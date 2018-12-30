@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: b513738ad4c56e7488a2d471a0577cc7
+timeCreated: 1533660999
+licenseType: Free
+ShaderImporter:
+  defaultTextures:
+  - _MainTex: {instanceID: 0}
+  - _BumpMap: {instanceID: 0}
+  - _EmissionMap: {instanceID: 0}
+  - _Ramp: {fileID: 2800000, guid: cf2cd894eb69bc34fb3ec92552ec2204, type: 3}
+  - _MetallicMap: {instanceID: 0}
+  - _GlossinessMap: {instanceID: 0}
+  - _Matcap: {instanceID: 0}
+  - _Cubemap: {instanceID: 0}
+  - _HighlightPattern: {instanceID: 0}
+  - _HighlightRamp: {fileID: 2800000, guid: cf2cd894eb69bc34fb3ec92552ec2204, type: 3}
+  - _DetailMask: {instanceID: 0}
+  - _DetailTexture: {instanceID: 0}
+  - _DetailBumpMap: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

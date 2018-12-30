@@ -1,0 +1,119 @@
+﻿
+//this shader has no real purpose apart from switching to the actual shaders with correct blending using the inspector, nothing interesting to see here
+Shader "Cibbis shaders/toony standard" {
+	Properties {
+
+		_Color ("Color", Color) = (1,1,1,1)
+		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		[Normal]_BumpMap("Normal Map", 2D) = "bump" {}
+		_BumpScale("Normal Scale", Float) = 1.0
+		_EmissionMap("Emission Map", 2D) = "white" {}
+		[HDR]_EmissionColor("Emission Color", Color) = (0,0,0,1)
+		_OcclusionMap("Occlusion Map", 2D) = "white" {}
+		_Occlusion("Occlusion", Range(0,1)) = 1.0
+
+		_Ramp("Ramp Texture", 2D) = "white" {}
+		_RampColor("Ramp Color", Color) = (1,1,1,1)
+		_ShadowIntensity("Shadow Intensity", Range(0,1)) = 0.4
+		_RampOffset("Ramp Offset", Range(-1,1)) = 0.0
+		_OcclusionOffsetIntensity("Occlusion Offset", Range(0,1)) = 0.0
+		_FakeLightColor("Fake Light Color", Color) = (1,1,1,1)
+		_FakeLightX("Fake Light X", Range(-1,1)) = 1.0
+		_FakeLightY("Fake Light Y", Range(-1,1)) = 0.7
+		_FakeLightZ("Fake Light Z", Range(-1,1)) = 0.0
+
+		_RimStrength("Rim Strength", Range(0,1)) = 0.0
+		_RimSharpness("Rim Sharpness", Range(0,1)) = 0.0
+		_RimIntensity("Rim Intensity", Range(-1,1)) = 0.0
+
+		_Metallic("Metallic", Range(0,1)) = 0.0
+		_MetallicMap("Metallic Map", 2D) = "white" {}
+		_Glossiness ("Smoothness", Range(0,1)) = 0.0
+		_GlossinessMap("Smoothness Map", 2D) = "white" {}
+		_TangentMap("Tangent Map", 2D) = "white" {}
+		_Anisotropy ("Anisotropy", Range(0,1)) = 0.0
+		_AnisotropyMap("Anisotropy Map", 2D) = "white" {}
+		_FakeHighlights("Fake Highlights", 2D) = "black" {}
+		_Matcap("Matcap", 2D) = "white" {}
+		_Cubemap("Cubemap", CUBE) = "" {}
+		_IndirectColor("Color", Color) = (.7,.7,.7,1)
+		_HighlightPattern("Highlight Pattern", 2D) = "white" {}
+
+		_HighlightRamp("Highlight Ramp Texture", 2D) = "white" {}
+		_HighlightRampColor("Highlight Ramp Color", Color) = (1,1,1,1)
+		_HighlightRampOffset("Highlight Ramp Offset", Range(-1,1)) = 0.0
+		_HighlightIntensity("Highlight Intensity", Range(0,1)) = 1.0
+		_FakeHighlightIntensity("Fake Highlight Intensity", Range(0,1)) = 0.5		
+
+		_DetailMask ("Detail Mask", 2D) = "white" {}
+		_DetailIntensity("Detail Intensity", Range(0,1)) = 1.0
+		_DetailTexture ("Albedo (RGB)", 2D) = "white" {}
+		_DetailColor ("Color", Color) = (1,1,1,1)
+		[Normal]_DetailBumpMap("Detail Normal Map", 2D) = "bump" {}
+		_DetailBumpScale("Detail Normal Scale", Float) = 1.0
+
+
+		_Cutoff("Alpha cutoff", Range(0,1)) = 0.5
+		[Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull Mode", Int) = 2
+
+		// Blending state
+		[HideInInspector] _Mode("__Mode", Float) = 0.0
+		[HideInInspector] _SpMode("__SpMode", Float) = 0.0
+		[HideInInspector] _IndirectSpecular("__IndirectSpecular", Float) = 0.0
+		[HideInInspector] _Workflow("__Workflow", Float) = 0.0
+		[HideInInspector] _SrcBlend("__src", Float) = 1.0
+		[HideInInspector] _DstBlend("__dst", Float) = 0.0
+		[HideInInspector] _ZWrite("__zw", Float) = 1.0
+
+		[HideInInspector] _ToonyHighlights("__ToonyHighlights", Float) = 0.0
+		[HideInInspector] _FakeLight("__FakeLight", Float) = 0.0
+		[HideInInspector] _OcclusionOffset("_-OcclusionOffset", Float) = 0.0
+		[HideInInspector] _EnableSpecular("__EnableSpecular", Float) = 0.0
+		[HideInInspector] _DetailMap("__DetailMap", Float) = 0.0
+		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 0.0
+		[HideInInspector] _RimLightBox("__RimLightBox", Float) = 0.0
+		[HideInInspector] _SpecularBox("__SpecularBox", Float) = 0.0
+		[HideInInspector] _DetailBox("__DetailBox", Float) = 0.0
+
+	}
+	SubShader {
+		Tags { "RenderType"="Opaque" }
+		LOD 200
+		
+		CGPROGRAM
+		// Physically based Standard lighting model, and enable shadows on all light types
+		#pragma surface surf Standard fullforwardshadows
+
+		// Use shader model 3.0 target, to get nicer looking lighting
+		#pragma target 3.0
+
+		sampler2D _MainTex;
+
+		struct Input {
+			float2 uv_MainTex;
+		};
+
+		half _Glossiness;
+		half _Metallic;
+		fixed4 _Color;
+
+		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
+		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
+		// #pragma instancing_options assumeuniformscaling
+		UNITY_INSTANCING_BUFFER_START(Props)
+			// put more per-instance properties here
+		UNITY_INSTANCING_BUFFER_END(Props)
+
+		void surf (Input IN, inout SurfaceOutputStandard o) {
+			// Albedo comes from a texture tinted by color
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			// Metallic and smoothness come from slider variables
+			o.Metallic = _Metallic;
+			o.Smoothness = _Glossiness;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	}
+	CustomEditor "ToonyStandardGUI"
+}
