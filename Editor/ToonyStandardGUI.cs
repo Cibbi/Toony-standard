@@ -277,7 +277,7 @@ public class ToonyStandardGUI : SimpleInspector
         EditorGUI.BeginChangeCheck();
         if (materialEditor.EmissionEnabledProperty())
         {
-            bool hadEmissionTexture = _Emission.GetGetExtraProperty1().textureValue != null;
+            //bool hadEmissionTexture = _Emission.GetGetExtraProperty1().textureValue != null;
             // Texture and HDR color controls
             _Emission.DrawProperty(materialEditor);
             // If texture was assigned and color was black set color to white
