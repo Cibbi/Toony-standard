@@ -41,10 +41,10 @@ public class ToonyStandardGUI : SimpleInspector
 	private static class Styles
     {
         public static GUIContent cullMode = new GUIContent("Cull mode", "Controls which face of the mesh is rendered \n\nOff: Double sided \n\nFront: Single sided (internal parts showing) \n\nBack: Single sided");
-        public static GUIContent blendMode = new GUIContent("Blend Mode", "Blend state \n\nOpaque: Opaque object \n\nCutout: Opaque object with cutout parts decided by the alpha channel of the main texture"+
+        public static GUIContent blendMode = new GUIContent("Blend mode", "Blend state \n\nOpaque: Opaque object \n\nCutout: Opaque object with cutout parts decided by the alpha channel of the main texture"+
                                                             " \n\nFade: Transparent object that does completely fade out at 0 opacity \n\nTransparent: Transparent object that is still visible at 0 opacity due to the fresnel effect, more realistic than fade");
-        public static GUIContent mainTex = new GUIContent("Main rexture", "Main texture (RGB channels) and transparency (A channel)");
-        public static GUIContent cutOff = new GUIContent("Alpha cutOff", "Transparency threshold to cut out");
+        public static GUIContent mainTex = new GUIContent("Main texture", "Main texture (RGB channels) and transparency (A channel)");
+        public static GUIContent cutOff = new GUIContent("Alpha cutoff", "Transparency threshold to cut out");
         public static GUIContent normal = new GUIContent("Normal", "Normal Map");
         public static GUIContent emission = new GUIContent("Color", "Emission map and Color");
         public static GUIContent occlusion = new GUIContent("Occlusion", "Occlusion map and intensity");  
@@ -60,9 +60,9 @@ public class ToonyStandardGUI : SimpleInspector
         public static GUIContent rimSharpness = new GUIContent("Rim sharpness", "Defines how sharp the rim is");
         public static GUIContent rimIntensity = new GUIContent("Rim intensity", "Defines the intensity of the rim, below 0 will make a rim darker than the base");
 
-        public static GUIContent indirectSpecular = new GUIContent("Indirect source", "Defines the source of the indirect specular \n\nProbe: uses the reflection probe in the world \n\nMatcap: uses a matcap texture \n\nCubemap uses a cubemap");
+        public static GUIContent indirectSpecular = new GUIContent("Indirect source", "Defines the source of the indirect specular \n\nProbe: uses the reflection probe in the world \n\nMatcap: uses a matcap texture \n\nCubemap uses a cubemap \n\nColor: uses a single color");
         public static GUIContent workflow = new GUIContent("Workflow", "Defines the workflow type \n\nMetallic: uses a texture that defines the metalness \n\nSpecular: uses a specular map");
-        public static GUIContent spMode = new GUIContent("Specular mode", "Defines the type of specular used \n\nStandard: uses the model used in the standard shader \n\nAnisotropic: uses anisotropic reflections");
+        public static GUIContent spMode = new GUIContent("Specular mode", "Defines the type of specular used \n\nStandard: uses the model used in the standard shader \n\nAnisotropic: uses anisotropic reflections \n\nFake: uses a texture as highlights");
         public static GUIContent smoothness = new GUIContent("Smoothness", "Smoothness map and intensity, usually the slider is set to 1 when using a smoothness texture");
         public static GUIContent metallic = new GUIContent("Metallic", "Metallic map and intensity, usually the slider is set to 1 when using a metallic texture");
         public static GUIContent specular = new GUIContent("Specular map", "Specular map");
@@ -386,16 +386,16 @@ public class ToonyStandardGUI : SimpleInspector
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent(gitHubIcon,"Check the official GitHub!"),"label", GUILayout.Width(32), GUILayout.Height(43)))
             {
-                //Application.OpenURL("https://notyet");
+                Application.OpenURL("https://github.com/Cibbi/Toony-standard");
             }
-            /*
+            
             EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
             if (GUILayout.Button(new GUIContent(patreonIcon,"Want to gift me pizza every month? Become a patreon!"),"label", GUILayout.Width(32), GUILayout.Height(32)))
             {
-               //Application.OpenURL("https://notyet");
+               Application.OpenURL("https://www.patreon.com/Cibbi");
             }
             EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-            GUILayout.EndHorizontal();*/
+            GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
             GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);
         	aboutLabelStyle.alignment = TextAnchor.LowerRight;
@@ -403,7 +403,7 @@ public class ToonyStandardGUI : SimpleInspector
             aboutLabelStyle.hover.textColor=Color.magenta;
             //sectionStyle.normal.textColor=new Color(.7f,.7f,.7f);
             //EditorGUILayout.LabelField("Toony Standard prerelase 3",sectionStyle,GUILayout.Height(32));
-            if(GUILayout.Button("Toony Standard prerelase 3",aboutLabelStyle,GUILayout.Height(32)))
+            if(GUILayout.Button("Toony Standard 1.0",aboutLabelStyle,GUILayout.Height(32)))
             {
                 ToonyStandardAboutWindow window = EditorWindow.GetWindow (typeof(ToonyStandardAboutWindow)) as ToonyStandardAboutWindow;
 				window.minSize = new Vector2 (475, 200);
@@ -442,9 +442,9 @@ public class ToonyStandardGUI : SimpleInspector
         _RimSharpness = new StoredShaderProperty(Styles.rimSharpness, ShaderGUI.FindProperty("_RimSharpness", properties));
         _RimIntensity = new StoredShaderProperty(Styles.rimIntensity, ShaderGUI.FindProperty("_RimIntensity", properties));
 
-        _indirectSpecular = new StoredSelectorProperty("indirect source",Enum.GetNames(typeof(IndirectSpecular)),FindProperty("_IndirectSpecular", properties)); 
-        _workflow = new StoredSelectorProperty("workflow",Enum.GetNames(typeof(Workflow)),FindProperty("_Workflow", properties));
-        _SpMode = new StoredSelectorProperty("specular Mode",Enum.GetNames(typeof(SpMode)),FindProperty("_SpMode", properties));
+        _indirectSpecular = new StoredSelectorProperty(Styles.indirectSpecular,Enum.GetNames(typeof(IndirectSpecular)),FindProperty("_IndirectSpecular", properties)); 
+        _workflow = new StoredSelectorProperty(Styles.workflow,Enum.GetNames(typeof(Workflow)),FindProperty("_Workflow", properties));
+        _SpMode = new StoredSelectorProperty(Styles.spMode,Enum.GetNames(typeof(SpMode)),FindProperty("_SpMode", properties));
         _GlossinessMap = new StoredTextureProperty(Styles.smoothness,ShaderGUI.FindProperty("_GlossinessMap", properties),ShaderGUI.FindProperty("_Glossiness", properties)); 
         _MetallicMap = new StoredTextureProperty(Styles.metallic,ShaderGUI.FindProperty("_MetallicMap", properties),ShaderGUI.FindProperty("_Metallic", properties));
         _SpecularMap = new StoredTextureProperty(Styles.specular,ShaderGUI.FindProperty("_MetallicMap", properties));
