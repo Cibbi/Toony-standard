@@ -1,0 +1,3 @@
+[submodule "submodules/Simple-inspectors"]
+	path = submodules/Simple-inspectors
+	url = https://github.com/Cibbi/Simple-inspectors
