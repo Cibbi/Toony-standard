@@ -1,16 +1,13 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System;
-using Cibbi.SimpleInspectors;
 
-public class ToonyStandardGUI : SimpleInspector 
+
+public class ToonyStandardGUI : ShaderGUI 
 {
-    /* static bool rampOpen;
-    static bool specularOpen;
-    static bool detailOpen;
-    static bool rimOpen;*/
-
     bool rimNeedsReset;
+
+    //bool isFirstCycle = false;
 
     public enum BlendMode
     {
@@ -55,6 +52,11 @@ public class ToonyStandardGUI : SimpleInspector
         public static GUIContent occlusionOffsetIntensity = new GUIContent("Occlusion offset intensity", "intensity of the occlusion driven ramp offset");
         public static GUIContent shadowIntensity = new GUIContent("Shadow intensity", "Defines how intense the toon ramp is");
         public static GUIContent fakeLight = new GUIContent("Fake light", "If enabled and in a world without a main directional light, will fake one based on parameters below");
+        public static GUIContent fakeLightColor = new GUIContent("Fake light color", "Color of the fake light");
+        public static GUIContent fakeLightX = new GUIContent("X", "X component of the direction vector");
+        public static GUIContent fakeLightY = new GUIContent("Y", "Y component of the direction vector");
+        public static GUIContent fakeLightZ = new GUIContent("Z", "Z component of the direction vector");
+
         
         public static GUIContent rimStrength = new GUIContent("Rim strength", "Defines how far the rim light extends");
         public static GUIContent rimSharpness = new GUIContent("Rim sharpness", "Defines how sharp the rim is");
@@ -90,74 +92,83 @@ public class ToonyStandardGUI : SimpleInspector
         public static GUIContent detailOptions = new GUIContent("Detail Options", "Various options for detail textures, can be disabled");     
     }
 
-	 	StoredSelectorProperty _blendMode;
-        StoredShaderProperty _Cull;
+        GUIStyle sectionStyle;
 
-        StoredTextureProperty _MainTex;
-        StoredShaderProperty _Cutoff;
-        StoredTextureProperty _BumpMap;
-        StoredTextureProperty _Emission;
-        StoredTextureProperty _Occlusion;
-        StoredTileAndOffset _MainTileAndOffset;
+	 	MaterialProperty _blendMode;
+        MaterialProperty _Cull;
 
-        StoredTextureProperty _Ramp;
-        StoredShaderProperty _RampOffset;
-        StoredShaderProperty _ShadowIntensity;
-        StoredShaderProperty _OcclusionOffsetIntensity;
-        StoredShaderProperty _FakeLightColor;
-        StoredShaderProperty _FakeLightX;
-        StoredShaderProperty _FakeLightY;
-        StoredShaderProperty _FakeLightZ;
+        MaterialProperty _MainTex;
+        MaterialProperty _Color;
+        MaterialProperty _Cutoff;
+        MaterialProperty _BumpMap;
+        MaterialProperty _BumpScale;
+        MaterialProperty _Emission;
+        MaterialProperty _EmissionColor;
+        MaterialProperty _OcclusionMap;
+        MaterialProperty _Occlusion;
+
+        MaterialProperty _Ramp;
+        MaterialProperty _RampColor;
+        MaterialProperty _RampOffset;
+        MaterialProperty _ShadowIntensity;
+        MaterialProperty _OcclusionOffsetIntensity;
+        MaterialProperty _FakeLightColor;
+        MaterialProperty _FakeLightX;
+        MaterialProperty _FakeLightY;
+        MaterialProperty _FakeLightZ;
         
-        StoredShaderProperty _RimStrength;
-        StoredShaderProperty _RimSharpness;
-        StoredShaderProperty _RimIntensity;
+        MaterialProperty _RimStrength;
+        MaterialProperty _RimSharpness;
+        MaterialProperty _RimIntensity;
 
-        StoredSelectorProperty _indirectSpecular;
-        StoredSelectorProperty _workflow;
-        StoredSelectorProperty _SpMode;       
-        StoredTextureProperty _GlossinessMap;
-        StoredTextureProperty _MetallicMap;
-        StoredTextureProperty _SpecularMap;
-        StoredTextureProperty _AnisotropyMap;
-        StoredTextureProperty _TangentMap;
-        StoredTextureProperty _FakeHightlights;
-        StoredTextureProperty _Matcap;
-        StoredTextureProperty _Cubemap;
-        StoredShaderProperty _IndirectColor;
-        StoredTextureProperty _HighlightRamp;
-        StoredShaderProperty _HighlightRampOffset;
-        StoredShaderProperty _HighlightIntensity;
-        StoredShaderProperty _FakeHighlightIntensity;
-        StoredTextureProperty _HighlightPattern;
+        MaterialProperty _indirectSpecular;
+        MaterialProperty _workflow;
+        MaterialProperty _SpMode;       
+        MaterialProperty _GlossinessMap;
+        MaterialProperty _Glossiness;
+        MaterialProperty _MetallicMap;
+        MaterialProperty _Metallic;
+        //MaterialProperty _SpecularMap;
+        MaterialProperty _AnisotropyMap;
+        MaterialProperty _Anisotropy;
+        MaterialProperty _TangentMap;
+        MaterialProperty _FakeHightlights;
+        MaterialProperty _Matcap;
+        MaterialProperty _Cubemap;
+        MaterialProperty _IndirectColor;
+        MaterialProperty _HighlightRamp;
+        MaterialProperty _HighlightRampColor;
+        MaterialProperty _HighlightRampOffset;
+        MaterialProperty _HighlightIntensity;
+        MaterialProperty _FakeHighlightIntensity;
+        MaterialProperty _HighlightPattern;
        
-        StoredTextureProperty _DetailMask;
-        StoredShaderProperty _DetailIntensity;
-        StoredTextureProperty _DetailTexture;
-        StoredTextureProperty _DetailBumpMap;
-        StoredTileAndOffset _DetailTileAndOffset;
+        MaterialProperty _DetailMask;
+        MaterialProperty _DetailIntensity;
+        MaterialProperty _DetailTexture;
+        MaterialProperty _DetailColor;
+        MaterialProperty _DetailBumpMap;
+        MaterialProperty _DetailBumpScale;
+        MaterialProperty _DetailTileAndOffset;
 
 		Material material;
 
-        StoredToggle fakeLight;
-        StoredToggle occlusionOffset;
-        StoredToggle toonyHighlights;
+        //StoredToggle toonyHighlights;
 
-        PropertiesBox rampOptions;
-        PropertiesBox rimOptions;
-        PropertiesBox specularOptions;
-        PropertiesBox detailOptions;
+        //PropertiesBox rimOptions;
+        // specularOptions;
+        //PropertiesBox detailOptions;
 
-        StoredPropertyList occlusionOffsetOptions;
-        StoredPropertyList fakeLightOptions;
-        StoredPropertyList metallicWorkflow;
-        StoredPropertyList specularWorkflow;
-        StoredPropertyList anisotropicOptions;
-        StoredPropertyList fakeHighlightOptions;
-        StoredPropertyList matcapOptions;
-        StoredPropertyList cubemapOptions;
-        StoredPropertyList indirectColorOptions;
-        StoredPropertyList toonyHighlightsOptions;
+        MaterialProperty occlusionOffsetOptions;
+        MaterialProperty fakeLightOptions;
+        MaterialProperty metallicWorkflow;
+        MaterialProperty specularWorkflow;
+        MaterialProperty anisotropicOptions;
+        MaterialProperty fakeHighlightOptions;
+        MaterialProperty matcapOptions;
+        MaterialProperty cubemapOptions;
+        MaterialProperty indirectColorOptions;
+        MaterialProperty toonyHighlightsOptions;
 
         MaterialProperty _ToonyHighlights;
         MaterialProperty _FakeLight;
@@ -173,11 +184,8 @@ public class ToonyStandardGUI : SimpleInspector
 
         Texture2D gitHubIcon;
         Texture2D patreonIcon;
-        //Texture2D paypalIcon;
 
-        //Vector2 scrollPos;
-
-    public override void Start(MaterialEditor materialEditor, MaterialProperty[] properties)
+    public void Start(MaterialEditor materialEditor, MaterialProperty[] properties)
     {
         string[] icons = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
 		if (icons.Length>0) 
@@ -188,15 +196,16 @@ public class ToonyStandardGUI : SimpleInspector
 			icon=AssetDatabase.LoadAssetAtPath<Texture2D>(path+"/ToonyStandardLogo.png");
             gitHubIcon=AssetDatabase.LoadAssetAtPath<Texture2D>(path+"/GitHubIcon.png");
             patreonIcon=AssetDatabase.LoadAssetAtPath<Texture2D>(path+"/PatreonIcon.png");
-            //paypalIcon=AssetDatabase.LoadAssetAtPath<Texture2D>(path+"/PaypalIcon.png");
              
 		}
+
+        sectionStyle = new GUIStyle(EditorStyles.boldLabel);
+        sectionStyle.alignment = TextAnchor.MiddleCenter;
 
         material = materialEditor.target as Material;
         //initialize properties
         FindProperties(properties);
         rimNeedsReset=false;
-		material = materialEditor.target as Material;
 
         SetKeyword(material, "_ENABLE_SPECULAR",_EnableSpecular.floatValue==1);
         SetKeyword(material, "_DETAIL_MAP",_DetailMap.floatValue==1);
@@ -217,20 +226,17 @@ public class ToonyStandardGUI : SimpleInspector
         else
         {
             material.SetOverrideTag("IsEmissive", "false");
-        }
-
-        UpdateComponents();
-
-        
+        }    
     }
 
-    public override void Update(MaterialEditor materialEditor, MaterialProperty[] properties)
+    public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
     { 
+        if(icon==null)
+		{
+			Start(materialEditor, properties);
+			//isFirstCycle=false;
+		}
 
-        
-        //scrollPos = EditorGUILayout.BeginScrollView(scrollPos,GUILayout.MinHeight(500),GUILayout.MaxHeight(2000));
-        
-        
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.Label(icon,GUILayout.Width(icon.width),GUILayout.Height(icon.height));
@@ -238,148 +244,18 @@ public class ToonyStandardGUI : SimpleInspector
         GUILayout.EndHorizontal();
 
         GUILayout.Space(10);
-        
-
-
+    
         FindProperties(properties);
-        UpdateComponents();
-
-        rimOptions=new PropertiesBox(Styles.rimOptions,BooleanFloat(_RimLightBox.floatValue),true,_RimIntensity.GetStoredProperty().floatValue!=0);
-        rimOptions.AddProperty(_RimIntensity);
-        rimOptions.AddProperty(_RimStrength);
-        rimOptions.AddProperty(_RimSharpness);
-
-        //draw blend mode
-        EditorGUI.BeginChangeCheck();
-        _blendMode.DrawProperty(materialEditor);
-        if (EditorGUI.EndChangeCheck())
-        {
-            SetupMaterialWithBlendMode(material, (BlendMode)_blendMode.getSelectedOption());        
-        }
-        
-        //draw cull mode
-        _Cull.DrawProperty(materialEditor);
-        EditorGUILayout.Space();
-
-        //draw main properties
-        _MainTex.DrawProperty(materialEditor);
-        if((BlendMode)_blendMode.getSelectedOption()==BlendMode.Cutout)
-        {
-            EditorGUI.indentLevel+=MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
-            _Cutoff.DrawProperty(materialEditor);
-            EditorGUI.indentLevel-=MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
-        }
-        _BumpMap.DrawProperty(materialEditor);
-        _Occlusion.DrawProperty(materialEditor);
-
-
-        //emission
-        EditorGUI.BeginChangeCheck();
-        if (materialEditor.EmissionEnabledProperty())
-        {
-            //bool hadEmissionTexture = _Emission.GetGetExtraProperty1().textureValue != null;
-            // Texture and HDR color controls
-            _Emission.DrawProperty(materialEditor);
-            // If texture was assigned and color was black set color to white
-            //float brightness = _Emission.GetGetExtraProperty1().colorValue.maxColorComponent;
-           // if (_Emission.GetGetStoredTextureProperty().textureValue != null && !hadEmissionTexture && brightness <= 0f)
-            //    _Emission.GetGetExtraProperty1().colorValue = Color.white;
-            // change the GI flag and fix it up with emissive as black if necessary
-            // materialEditor.LightmapEmissionFlagsProperty(, true);
-            materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
-        }
-        if(EditorGUI.EndChangeCheck())
-        {
-            MaterialEditor.FixupEmissiveFlag(material);
-            bool shouldEmissionBeEnabled = (material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.EmissiveIsBlack) == 0;
-            SetKeyword(material, "_EMISSION", shouldEmissionBeEnabled);
-            if (shouldEmissionBeEnabled)
-            {
-                material.SetOverrideTag("IsEmissive", "true");
-            }
-            else
-            {
-                material.SetOverrideTag("IsEmissive", "false");
-            }
-        }
-        _MainTileAndOffset.DrawProperty(materialEditor);
-
-        EditorGUILayout.Space();
-
+        //draw main section
+        DrawMainSection(materialEditor);   
         //ramp options box
-        EditorGUI.BeginChangeCheck();
-        rampOptions.DrawBox(materialEditor);
-        if (EditorGUI.EndChangeCheck())
-        {
-            _ToonRampBox.floatValue=floatBoolean(rampOptions.IsOpen());
-            //SetKeyword(material, "_FAKE_LIGHT",fakeLight.IsEnabled());
-            _OcclusionOffset.floatValue=floatBoolean(occlusionOffset.IsEnabled());
-            occlusionOffsetOptions.Enable(occlusionOffset.IsEnabled());
-            _FakeLight.floatValue=floatBoolean(fakeLight.IsEnabled());
-            fakeLightOptions.Enable(fakeLight.IsEnabled());  
-
-            if(!occlusionOffset.IsEnabled())
-            {
-                _OcclusionOffsetIntensity.GetStoredProperty().floatValue=0;
-            }      
-        }
-        EditorGUILayout.Space();
-
+        DrawRampOptionsSection(materialEditor);
         //rim light options box
-        EditorGUI.BeginChangeCheck();
-        rimOptions.DrawBox(materialEditor);
-        if (EditorGUI.EndChangeCheck())
-        {
-            _RimLightBox.floatValue=floatBoolean(rimOptions.IsOpen());
-            //SetKeyword(material, "_RIM_LIGHT",rimOptions.IsEnabled());
-            if(rimOptions.IsEnabled() && rimNeedsReset)
-            {
-                _RimIntensity.GetStoredProperty().floatValue=1;
-                rimNeedsReset=false;
-                
-            }
-            else if (!rimOptions.IsEnabled())
-            {
-                _RimIntensity.GetStoredProperty().floatValue=0;
-                rimNeedsReset=true;
-            }      
-        }
-        EditorGUILayout.Space();
-
+        DrawRimLightOptionsSection(materialEditor);
         //Specular options box
-        EditorGUI.BeginChangeCheck();
-        specularOptions.DrawBox(materialEditor);
-        if (EditorGUI.EndChangeCheck())
-        {
-            _SpecularBox.floatValue=floatBoolean(specularOptions.IsOpen());
-            SetKeyword(material, "_ENABLE_SPECULAR",specularOptions.IsEnabled());
-            _EnableSpecular.floatValue=floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
-            SetupWorkflow(material,(Workflow)_workflow.getSelectedOption());
-            SetupSpMode(material,(SpMode)_SpMode.getSelectedOption());
-            //SetupIndirectSource(material,(IndirectSpecular)_indirectSpecular.getSelectedOption());
-
-            metallicWorkflow.Enable((Workflow)_workflow.getSelectedOption()==Workflow.Metallic);
-            specularWorkflow.Enable((Workflow)_workflow.getSelectedOption()==Workflow.Specular);
-            anisotropicOptions.Enable((SpMode)_SpMode.getSelectedOption()==SpMode.Anisotropic);
-            matcapOptions.Enable((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Matcap);
-            cubemapOptions.Enable((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Cubemap);
-            //SetKeyword(material,"_TOONY_HIGHLIGHTS",toonyHighlights.IsEnabled()); 
-            _ToonyHighlights.floatValue=floatBoolean(toonyHighlights.IsEnabled());
-            toonyHighlightsOptions.Enable(toonyHighlights.IsEnabled());
-        }
-        EditorGUILayout.Space();
-
-        //detail options box
-        EditorGUI.BeginChangeCheck();
-        detailOptions.DrawBox(materialEditor);
-        if (EditorGUI.EndChangeCheck())
-        {
-            _DetailBox.floatValue=floatBoolean(detailOptions.IsOpen());
-            SetKeyword(material, "_DETAIL_MAP",detailOptions.IsEnabled());  
-            _DetailMap.floatValue=floatBoolean(material.IsKeywordEnabled("_DETAIL_MAP"));     
-        }
-        EditorGUILayout.Space();
-
+        DrawSpecularOptionsSection(materialEditor);
+        //Detail options box
+        DrawDetailOptionsSection(materialEditor);
         //EditorGUILayout.EndScrollView();
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
@@ -402,8 +278,7 @@ public class ToonyStandardGUI : SimpleInspector
             aboutLabelStyle.fontStyle = FontStyle.Italic;
             aboutLabelStyle.hover.textColor=Color.magenta;
             //sectionStyle.normal.textColor=new Color(.7f,.7f,.7f);
-            //EditorGUILayout.LabelField("Toony Standard prerelase 3",sectionStyle,GUILayout.Height(32));
-            if(GUILayout.Button("Toony Standard 1.0",aboutLabelStyle,GUILayout.Height(32)))
+            if(GUILayout.Button("Toony Standard MasterBuild 20190221",aboutLabelStyle,GUILayout.Height(32)))
             {
                 ToonyStandardAboutWindow window = EditorWindow.GetWindow (typeof(ToonyStandardAboutWindow)) as ToonyStandardAboutWindow;
 				window.minSize = new Vector2 (475, 200);
@@ -419,164 +294,400 @@ public class ToonyStandardGUI : SimpleInspector
 
 	public void FindProperties(MaterialProperty[] properties)
 	{
-        _blendMode=new StoredSelectorProperty(Styles.blendMode,Enum.GetNames(typeof(BlendMode)),FindProperty("_Mode", properties));
-        _Cull = new StoredShaderProperty(Styles.cullMode,FindProperty("_Cull", properties));
+        _blendMode = FindProperty("_Mode", properties);
+        _Cull = FindProperty("_Cull", properties);
 
-        _MainTex =new StoredTextureProperty(Styles.mainTex,ShaderGUI.FindProperty("_MainTex", properties),ShaderGUI.FindProperty("_Color", properties));
-        _Cutoff = new StoredShaderProperty(Styles.cutOff,FindProperty("_Cutoff", properties));
-        _BumpMap = new StoredTextureProperty(Styles.normal,ShaderGUI.FindProperty("_BumpMap", properties),ShaderGUI.FindProperty("_BumpScale", properties)); 
-        _Emission =new StoredTextureProperty(Styles.emission,ShaderGUI.FindProperty("_EmissionMap", properties),ShaderGUI.FindProperty("_EmissionColor", properties)); 
-        _Occlusion =new StoredTextureProperty(Styles.occlusion,ShaderGUI.FindProperty("_OcclusionMap", properties),ShaderGUI.FindProperty("_Occlusion", properties)); 
-        _MainTileAndOffset = new StoredTileAndOffset(ShaderGUI.FindProperty("_MainTex", properties));
+        _MainTex = FindProperty("_MainTex", properties);
+        _Color = FindProperty("_Color", properties);
+        _Cutoff = FindProperty("_Cutoff", properties);
+        _BumpMap = FindProperty("_BumpMap", properties);
+        _BumpScale = FindProperty("_BumpScale", properties); 
+        _Emission = FindProperty("_EmissionMap", properties);
+        _EmissionColor = FindProperty("_EmissionColor", properties); 
+        _OcclusionMap = FindProperty("_OcclusionMap", properties);
+        _Occlusion = FindProperty("_Occlusion", properties); 
+        //_MainTileAndOffset = new StoredTileAndOffset(ShaderGUI.FindProperty("_MainTex", properties));
         
-        _Ramp = new StoredTextureProperty(Styles.ramp,ShaderGUI.FindProperty("_Ramp", properties),ShaderGUI.FindProperty("_RampColor", properties));         
-        _RampOffset = new StoredShaderProperty(Styles.rampOffset,ShaderGUI.FindProperty("_RampOffset", properties));
-        _ShadowIntensity = new StoredShaderProperty(Styles.shadowIntensity,ShaderGUI.FindProperty("_ShadowIntensity", properties));
-        _OcclusionOffsetIntensity = new StoredShaderProperty(Styles.occlusionOffsetIntensity,ShaderGUI.FindProperty("_OcclusionOffsetIntensity", properties));
-        _FakeLightColor = new StoredShaderProperty("Fake light color", ShaderGUI.FindProperty("_FakeLightColor", properties));
-        _FakeLightX = new StoredShaderProperty("X", ShaderGUI.FindProperty("_FakeLightX", properties));
-        _FakeLightY = new StoredShaderProperty("Y", ShaderGUI.FindProperty("_FakeLightY", properties));
-        _FakeLightZ = new StoredShaderProperty("Z",ShaderGUI.FindProperty("_FakeLightZ", properties)); 
+        _Ramp = FindProperty("_Ramp", properties);
+        _RampColor = FindProperty("_RampColor", properties);         
+        _RampOffset = FindProperty("_RampOffset", properties);
+        _ShadowIntensity = FindProperty("_ShadowIntensity", properties);
+        _OcclusionOffsetIntensity = FindProperty("_OcclusionOffsetIntensity", properties);
+        _FakeLightColor = FindProperty("_FakeLightColor", properties);
+        _FakeLightX = FindProperty("_FakeLightX", properties);
+        _FakeLightY = FindProperty("_FakeLightY", properties);
+        _FakeLightZ = FindProperty("_FakeLightZ", properties); 
 
-        _RimStrength = new StoredShaderProperty(Styles.rimStrength, ShaderGUI.FindProperty("_RimStrength", properties));
-        _RimSharpness = new StoredShaderProperty(Styles.rimSharpness, ShaderGUI.FindProperty("_RimSharpness", properties));
-        _RimIntensity = new StoredShaderProperty(Styles.rimIntensity, ShaderGUI.FindProperty("_RimIntensity", properties));
+        _RimStrength = FindProperty("_RimStrength", properties);
+        _RimSharpness = FindProperty("_RimSharpness", properties);
+        _RimIntensity = FindProperty("_RimIntensity", properties);
 
-        _indirectSpecular = new StoredSelectorProperty(Styles.indirectSpecular,Enum.GetNames(typeof(IndirectSpecular)),FindProperty("_IndirectSpecular", properties)); 
-        _workflow = new StoredSelectorProperty(Styles.workflow,Enum.GetNames(typeof(Workflow)),FindProperty("_Workflow", properties));
-        _SpMode = new StoredSelectorProperty(Styles.spMode,Enum.GetNames(typeof(SpMode)),FindProperty("_SpMode", properties));
-        _GlossinessMap = new StoredTextureProperty(Styles.smoothness,ShaderGUI.FindProperty("_GlossinessMap", properties),ShaderGUI.FindProperty("_Glossiness", properties)); 
-        _MetallicMap = new StoredTextureProperty(Styles.metallic,ShaderGUI.FindProperty("_MetallicMap", properties),ShaderGUI.FindProperty("_Metallic", properties));
-        _SpecularMap = new StoredTextureProperty(Styles.specular,ShaderGUI.FindProperty("_MetallicMap", properties));
-        _AnisotropyMap = new StoredTextureProperty(Styles.anisotropy,ShaderGUI.FindProperty("_AnisotropyMap", properties),ShaderGUI.FindProperty("_Anisotropy", properties));
-        _TangentMap = new StoredTextureProperty(Styles.tangent,ShaderGUI.FindProperty("_TangentMap", properties));
-        _FakeHightlights = new StoredTextureProperty(Styles.fakeHighlights,ShaderGUI.FindProperty("_FakeHighlights", properties));
-        _Matcap = new StoredTextureProperty(Styles.matcap,ShaderGUI.FindProperty("_Matcap", properties));
-        _Cubemap = new StoredTextureProperty(Styles.cubemap,ShaderGUI.FindProperty("_Cubemap", properties));
-        _IndirectColor = new StoredShaderProperty(Styles.indirectColor,FindProperty("_IndirectColor", properties));
-        _HighlightRamp = new StoredTextureProperty(Styles.highlightRamp,ShaderGUI.FindProperty("_HighlightRamp", properties),ShaderGUI.FindProperty("_HighlightRampColor", properties));
-        _HighlightRampOffset = new StoredShaderProperty(Styles.hightlightRampOffset,ShaderGUI.FindProperty("_HighlightRampOffset", properties));
-        _HighlightIntensity = new StoredShaderProperty(Styles.highlightIntensity,ShaderGUI.FindProperty("_HighlightIntensity", properties));  
-        _FakeHighlightIntensity = new StoredShaderProperty(Styles.fakeHighlightIntensity,ShaderGUI.FindProperty("_FakeHighlightIntensity", properties));  
-        _HighlightPattern = new StoredTextureProperty(Styles.highlightPattern,ShaderGUI.FindProperty("_HighlightPattern", properties));
+        _indirectSpecular = FindProperty("_IndirectSpecular", properties); 
+        _workflow = FindProperty("_Workflow", properties);
+        _SpMode = FindProperty("_SpMode", properties);
+        _GlossinessMap = FindProperty("_GlossinessMap", properties);
+        _Glossiness = FindProperty("_Glossiness", properties); 
+        _MetallicMap = FindProperty("_MetallicMap", properties);
+        _Metallic = FindProperty("_Metallic", properties);
+        //_SpecularMap = new StoredTextureProperty(Styles.specular,ShaderGUI.FindProperty("_MetallicMap", properties));
+        _AnisotropyMap = FindProperty("_AnisotropyMap", properties);
+        _Anisotropy = FindProperty("_Anisotropy", properties);
+        _TangentMap = FindProperty("_TangentMap", properties);
+        _FakeHightlights = FindProperty("_FakeHighlights", properties);
+        _Matcap = FindProperty("_Matcap", properties);
+        _Cubemap = FindProperty("_Cubemap", properties);
+        _IndirectColor = FindProperty("_IndirectColor", properties);
+        _HighlightRamp = FindProperty("_HighlightRamp", properties);
+        _HighlightRampColor = FindProperty("_HighlightRampColor", properties);
+        _HighlightRampOffset = FindProperty("_HighlightRampOffset", properties);
+        _HighlightIntensity = FindProperty("_HighlightIntensity", properties);  
+        _FakeHighlightIntensity = FindProperty("_FakeHighlightIntensity", properties);  
+        _HighlightPattern = FindProperty("_HighlightPattern", properties);
 
-        _DetailMask = new StoredTextureProperty(Styles.detailMask,ShaderGUI.FindProperty("_DetailMask", properties));
-        _DetailIntensity = new StoredShaderProperty(Styles.detailIntensity,ShaderGUI.FindProperty("_DetailIntensity", properties));  
-        _DetailTexture = new StoredTextureProperty(Styles.detailPattern, ShaderGUI.FindProperty("_DetailTexture", properties),ShaderGUI.FindProperty("_DetailColor", properties));
-        _DetailBumpMap = new StoredTextureProperty(Styles.detailNormal,ShaderGUI.FindProperty("_DetailBumpMap", properties),ShaderGUI.FindProperty("_DetailBumpScale", properties));
-        _DetailTileAndOffset = new StoredTileAndOffset(ShaderGUI.FindProperty("_DetailTexture", properties));
+        _DetailMask = FindProperty("_DetailMask", properties);
+        _DetailIntensity = FindProperty("_DetailIntensity", properties);  
+        _DetailTexture = FindProperty("_DetailTexture", properties);
+        _DetailColor = FindProperty("_DetailColor", properties);
+        _DetailBumpMap = FindProperty("_DetailBumpMap", properties);
+        _DetailBumpScale = FindProperty("_DetailBumpScale", properties);
+        //_DetailTileAndOffset = new StoredTileAndOffset(ShaderGUI.FindProperty("_DetailTexture", properties));
 
-        _HighlightPattern.ShowTextureScaleAndOffset(true);
+        //_HighlightPattern.ShowTextureScaleAndOffset(true);
 
-        _ToonyHighlights = ShaderGUI.FindProperty("_ToonyHighlights", properties);
-        _OcclusionOffset = ShaderGUI.FindProperty("_OcclusionOffset", properties);
-        _FakeLight = ShaderGUI.FindProperty("_FakeLight", properties);
-		_EnableSpecular = ShaderGUI.FindProperty("_EnableSpecular", properties);
-		_DetailMap = ShaderGUI.FindProperty("_DetailMap", properties);
-		_ToonRampBox = ShaderGUI.FindProperty("_ToonRampBox", properties);
-		_RimLightBox = ShaderGUI.FindProperty("_RimLightBox", properties);
-		_SpecularBox = ShaderGUI.FindProperty("_SpecularBox", properties);
-		_DetailBox = ShaderGUI.FindProperty("_DetailBox", properties);
+        _ToonyHighlights = FindProperty("_ToonyHighlights", properties);
+        _OcclusionOffset = FindProperty("_OcclusionOffset", properties);
+        _FakeLight = FindProperty("_FakeLight", properties);
+		_EnableSpecular = FindProperty("_EnableSpecular", properties);
+		_DetailMap = FindProperty("_DetailMap", properties);
+		_ToonRampBox = FindProperty("_ToonRampBox", properties);
+		_RimLightBox = FindProperty("_RimLightBox", properties);
+		_SpecularBox = FindProperty("_SpecularBox", properties);
+		_DetailBox = FindProperty("_DetailBox", properties);
 	}
 
-
-    public void UpdateComponents()
+    public void DrawMainSection(MaterialEditor materialEditor)
     {
-        //initialize toggles
-        fakeLight=new StoredToggle(Styles.fakeLight,_FakeLight.floatValue==1);
-        occlusionOffset=new StoredToggle(Styles.occlusionOffset,_OcclusionOffset.floatValue==1);
-        toonyHighlights=new StoredToggle(Styles.toonyHighlight,_ToonyHighlights.floatValue==1);
+        EditorGUI.BeginChangeCheck();
+        DrawSelector(Enum.GetNames(typeof(BlendMode)),_blendMode,Styles.blendMode,materialEditor);
+        if (EditorGUI.EndChangeCheck())
+        {
+            foreach(Material mat in _blendMode.targets)
+            {
+                SetupMaterialWithBlendMode(mat, (BlendMode)_blendMode.floatValue);  
+            }      
+        }
+        
+        //draw cull mode
+        materialEditor.ShaderProperty(_Cull,Styles.cullMode);
+        EditorGUILayout.Space();
 
-        //initialize lists
-        occlusionOffsetOptions= new StoredPropertyList(occlusionOffset.IsEnabled(),true);
-        occlusionOffsetOptions.AddProperty(_OcclusionOffsetIntensity);
-
-        fakeLightOptions = new StoredPropertyList(fakeLight.IsEnabled(),true);
-        fakeLightOptions.AddProperty(_FakeLightColor);
-        fakeLightOptions.AddProperty(_FakeLightX);
-        fakeLightOptions.AddProperty(_FakeLightY);
-        fakeLightOptions.AddProperty(_FakeLightZ);
-
-        metallicWorkflow = new StoredPropertyList((Workflow)_workflow.getSelectedOption()==Workflow.Metallic,false);
-        metallicWorkflow.AddProperty(_MetallicMap);
-
-        specularWorkflow = new StoredPropertyList((Workflow)_workflow.getSelectedOption()==Workflow.Specular,false);
-        specularWorkflow.AddProperty(_SpecularMap);
-
-        anisotropicOptions=new StoredPropertyList((SpMode)_SpMode.getSelectedOption()==SpMode.Anisotropic,false);
-        anisotropicOptions.AddProperty(_TangentMap);
-        anisotropicOptions.AddProperty(_AnisotropyMap);
-
-        fakeHighlightOptions=new StoredPropertyList((SpMode)_SpMode.getSelectedOption()==SpMode.Fake,false);
-        fakeHighlightOptions.AddProperty(_FakeHightlights);
-        fakeHighlightOptions.AddProperty(_FakeHighlightIntensity);
-
-        matcapOptions = new StoredPropertyList((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Matcap,false);
-        matcapOptions.AddProperty(_Matcap);
-
-        cubemapOptions = new StoredPropertyList((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Cubemap,false);
-        cubemapOptions.AddProperty(_Cubemap);
-
-        indirectColorOptions = new StoredPropertyList((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Color,false);
-        indirectColorOptions.AddProperty(_IndirectColor);
-
-        toonyHighlightsOptions = new StoredPropertyList(toonyHighlights.IsEnabled(),false);
-        toonyHighlightsOptions.AddProperty(_HighlightRamp);
-        toonyHighlightsOptions.AddProperty(_HighlightRampOffset);
-        toonyHighlightsOptions.AddProperty(_HighlightIntensity);
-
-        //initialize boxes
-        rampOptions=new PropertiesBox(Styles.rampOptions,BooleanFloat(_ToonRampBox.floatValue),false,false);
-        rampOptions.AddProperty(_Ramp);
-        rampOptions.AddProperty(_RampOffset);
-        rampOptions.AddProperty(_ShadowIntensity);
-        rampOptions.AddProperty(occlusionOffset);
-        rampOptions.AddProperty(occlusionOffsetOptions);
-        rampOptions.AddProperty(fakeLight);
-        rampOptions.AddProperty(fakeLightOptions);
-
-        //rimOptions=new PropertiesBox(Styles.rimOptions,rimOpen,true,material.IsKeywordEnabled("_RIM_LIGHT"));
-        rimOptions=new PropertiesBox(Styles.rimOptions,BooleanFloat(_RimLightBox.floatValue),true,_RimIntensity.GetStoredProperty().floatValue!=0);
-        rimOptions.AddProperty(_RimIntensity);
-        rimOptions.AddProperty(_RimStrength);
-        rimOptions.AddProperty(_RimSharpness);
-
-        rimNeedsReset = !rimOptions.IsEnabled();
-
-        specularOptions=new PropertiesBox(Styles.specularOptions,BooleanFloat(_SpecularBox.floatValue),true,material.IsKeywordEnabled("_ENABLE_SPECULAR"));
-        specularOptions.AddProperty(_workflow);
-        specularOptions.AddProperty(metallicWorkflow);
-        specularOptions.AddProperty(specularWorkflow);
-        specularOptions.AddProperty(_GlossinessMap);
-        specularOptions.AddProperty(_SpMode);
-        specularOptions.AddProperty(anisotropicOptions);
-        specularOptions.AddProperty(fakeHighlightOptions);
-        specularOptions.AddProperty(_indirectSpecular);
-        specularOptions.AddProperty(matcapOptions);
-        specularOptions.AddProperty(cubemapOptions);
-        specularOptions.AddProperty(indirectColorOptions);
-        specularOptions.AddProperty(toonyHighlights);
-        specularOptions.AddProperty(toonyHighlightsOptions);
-        specularOptions.AddProperty(_HighlightPattern);
-
-        detailOptions=new PropertiesBox(Styles.detailOptions,BooleanFloat(_DetailBox.floatValue),true,material.IsKeywordEnabled("_DETAIL_MAP"));
-        detailOptions.AddProperty(_DetailMask);
-        detailOptions.AddProperty(_DetailIntensity);
-        detailOptions.AddProperty(_DetailTexture);
-        detailOptions.AddProperty(_DetailBumpMap);
-        detailOptions.AddProperty(_DetailTileAndOffset);
-
-        occlusionOffset.Enable(_OcclusionOffset.floatValue==1);
-        occlusionOffsetOptions.Enable(occlusionOffset.IsEnabled());
-        fakeLight.Enable(_FakeLight.floatValue==1);
-        fakeLightOptions.Enable(fakeLight.IsEnabled());
-        toonyHighlights.Enable(_ToonyHighlights.floatValue==1);
-        toonyHighlightsOptions.Enable(toonyHighlights.IsEnabled());
-        rimOptions.Enable(_RimIntensity.GetStoredProperty().floatValue!=0);       
-        specularOptions.Enable(material.IsKeywordEnabled("_ENABLE_SPECULAR"));       
-        detailOptions.Enable(material.IsKeywordEnabled("_DETAIL_MAP"));		
+        //draw main properties
+        materialEditor.TexturePropertySingleLine(Styles.mainTex,_MainTex,_Color);
+        if((BlendMode)_blendMode.floatValue==BlendMode.Cutout)
+        {
+            EditorGUI.indentLevel+=MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
+            materialEditor.ShaderProperty(_Cutoff,Styles.cutOff);
+            EditorGUI.indentLevel-=MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
+        }
+        materialEditor.TexturePropertySingleLine(Styles.normal,_BumpMap,_BumpScale);
+        materialEditor.TexturePropertySingleLine(Styles.occlusion,_OcclusionMap,_Occlusion);
 
 
+        //emission
+        EditorGUI.BeginChangeCheck();
+        if (materialEditor.EmissionEnabledProperty())
+        {
+            //bool hadEmissionTexture = _Emission.GetGetExtraProperty1().textureValue != null;
+            // Texture and HDR color controls
+            materialEditor.TexturePropertySingleLine(Styles.emission,_Emission,_EmissionColor);
+            // If texture was assigned and color was black set color to white
+            //float brightness = _Emission.GetGetExtraProperty1().colorValue.maxColorComponent;
+           // if (_Emission.GetGetStoredTextureProperty().textureValue != null && !hadEmissionTexture && brightness <= 0f)
+            //    _Emission.GetGetExtraProperty1().colorValue = Color.white;
+            // change the GI flag and fix it up with emissive as black if necessary
+            // materialEditor.LightmapEmissionFlagsProperty(, true);
+            materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
+        }
+        if(EditorGUI.EndChangeCheck())
+        {
+            foreach(Material mat in _Emission.targets)
+            {
+                MaterialEditor.FixupEmissiveFlag(mat);
+                bool shouldEmissionBeEnabled = (mat.globalIlluminationFlags & MaterialGlobalIlluminationFlags.EmissiveIsBlack) == 0;
+                SetKeyword(mat, "_EMISSION", shouldEmissionBeEnabled);
+                if (shouldEmissionBeEnabled)
+                {
+                    mat.SetOverrideTag("IsEmissive", "true");
+                }
+                else
+                {
+                    mat.SetOverrideTag("IsEmissive", "false");
+                }
+            }
+        }
+        materialEditor.TextureScaleOffsetProperty(_MainTex);
+
+        EditorGUILayout.Space();
+    }
+
+    public void DrawRampOptionsSection(MaterialEditor materialEditor)
+    {  
+        EditorGUI.BeginChangeCheck();       
+		Color bCol=GUI.backgroundColor;
+        GUI.backgroundColor = new Color (0.9f, 0.9f, 0.9f, 0.75f);
+		EditorGUILayout.BeginVertical ("Button");
+		GUI.backgroundColor = bCol;
+        bool isOpen=BooleanFloat(_ToonRampBox.floatValue);
+        bool isOcclusionOffsetEnabled=BooleanFloat(_OcclusionOffset.floatValue);
+        bool isFakeLightEnabled=BooleanFloat(_FakeLight.floatValue);
+		Rect r = EditorGUILayout.BeginHorizontal();   
+		EditorGUILayout.LabelField("", GUILayout.MaxWidth(10.0f));
+        EditorGUILayout.LabelField(Styles.rampOptions, sectionStyle);
+		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+		EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+        EditorGUILayout.EndHorizontal();
+        if (isOpen)
+        {
+            EditorGUILayout.Space();
+			materialEditor.TexturePropertySingleLine(Styles.ramp,_Ramp,_RampColor);
+            materialEditor.ShaderProperty(_RampOffset,Styles.rampOffset);
+            materialEditor.ShaderProperty(_ShadowIntensity,Styles.shadowIntensity);
+            isOcclusionOffsetEnabled=EditorGUILayout.Toggle(Styles.occlusionOffset, isOcclusionOffsetEnabled);
+            if(isOcclusionOffsetEnabled)
+            {
+                materialEditor.ShaderProperty(_OcclusionOffsetIntensity,Styles.occlusionOffsetIntensity);
+            }
+            isFakeLightEnabled=EditorGUILayout.Toggle(Styles.fakeLight, isFakeLightEnabled);
+            if(isFakeLightEnabled)
+            {
+                materialEditor.ShaderProperty(_FakeLightColor,Styles.fakeLightColor);
+                materialEditor.ShaderProperty(_FakeLightX,Styles.fakeLightX);
+                materialEditor.ShaderProperty(_FakeLightY,Styles.fakeLightY);
+                materialEditor.ShaderProperty(_FakeLightZ,Styles.fakeLightZ);
+            }
+
+        }
+		EditorGUILayout.EndVertical();
+		EditorGUILayout.Space();
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            _ToonRampBox.floatValue=floatBoolean(isOpen);
+            _OcclusionOffset.floatValue=floatBoolean(isOcclusionOffsetEnabled);
+            _FakeLight.floatValue=floatBoolean(isFakeLightEnabled); 
+
+            if(!isOcclusionOffsetEnabled)
+            {
+                _OcclusionOffsetIntensity.floatValue=0;
+            }      
+        }
+        EditorGUILayout.Space();
+    }
+
+    public void DrawRimLightOptionsSection(MaterialEditor materialEditor)
+     {
+        EditorGUI.BeginChangeCheck();
+    
+        Color bCol=GUI.backgroundColor;
+        GUI.backgroundColor = new Color (0.9f, 0.9f, 0.9f, 0.75f);
+		EditorGUILayout.BeginVertical ("Button");
+		GUI.backgroundColor = bCol;
+        bool isOpen=BooleanFloat(_RimLightBox.floatValue);
+        bool isEnabled=_RimIntensity.floatValue!=0;
+		Rect r = EditorGUILayout.BeginHorizontal();
+        isEnabled = EditorGUILayout.Toggle(isEnabled, EditorStyles.radioButton, GUILayout.MaxWidth(15.0f));
+		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+		
+        EditorGUILayout.LabelField(Styles.rimOptions, sectionStyle);
+		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+		EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+        EditorGUILayout.EndHorizontal();
+        if (isOpen)
+        {
+            EditorGUILayout.Space();
+            EditorGUI.BeginDisabledGroup(!isEnabled);			
+            materialEditor.ShaderProperty(_RimIntensity,Styles.rimIntensity);
+            materialEditor.ShaderProperty(_RimStrength,Styles.rimStrength);
+            materialEditor.ShaderProperty(_RimSharpness,Styles.rimSharpness);
+            EditorGUI.EndDisabledGroup();
+        }
+		EditorGUILayout.EndVertical();
+		EditorGUILayout.Space();
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            _RimLightBox.floatValue=floatBoolean(isOpen);
+            if(isEnabled && rimNeedsReset)
+            {
+                _RimIntensity.floatValue=1;
+                rimNeedsReset=false;
+                
+            }
+            else if (!isEnabled)
+            {
+                _RimIntensity.floatValue=0;
+                rimNeedsReset=true;
+            }      
+        }
+        EditorGUILayout.Space();
+
+        //rimNeedsReset = !isEnabled;
+     }
+
+    public void DrawSpecularOptionsSection(MaterialEditor materialEditor)
+    {
+        EditorGUI.BeginChangeCheck();
+        Color bCol=GUI.backgroundColor;
+        GUI.backgroundColor = new Color (0.9f, 0.9f, 0.9f, 0.75f);
+		EditorGUILayout.BeginVertical ("Button");
+		GUI.backgroundColor = bCol;
+        bool isOpen=BooleanFloat(_SpecularBox.floatValue);
+        bool isEnabled=BooleanFloat(_EnableSpecular.floatValue);
+		Rect r = EditorGUILayout.BeginHorizontal();
+        isEnabled = EditorGUILayout.Toggle(isEnabled, EditorStyles.radioButton, GUILayout.MaxWidth(15.0f));
+		//isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+        EditorGUILayout.LabelField(Styles.specularOptions, sectionStyle);
+		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+		EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+        EditorGUILayout.EndHorizontal();
+        if (isOpen)
+        {
+            EditorGUILayout.Space();
+            EditorGUI.BeginDisabledGroup(!isEnabled);			
+            
+            DrawSelector(Enum.GetNames(typeof(Workflow)),_workflow,Styles.workflow,materialEditor);
+            if((Workflow)_workflow.floatValue==Workflow.Metallic)
+            {
+                materialEditor.TexturePropertySingleLine(Styles.metallic,_MetallicMap,_Metallic);
+            }
+            else if((Workflow)_workflow.floatValue==Workflow.Specular)
+            {
+                materialEditor.TexturePropertySingleLine(Styles.specular,_MetallicMap);
+            }
+
+            materialEditor.TexturePropertySingleLine(Styles.smoothness,_GlossinessMap,_Glossiness);
+
+            DrawSelector(Enum.GetNames(typeof(SpMode)),_SpMode,Styles.spMode,materialEditor);
+            if((SpMode)_SpMode.floatValue==SpMode.Anisotropic)
+            {
+                materialEditor.TexturePropertySingleLine(Styles.anisotropy,_AnisotropyMap,_Anisotropy);
+                materialEditor.TexturePropertySingleLine(Styles.tangent,_TangentMap);
+            }
+            else if((SpMode)_SpMode.floatValue==SpMode.Fake)
+            {
+                materialEditor.TexturePropertySingleLine(Styles.fakeHighlights,_FakeHightlights);
+                materialEditor.TexturePropertySingleLine(Styles.fakeHighlightIntensity,_FakeHighlightIntensity);
+            }
+
+            DrawSelector(Enum.GetNames(typeof(IndirectSpecular)),_indirectSpecular,Styles.indirectSpecular,materialEditor);
+            if((IndirectSpecular)_indirectSpecular.floatValue==IndirectSpecular.Matcap)
+            {
+                materialEditor.TexturePropertySingleLine(Styles.matcap,_Matcap);
+            }
+            else if((IndirectSpecular)_indirectSpecular.floatValue==IndirectSpecular.Cubemap)
+            {
+                materialEditor.TexturePropertySingleLine(Styles.cubemap,_Cubemap);
+            }
+            else if((IndirectSpecular)_indirectSpecular.floatValue==IndirectSpecular.Color)
+            {
+                materialEditor.ShaderProperty(_IndirectColor,Styles.indirectColor);
+            }
+
+            _ToonyHighlights.floatValue = floatBoolean(EditorGUILayout.Toggle(Styles.toonyHighlight, BooleanFloat(_ToonyHighlights.floatValue)));
+            if(BooleanFloat(_ToonyHighlights.floatValue))
+            {
+                materialEditor.TexturePropertySingleLine(Styles.highlightRamp,_HighlightRamp,_HighlightRampColor);
+                materialEditor.ShaderProperty(_HighlightRampOffset,Styles.hightlightRampOffset);
+                materialEditor.ShaderProperty(_HighlightIntensity,Styles.highlightIntensity);
+            }
+
+            materialEditor.TexturePropertySingleLine(Styles.highlightPattern,_HighlightPattern);
+            EditorGUI.indentLevel++;
+            materialEditor.TextureScaleOffsetProperty(_HighlightPattern);
+            EditorGUI.indentLevel--;
+
+            EditorGUI.EndDisabledGroup();
+        }
+		EditorGUILayout.EndVertical();
+		EditorGUILayout.Space();
+
+        if (EditorGUI.EndChangeCheck())
+        {
+
+            _SpecularBox.floatValue=floatBoolean(isOpen);
+            foreach(Material mat in _EnableSpecular.targets)
+            {
+                SetKeyword(mat, "_ENABLE_SPECULAR",isEnabled);       
+            }
+            _EnableSpecular.floatValue=floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
+            foreach(Material mat in _workflow.targets)
+            {
+                SetupWorkflow(mat,(Workflow)_workflow.floatValue);
+            }
+            foreach(Material mat in _SpMode.targets)
+            {
+                SetupSpMode(mat,(SpMode)_SpMode.floatValue);
+            }
+            foreach(Material mat in _indirectSpecular.targets)
+            {
+                SetupIndirectSource(mat,(IndirectSpecular)_indirectSpecular.floatValue);
+            }
+
+            /* metallicWorkflow.Enable((Workflow)_workflow.getSelectedOption()==Workflow.Metallic);
+            specularWorkflow.Enable((Workflow)_workflow.getSelectedOption()==Workflow.Specular);
+            anisotropicOptions.Enable((SpMode)_SpMode.getSelectedOption()==SpMode.Anisotropic);
+            matcapOptions.Enable((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Matcap);
+            cubemapOptions.Enable((IndirectSpecular)_indirectSpecular.getSelectedOption()==IndirectSpecular.Cubemap);*/
+            //SetKeyword(material,"_TOONY_HIGHLIGHTS",toonyHighlights.IsEnabled()); 
+            //_ToonyHighlights.floatValue=floatBoolean(toonyHighlights.IsEnabled());
+            //toonyHighlightsOptions.Enable(toonyHighlights.IsEnabled());
+        }
+        EditorGUILayout.Space();
+
+    }
+
+    public void DrawDetailOptionsSection(MaterialEditor materialEditor)
+    {
+        EditorGUI.BeginChangeCheck();
+    
+        Color bCol=GUI.backgroundColor;
+        GUI.backgroundColor = new Color (0.9f, 0.9f, 0.9f, 0.75f);
+		EditorGUILayout.BeginVertical ("Button");
+		GUI.backgroundColor = bCol;
+        bool isOpen=BooleanFloat(_DetailBox.floatValue);
+        bool isEnabled=BooleanFloat(_DetailMap.floatValue);
+		Rect r = EditorGUILayout.BeginHorizontal();
+        isEnabled = EditorGUILayout.Toggle(isEnabled, EditorStyles.radioButton, GUILayout.MaxWidth(15.0f));
+		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+		
+        EditorGUILayout.LabelField(Styles.detailOptions, sectionStyle);
+		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
+		EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+        EditorGUILayout.EndHorizontal();
+        if (isOpen)
+        {
+            EditorGUILayout.Space();
+            EditorGUI.BeginDisabledGroup(!isEnabled);			
+            materialEditor.TexturePropertySingleLine(Styles.detailMask,_DetailMask);
+            materialEditor.ShaderProperty(_DetailIntensity,Styles.detailIntensity);
+            materialEditor.TexturePropertySingleLine(Styles.detailPattern,_DetailTexture,_DetailColor);
+            materialEditor.TexturePropertySingleLine(Styles.detailNormal,_DetailBumpMap,_DetailBumpScale);
+            materialEditor.TextureScaleOffsetProperty(_DetailTexture);
+            EditorGUI.EndDisabledGroup();
+        }
+		EditorGUILayout.EndVertical();
+		EditorGUILayout.Space();
+
+        if (EditorGUI.EndChangeCheck())
+        {
+            _DetailBox.floatValue=floatBoolean(isOpen);
+            foreach(Material mat in _DetailMap.targets)
+            {
+                SetKeyword(mat, "_DETAIL_MAP",isEnabled);  
+            }
+            _DetailMap.floatValue=floatBoolean(material.IsKeywordEnabled("_DETAIL_MAP"));     
+        }
+        EditorGUILayout.Space();
     }
 
     public static float floatBoolean(bool boolean)
@@ -676,5 +787,33 @@ public class ToonyStandardGUI : SimpleInspector
                 break;
         }
     }
+
+    protected void SetKeyword(Material m, string keyword, bool state)
+	{
+		if (state)
+			m.EnableKeyword(keyword);
+		else
+			m.DisableKeyword(keyword);
+	}
+
+    public void DrawSelector(string[] options, MaterialProperty selectedOption, GUIContent label, MaterialEditor materialEditor)
+        {
+            GUIContent[] GUIoptions= new GUIContent[options.Length];
+            int i=0;
+            foreach(string option in options)
+            {   
+                GUIoptions[i]=new GUIContent(option, option);
+                i++;
+            }
+            int bMode = (int)selectedOption.floatValue;
+            EditorGUI.BeginChangeCheck();
+            bMode = EditorGUILayout.Popup(label, (int)bMode, GUIoptions);
+            if (EditorGUI.EndChangeCheck())
+            {
+                materialEditor.RegisterPropertyChangeUndo(label.text);
+                selectedOption.floatValue = (float)bMode;
+            }
+
+        }
 
 }
