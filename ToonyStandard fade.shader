@@ -15,7 +15,7 @@
 		_ShadowIntensity("Shadow Intensity", Range(0,1)) = 0.4
 		_RampOffset("Ramp Offset", Range(-1,1)) = 0.0
 		_OcclusionOffsetIntensity("Occlusion Offset", Range(0,1)) = 0.0
-		_FakeLightColor("Fake Light Color", Color) = (1,1,1,1)
+		[HDR]_FakeLightColor("Fake Light Color", Color) = (1,1,1,1)
 		_FakeLightX("Fake Light X", Range(-1,1)) = 1.0
 		_FakeLightY("Fake Light Y", Range(-1,1)) = 0.7
 		_FakeLightZ("Fake Light Z", Range(-1,1)) = 0.0
@@ -34,11 +34,11 @@
 		_FakeHighlights("Fake Highlights", 2D) = "black" {}
 		_Matcap("Matcap", 2D) = "white" {}
 		_Cubemap("Cubemap", CUBE) = "" {}
-		_IndirectColor("Color", Color) = (.7,.7,.7,1)
+		[HDR]_IndirectColor("Color", Color) = (.7,.7,.7,1)
 		_HighlightPattern("Highlight Pattern", 2D) = "white" {}
 
 		_HighlightRamp("Highlight Ramp Texture", 2D) = "white" {}
-		_HighlightRampColor("Highlight Ramp Color", Color) = (1,1,1,1)
+		[HDR]_HighlightRampColor("Highlight Ramp Color", Color) = (1,1,1,1)
 		_HighlightRampOffset("Highlight Ramp Offset", Range(-1,1)) = 0.0
 		_HighlightIntensity("Highlight Intensity", Range(0,1)) = 1.0
 		_FakeHighlightIntensity("Fake Highlight Intensity", Range(0,1)) = 0.5		
