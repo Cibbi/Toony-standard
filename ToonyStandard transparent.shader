@@ -65,7 +65,8 @@
 
 		[HideInInspector] _ToonyHighlights("__ToonyHighlights", Float) = 0.0
 		[HideInInspector] _FakeLight("__FakeLight", Float) = 0.0
-		[HideInInspector] _OcclusionOffset("_-OcclusionOffset", Float) = 0.0
+		[HideInInspector] _OcclusionOffset("__OcclusionOffset", Float) = 0.0
+		[HideInInspector] _RimLight("__RimLight", Float) = 0.0
 		[HideInInspector] _EnableSpecular("__EnableSpecular", Float) = 0.0
 		[HideInInspector] _DetailMap("__DetailMap", Float) = 0.0
 		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 0.0

@@ -5,10 +5,6 @@ using System;
 
 public class ToonyStandardGUI : ShaderGUI 
 {
-    bool rimNeedsReset;
-
-    //bool isFirstCycle = false;
-
     public enum BlendMode
     {
         Opaque,
@@ -173,6 +169,7 @@ public class ToonyStandardGUI : ShaderGUI
         MaterialProperty _ToonyHighlights;
         MaterialProperty _FakeLight;
         MaterialProperty _OcclusionOffset;
+        MaterialProperty _RimLight;
         MaterialProperty _EnableSpecular;
 		MaterialProperty _DetailMap;
 		MaterialProperty _ToonRampBox;
@@ -205,7 +202,6 @@ public class ToonyStandardGUI : ShaderGUI
         material = materialEditor.target as Material;
         //initialize properties
         FindProperties(properties);
-        rimNeedsReset=false;
 
         SetKeyword(material, "_ENABLE_SPECULAR",_EnableSpecular.floatValue==1);
         SetKeyword(material, "_DETAIL_MAP",_DetailMap.floatValue==1);
@@ -247,7 +243,7 @@ public class ToonyStandardGUI : ShaderGUI
     
         FindProperties(properties);
         //draw main section
-        DrawMainSection(materialEditor);   
+        DrawMainSection(materialEditor);  
         //ramp options box
         DrawRampOptionsSection(materialEditor);
         //rim light options box
@@ -278,7 +274,7 @@ public class ToonyStandardGUI : ShaderGUI
             aboutLabelStyle.fontStyle = FontStyle.Italic;
             aboutLabelStyle.hover.textColor=Color.magenta;
             //sectionStyle.normal.textColor=new Color(.7f,.7f,.7f);
-            if(GUILayout.Button("Toony Standard MasterBuild 20190221",aboutLabelStyle,GUILayout.Height(32)))
+            if(GUILayout.Button("Toony Standard Master Build 20190222",aboutLabelStyle,GUILayout.Height(32)))
             {
                 ToonyStandardAboutWindow window = EditorWindow.GetWindow (typeof(ToonyStandardAboutWindow)) as ToonyStandardAboutWindow;
 				window.minSize = new Vector2 (475, 200);
@@ -357,6 +353,7 @@ public class ToonyStandardGUI : ShaderGUI
         _ToonyHighlights = FindProperty("_ToonyHighlights", properties);
         _OcclusionOffset = FindProperty("_OcclusionOffset", properties);
         _FakeLight = FindProperty("_FakeLight", properties);
+        _RimLight = FindProperty("_RimLight", properties);
 		_EnableSpecular = FindProperty("_EnableSpecular", properties);
 		_DetailMap = FindProperty("_DetailMap", properties);
 		_ToonRampBox = FindProperty("_ToonRampBox", properties);
@@ -493,7 +490,7 @@ public class ToonyStandardGUI : ShaderGUI
 		EditorGUILayout.BeginVertical ("Button");
 		GUI.backgroundColor = bCol;
         bool isOpen=BooleanFloat(_RimLightBox.floatValue);
-        bool isEnabled=_RimIntensity.floatValue!=0;
+        bool isEnabled=_RimLight.floatValue!=0;
 		Rect r = EditorGUILayout.BeginHorizontal();
         isEnabled = EditorGUILayout.Toggle(isEnabled, EditorStyles.radioButton, GUILayout.MaxWidth(15.0f));
 		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
@@ -517,21 +514,9 @@ public class ToonyStandardGUI : ShaderGUI
         if (EditorGUI.EndChangeCheck())
         {
             _RimLightBox.floatValue=floatBoolean(isOpen);
-            if(isEnabled && rimNeedsReset)
-            {
-                _RimIntensity.floatValue=1;
-                rimNeedsReset=false;
-                
-            }
-            else if (!isEnabled)
-            {
-                _RimIntensity.floatValue=0;
-                rimNeedsReset=true;
-            }      
+            _RimLight.floatValue=floatBoolean(isEnabled);     
         }
         EditorGUILayout.Space();
-
-        //rimNeedsReset = !isEnabled;
      }
 
     public void DrawSpecularOptionsSection(MaterialEditor materialEditor)

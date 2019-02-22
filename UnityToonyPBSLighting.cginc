@@ -2,6 +2,7 @@
 half _ToonyHighlights;
 half _FakeLight;
 half _IndirectSpecular;
+half _RimLight;
 
 half _OcclusionOffsetIntensity;
 
@@ -311,11 +312,7 @@ half4 BRDF_Unity_PBS(half3 diffColor, half3 specColor, half oneMinusReflectivity
 
 	
 
-	
-
 	float3 directLighting = (ShadeSH9(half4(0.0, 1.0, 0.0, 1.0)) + light.color);
-
-
 
 	half3 DiffuseColor = diffColor * (/*indirectLighting +*/ directLighting * ramp);		 //diffuseTerm
 	half3 DirectSpecular = 0;
@@ -337,10 +334,13 @@ half4 BRDF_Unity_PBS(half3 diffColor, half3 specColor, half oneMinusReflectivity
 	half3 color = DiffuseColor + DirectSpecular + IndirectSpecular;
 
 	//rim light
-	half rim=pow((1-nv),max((1-RimStrength)*10,0.001));
-	RimSharpness/=2;
-	rim=1+(smoothstep(RimSharpness,1-RimSharpness,rim)*RimIntensity);
-	color*=rim;
+	if(_RimLight==1)
+	{
+		half rim=pow((1-nv),max((1-RimStrength)*10,0.001));
+		RimSharpness/=2;
+		rim=1+(smoothstep(RimSharpness,1-RimSharpness,rim)*RimIntensity);
+		color*=rim;
+	}
 
 	return half4(color, 1);
 }
