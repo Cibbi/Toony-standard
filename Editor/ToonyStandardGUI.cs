@@ -53,10 +53,11 @@ public class ToonyStandardGUI : ShaderGUI
         public static GUIContent fakeLightY = new GUIContent("Y", "Y component of the direction vector");
         public static GUIContent fakeLightZ = new GUIContent("Z", "Z component of the direction vector");
 
-        
+        public static GUIContent rimColor = new GUIContent("Rim color", "Color of the rim light");
         public static GUIContent rimStrength = new GUIContent("Rim strength", "Defines how far the rim light extends");
         public static GUIContent rimSharpness = new GUIContent("Rim sharpness", "Defines how sharp the rim is");
         public static GUIContent rimIntensity = new GUIContent("Rim intensity", "Defines the intensity of the rim, below 0 will make a rim darker than the base");
+        public static GUIContent emissiveRim = new GUIContent("Emissive rim", "If turned on, the rim light will be emissive");
 
         public static GUIContent indirectSpecular = new GUIContent("Indirect source", "Defines the source of the indirect specular \n\nProbe: uses the reflection probe in the world \n\nMatcap: uses a matcap texture \n\nCubemap uses a cubemap \n\nColor: uses a single color");
         public static GUIContent workflow = new GUIContent("Workflow", "Defines the workflow type \n\nMetallic: uses a texture that defines the metalness \n\nSpecular: uses a specular map");
@@ -113,6 +114,7 @@ public class ToonyStandardGUI : ShaderGUI
         MaterialProperty _FakeLightY;
         MaterialProperty _FakeLightZ;
         
+        MaterialProperty _RimColor;
         MaterialProperty _RimStrength;
         MaterialProperty _RimSharpness;
         MaterialProperty _RimIntensity;
@@ -174,6 +176,7 @@ public class ToonyStandardGUI : ShaderGUI
 		MaterialProperty _DetailMap;
 		MaterialProperty _ToonRampBox;
 		MaterialProperty _RimLightBox;
+        MaterialProperty _EmissiveRim;
 		MaterialProperty _SpecularBox;
 		MaterialProperty _DetailBox;
 
@@ -198,7 +201,6 @@ public class ToonyStandardGUI : ShaderGUI
 
         sectionStyle = new GUIStyle(EditorStyles.boldLabel);
         sectionStyle.alignment = TextAnchor.MiddleCenter;
-
         material = materialEditor.target as Material;
         //initialize properties
         FindProperties(properties);
@@ -252,7 +254,7 @@ public class ToonyStandardGUI : ShaderGUI
         DrawSpecularOptionsSection(materialEditor);
         //Detail options box
         DrawDetailOptionsSection(materialEditor);
-        //EditorGUILayout.EndScrollView();
+
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
             GUILayout.BeginHorizontal();
@@ -274,7 +276,7 @@ public class ToonyStandardGUI : ShaderGUI
             aboutLabelStyle.fontStyle = FontStyle.Italic;
             aboutLabelStyle.hover.textColor=Color.magenta;
             //sectionStyle.normal.textColor=new Color(.7f,.7f,.7f);
-            if(GUILayout.Button("Toony Standard Master Build 20190222",aboutLabelStyle,GUILayout.Height(32)))
+            if(GUILayout.Button("Toony Standard Master Build 20190323",aboutLabelStyle,GUILayout.Height(32)))
             {
                 ToonyStandardAboutWindow window = EditorWindow.GetWindow (typeof(ToonyStandardAboutWindow)) as ToonyStandardAboutWindow;
 				window.minSize = new Vector2 (475, 200);
@@ -314,6 +316,7 @@ public class ToonyStandardGUI : ShaderGUI
         _FakeLightY = FindProperty("_FakeLightY", properties);
         _FakeLightZ = FindProperty("_FakeLightZ", properties); 
 
+        _RimColor = FindProperty("_RimColor", properties);
         _RimStrength = FindProperty("_RimStrength", properties);
         _RimSharpness = FindProperty("_RimSharpness", properties);
         _RimIntensity = FindProperty("_RimIntensity", properties);
@@ -354,6 +357,7 @@ public class ToonyStandardGUI : ShaderGUI
         _OcclusionOffset = FindProperty("_OcclusionOffset", properties);
         _FakeLight = FindProperty("_FakeLight", properties);
         _RimLight = FindProperty("_RimLight", properties);
+        _EmissiveRim = FindProperty("_EmissiveRim", properties);
 		_EnableSpecular = FindProperty("_EnableSpecular", properties);
 		_DetailMap = FindProperty("_DetailMap", properties);
 		_ToonRampBox = FindProperty("_ToonRampBox", properties);
@@ -489,8 +493,9 @@ public class ToonyStandardGUI : ShaderGUI
         GUI.backgroundColor = new Color (0.9f, 0.9f, 0.9f, 0.75f);
 		EditorGUILayout.BeginVertical ("Button");
 		GUI.backgroundColor = bCol;
-        bool isOpen=BooleanFloat(_RimLightBox.floatValue);
-        bool isEnabled=_RimLight.floatValue!=0;
+        bool isOpen = BooleanFloat(_RimLightBox.floatValue);
+        bool isEnabled = _RimLight.floatValue!=0;
+        bool isEmissiveRimEnabled = BooleanFloat(_EmissiveRim.floatValue);
 		Rect r = EditorGUILayout.BeginHorizontal();
         isEnabled = EditorGUILayout.Toggle(isEnabled, EditorStyles.radioButton, GUILayout.MaxWidth(15.0f));
 		isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle()); 
@@ -502,10 +507,12 @@ public class ToonyStandardGUI : ShaderGUI
         if (isOpen)
         {
             EditorGUILayout.Space();
-            EditorGUI.BeginDisabledGroup(!isEnabled);			
+            EditorGUI.BeginDisabledGroup(!isEnabled);
+            materialEditor.ShaderProperty(_RimColor,Styles.rimColor);	
             materialEditor.ShaderProperty(_RimIntensity,Styles.rimIntensity);
             materialEditor.ShaderProperty(_RimStrength,Styles.rimStrength);
             materialEditor.ShaderProperty(_RimSharpness,Styles.rimSharpness);
+            isEmissiveRimEnabled=EditorGUILayout.Toggle(Styles.emissiveRim, isEmissiveRimEnabled);
             EditorGUI.EndDisabledGroup();
         }
 		EditorGUILayout.EndVertical();
@@ -514,7 +521,8 @@ public class ToonyStandardGUI : ShaderGUI
         if (EditorGUI.EndChangeCheck())
         {
             _RimLightBox.floatValue=floatBoolean(isOpen);
-            _RimLight.floatValue=floatBoolean(isEnabled);     
+            _RimLight.floatValue=floatBoolean(isEnabled);  
+            _EmissiveRim.floatValue=floatBoolean(isEmissiveRimEnabled);   
         }
         EditorGUILayout.Space();
      }
@@ -561,7 +569,7 @@ public class ToonyStandardGUI : ShaderGUI
             else if((SpMode)_SpMode.floatValue==SpMode.Fake)
             {
                 materialEditor.TexturePropertySingleLine(Styles.fakeHighlights,_FakeHightlights);
-                materialEditor.TexturePropertySingleLine(Styles.fakeHighlightIntensity,_FakeHighlightIntensity);
+                materialEditor.ShaderProperty(_FakeHighlightIntensity,Styles.fakeHighlightIntensity);
             }
 
             DrawSelector(Enum.GetNames(typeof(IndirectSpecular)),_indirectSpecular,Styles.indirectSpecular,materialEditor);

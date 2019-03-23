@@ -24,6 +24,7 @@ Shader "Cibbis shaders/toony standard" {
 		_RimStrength("Rim Strength", Range(0,1)) = 0.0
 		_RimSharpness("Rim Sharpness", Range(0,1)) = 0.0
 		_RimIntensity("Rim Intensity", Range(-1,1)) = 0.0
+		[HDR]_RimColor("Rim Color", Color) = (1,1,1,1)
 
 		_Metallic("Metallic", Range(0,1)) = 0.0
 		_MetallicMap("Metallic Map", 2D) = "white" {}
@@ -68,6 +69,7 @@ Shader "Cibbis shaders/toony standard" {
 		[HideInInspector] _FakeLight("__FakeLight", Float) = 0.0
 		[HideInInspector] _OcclusionOffset("__OcclusionOffset", Float) = 0.0
 		[HideInInspector] _RimLight("__RimLight", Float) = 0.0
+		[HideInInspector] _EmissiveRim("__EmissiveRim", Float) = 0.0
 		[HideInInspector] _EnableSpecular("__EnableSpecular", Float) = 0.0
 		[HideInInspector] _DetailMap("__DetailMap", Float) = 0.0
 		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 0.0

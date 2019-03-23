@@ -3,6 +3,7 @@ half _ToonyHighlights;
 half _FakeLight;
 half _IndirectSpecular;
 half _RimLight;
+half _EmissiveRim;
 
 half _OcclusionOffsetIntensity;
 
@@ -78,8 +79,10 @@ void setFakeLightParameters(half3 color, half3 dir)
 half RimStrength=0;
 half RimSharpness=0;
 half RimIntensity=0;
-void setRimLightParameters(half strength, half sharpness, half intensity)
+half3 RimColor=0;
+void setRimLightParameters(half3 color, half strength, half sharpness, half intensity)
 {
+	RimColor=color;
 	RimStrength=strength;
 	RimSharpness=sharpness;
 	RimIntensity=intensity;
@@ -334,12 +337,19 @@ half4 BRDF_Unity_PBS(half3 diffColor, half3 specColor, half oneMinusReflectivity
 	half3 color = DiffuseColor + DirectSpecular + IndirectSpecular;
 
 	//rim light
-	if(_RimLight==1)
+	if(_RimLight==1 && _EmissiveRim==0)
 	{
-		half rim=pow((1-nv),max((1-RimStrength)*10,0.001));
+		half3 rim=pow((1-nv),max((1-RimStrength)*10,0.001));
 		RimSharpness/=2;
-		rim=1+(smoothstep(RimSharpness,1-RimSharpness,rim)*RimIntensity);
+		rim=1+((smoothstep(RimSharpness,1-RimSharpness,rim)*RimIntensity)*RimColor);
 		color*=rim;
+	}
+	else if(_RimLight==1 && _EmissiveRim==1)
+	{
+		half3 rim=pow((1-nv),max((1-RimStrength)*10,0.001));
+		RimSharpness/=2;
+		rim=(smoothstep(RimSharpness,1-RimSharpness,rim)*RimIntensity)*RimColor;
+		color+=rim;
 	}
 
 	return half4(color, 1);

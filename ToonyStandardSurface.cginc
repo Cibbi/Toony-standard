@@ -53,6 +53,7 @@ half _FakeLightZ;
 half _RimStrength;
 half _RimSharpness;
 half _RimIntensity;
+half3 _RimColor;
 
 half3 _IndirectColor;
 
@@ -99,7 +100,7 @@ void surf (Input IN, inout SurfaceOutputToonyStandard o) {
 
 	setFakeLightParameters(_FakeLightColor.rgb, half3(_FakeLightX,_FakeLightY,_FakeLightZ));
 
-	setRimLightParameters(_RimStrength, _RimSharpness, _RimIntensity);
+	setRimLightParameters(_RimColor, _RimStrength, _RimSharpness, _RimIntensity);
 
 	#if defined (_DETAIL_MAP)
 		//blending of the texture
@@ -125,6 +126,7 @@ void surf (Input IN, inout SurfaceOutputToonyStandard o) {
 
 	#if defined(_EMISSION)
 		o.Emission = (UNITY_SAMPLE_TEX2D_SAMPLER(_EmissionMap, _MainTex, IN.uv_MainTex) * _EmissionColor).rgb;
+		
 	#endif
 	// Metallic and smoothness come from slider variables
 	#if defined(_SPECULAR_WORKFLOW)
