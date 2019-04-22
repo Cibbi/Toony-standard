@@ -115,5 +115,5 @@
 
 	Fallback "Standard"
 	
-	CustomEditor ""
+	CustomEditor "Cibbi.ToonyStandard.ToonyStandardGUI"
 }
