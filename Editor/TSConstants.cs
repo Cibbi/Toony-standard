@@ -8,6 +8,7 @@ namespace Cibbi.ToonyStandard
         public static string Version = "Toony Standard Master Build 20190506";
         public static string localJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/version.json";
         public static string settingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/settings.json";
+        public static string oldSettingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/oldSettings.json";
         
         public static Texture2D deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/DeleteIcon.png");
         public static Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/ToonyStandardLogo.png");
@@ -45,7 +46,7 @@ namespace Cibbi.ToonyStandard
 
         private static GUIStyle sectionTitleLocal;
         public static GUIStyle sectionTitle
-        {
+        { 
             get
             {
                 if(sectionTitleLocal==null)

@@ -325,10 +325,13 @@ namespace Cibbi.ToonyStandard
                     if(request.isDone)
                     {
                         state=UpdaterState.Downloaded;
+
+                        TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+
                         // If the update stream is the beta one the downloaded file is a zip file, meaning that we have to extract it manually, fortunately a guy called Yallie made a simple
                         // extraction class that handles the basic stuff needed here, check him over https://github.com/yallie/unzip
                         if(updateStream==UpdateStream.Beta)
-                        {
+                        {   
                             // Deleting the old Toony standard version
                             if(Directory.Exists(Application.dataPath+"/Cibbi's shaders/Toony standard"))
                             {
@@ -371,6 +374,8 @@ namespace Cibbi.ToonyStandard
                             AssetDatabase.Refresh();
                             AssetDatabase.DeleteAsset("Assets/toonyStandard.unitypackage");
                         }
+
+                        File.WriteAllText(TSConstants.oldSettingsJSONPath,JsonUtility.ToJson(settings));
                         
                     }
                     // Executed if the request got an error response
@@ -493,6 +498,15 @@ namespace Cibbi.ToonyStandard
         static TSAutoUpdater ()
         {
             bool update;
+
+            if(File.Exists(TSConstants.oldSettingsJSONPath))
+			{
+				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.oldSettingsJSONPath));
+				File.WriteAllText(TSConstants.settingsJSONPath,JsonUtility.ToJson(settings));
+                File.Delete(TSConstants.oldSettingsJSONPath);
+                AssetDatabase.Refresh();
+			}
+
             if(File.Exists(TSConstants.settingsJSONPath))
 			{
 				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
@@ -536,7 +550,6 @@ namespace Cibbi.ToonyStandard
                         window = EditorWindow.CreateInstance<TSAutoUpdatePopup>();
                         window.updater=updater;
                         window.update=Update;
-                        window.position = new Rect(Screen.currentResolution.width/3-windowWidth/2, Screen.currentResolution.height/3-windowHeight/2, windowWidth, windowHeight);
                         window.minSize=new Vector2(windowWidth, windowHeight);
 			            window.maxSize=new Vector2(windowWidth, windowHeight);
                         window.titleContent=new GUIContent("Toony Standard Updater");
@@ -568,45 +581,16 @@ namespace Cibbi.ToonyStandard
     /// </summary>
     public class TSAutoUpdatePopup : EditorWindow
     {
-        private bool firstCycle=true;
         private Texture2D icon;
         public TSUpdater updater;
         public EditorApplication.CallbackFunction update;
 
-            public void Start()
-            {
-                string[] icons = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
-                if (icons.Length>0) 
-                {
-                    string [] pieces=AssetDatabase.GUIDToAssetPath(icons[0]).Split('/');
-                    ArrayUtility.RemoveAt(ref pieces,pieces.Length-1);
-                    string path=string.Join("/",pieces);
-                    icon=AssetDatabase.LoadAssetAtPath<Texture2D>(path+"/ToonyStandardLogo.png");
-                }
-                firstCycle=false;
-                
-            }
 
         void OnGUI() 
         {
-            if(firstCycle)
-			{
-				Start();
-			}
-            DrawHeader(); 
+            TSFunctions.DrawHeader(20); 
             updater.DrawGUI();
         }
-
-        private void DrawHeader() 
-		{
-			GUILayout.Space(20);
-			GUILayout.BeginHorizontal();
-				GUILayout.FlexibleSpace();
-				GUILayout.Label(icon, GUILayout.Width(icon.width), GUILayout.Height(icon.height));
-				GUILayout.FlexibleSpace();
-			GUILayout.EndHorizontal();
-			GUILayout.Space(20);
-		}
 
         public void OnInspectorUpdate()
 		{

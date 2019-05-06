@@ -48,9 +48,8 @@ namespace Cibbi.ToonyStandard
 
 		private static TSMultiWindow CreateBaseWindow()
 		{
-			TSMultiWindow window = (TSMultiWindow)EditorWindow.GetWindow(typeof(TSMultiWindow));
+			TSMultiWindow window = EditorWindow.GetWindow<TSMultiWindow>();
 			window.titleContent=new GUIContent("Toony Standard");
-			window.position = new Rect(Screen.currentResolution.width/3-windowWidth/2, Screen.currentResolution.height/3-windowHeight/2, windowWidth, windowHeight);
 			window.minSize=new Vector2(windowWidth, windowHeight);
 			window.maxSize=new Vector2(windowWidth, windowHeight);
 			return window;
@@ -62,7 +61,6 @@ namespace Cibbi.ToonyStandard
 			{
 				TSMultiWindow window = CreateBaseWindow();
 				window.SetOpenSection(MultiWindowSection.Settings);
-				window.Show();
 			}
 
 			[MenuItem("Window/Toony Standard/Updater")]
@@ -70,7 +68,6 @@ namespace Cibbi.ToonyStandard
 			{
 				TSMultiWindow window = CreateBaseWindow();
 				window.SetOpenSection(MultiWindowSection.Updater);
-				window.Show();
 			}
 
 			[MenuItem("Window/Toony Standard/Credits")]
@@ -78,7 +75,6 @@ namespace Cibbi.ToonyStandard
 			{
 				TSMultiWindow window = CreateBaseWindow();
 				window.SetOpenSection(MultiWindowSection.Credits);
-				window.Show();
 			}
 
 		#endregion
@@ -218,7 +214,7 @@ namespace Cibbi.ToonyStandard
 
 		private void DrawCredits()
 		{
-			EditorGUILayout.LabelField("thanks alpha for testing lol");
+			
 		}
 
 		public void OnInspectorUpdate()
