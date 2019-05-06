@@ -72,8 +72,8 @@ namespace Cibbi.ToonyStandard
             GUI.backgroundColor = bCol;
             Rect r = EditorGUILayout.BeginHorizontal();
             isOpen=EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
-            EditorGUILayout.LabelField(sectionTitle, TSConstants.sectionTitleCenter);      
-            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.deleteStyle, GUILayout.MaxWidth(15.0f));
+            EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitleCenter);      
+            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
             isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());  
             EditorGUILayout.EndHorizontal();
         }
@@ -85,8 +85,8 @@ namespace Cibbi.ToonyStandard
             
             Rect r = EditorGUILayout.BeginHorizontal();
             isOpen=EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
-            EditorGUILayout.LabelField(sectionTitle, TSConstants.sectionTitle);      
-            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.deleteStyle, GUILayout.MaxWidth(15.0f));
+            EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitle);      
+            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
             isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());  
             EditorGUILayout.EndHorizontal();
         }
@@ -98,8 +98,8 @@ namespace Cibbi.ToonyStandard
             
             Rect r = EditorGUILayout.BeginHorizontal();
             isOpen=EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
-            EditorGUILayout.LabelField(sectionTitle, TSConstants.sectionTitle);      
-            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.deleteStyle, GUILayout.MaxWidth(15.0f));
+            EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitle);      
+            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
             isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());  
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();

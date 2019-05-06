@@ -1,3 +1,5 @@
+// Various constant functions used around
+
 using UnityEditor;
 using UnityEngine;
 using System;
@@ -117,6 +119,10 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Draws the default header of the various windows
+        /// </summary>
+        /// <param name="padding">Vertical padding</param>
         public static void DrawHeader(int padding)
 		{
 			Texture2D icon=TSConstants.logo;
@@ -129,6 +135,9 @@ namespace Cibbi.ToonyStandard
 			GUILayout.Space(padding);
 		}
 
+        /// <summary>
+        /// Draw the default footer of the various windows
+        /// </summary>
         public static void DrawFooter()
 		{
 			GUILayout.FlexibleSpace();

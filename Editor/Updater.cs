@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using Yallie.Unzip;
 using System.IO;
-using Cibbi.ToonyStandard.GitHubAPI;
+using Cibbi.ToonyStandard.GithubAPI;
 
 namespace Cibbi.ToonyStandard
 {
@@ -47,8 +47,8 @@ namespace Cibbi.ToonyStandard
         DownloadHandlerBuffer response;
         DownloadHandlerFile file;
 
-        GitHubReleaseJSON githubReleaseJSON;
-        GitHubCommitJSON githubBetaJSON;
+        GithubReleaseJSON githubReleaseJSON;
+        GithubCommitJSON githubBetaJSON;
 
         List<TSTimedCoroutine> timedCoroutines;
         DateTime previousTimeSinceStartup;
@@ -141,7 +141,7 @@ namespace Cibbi.ToonyStandard
                     {
                         EditorGUILayout.LabelField("New beta update found");
                         EditorGUILayout.BeginVertical("box");
-                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(100)); 
+                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
                         EditorGUILayout.LabelField(githubBetaJSON.commit.message);               
                         EditorGUILayout.EndScrollView();
                         EditorGUILayout.EndVertical();
@@ -150,7 +150,7 @@ namespace Cibbi.ToonyStandard
                     {
                         EditorGUILayout.LabelField("New version found: "+githubReleaseJSON.tag_name);
                         EditorGUILayout.BeginVertical("box");
-                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(100)); 
+                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
                         EditorGUILayout.LabelField(githubReleaseJSON.body);               
                         EditorGUILayout.EndScrollView();
                         EditorGUILayout.EndVertical();
@@ -258,7 +258,7 @@ namespace Cibbi.ToonyStandard
                 {   
                     if(updateStream==UpdateStream.Beta)
                     {
-                        githubBetaJSON=JsonUtility.FromJson<GitHubCommitJSON>(response.text);
+                        githubBetaJSON=JsonUtility.FromJson<GithubCommitJSON>(response.text);
                         if(local.beta&&local.betaSha==githubBetaJSON.sha)
                         {
                             state=UpdaterState.UpToDate;
@@ -276,7 +276,7 @@ namespace Cibbi.ToonyStandard
                     }
                     else
                     {
-                        githubReleaseJSON=JsonUtility.FromJson<GitHubReleaseJSON>(response.text);
+                        githubReleaseJSON=JsonUtility.FromJson<GithubReleaseJSON>(response.text);
                         if(!local.beta&&local.version.Equals(githubReleaseJSON.tag_name))
                         {
                             state=UpdaterState.UpToDate;

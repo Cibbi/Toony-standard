@@ -1,3 +1,5 @@
+// This file is a collection of constant values used around
+
 using UnityEngine;
 using UnityEditor;
 
@@ -16,46 +18,95 @@ namespace Cibbi.ToonyStandard
         public static Texture2D patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/PatreonIcon.png");
         public static Texture2D defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/RampDefault.png");
 
-        private static GUIStyle deleteStyleLocal;
-        public static GUIStyle deleteStyle
+
+        public static class Styles
         {
-            get
+             private static GUIStyle deleteStyleLocal;
+            public static GUIStyle deleteStyle
             {
-                if(deleteStyleLocal==null)
+                get
                 {
-                    deleteStyleLocal=new GUIStyle();
-                    deleteStyleLocal.normal.background=TSConstants.deleteIcon;
+                    if(deleteStyleLocal==null)
+                    {
+                        deleteStyleLocal=new GUIStyle();
+                        deleteStyleLocal.normal.background=TSConstants.deleteIcon;
+                    }
+                    return deleteStyleLocal;
                 }
-                return deleteStyleLocal;
+            }
+
+            private static GUIStyle sectionTitleCenterLocal;
+            public static GUIStyle sectionTitleCenter
+            {
+                get
+                {
+                    if(sectionTitleCenterLocal==null)
+                    {
+                        sectionTitleCenterLocal=new GUIStyle(EditorStyles.boldLabel);
+                        sectionTitleCenterLocal.alignment = TextAnchor.MiddleCenter;
+                    }
+                    return sectionTitleCenterLocal;
+                }
+            }
+
+            private static GUIStyle sectionTitleLocal;
+            public static GUIStyle sectionTitle
+            { 
+                get
+                {
+                    if(sectionTitleLocal==null)
+                    {
+                        sectionTitleLocal=new GUIStyle(EditorStyles.boldLabel);
+                        sectionTitleLocal.alignment = TextAnchor.MiddleLeft;
+                    }
+                    return sectionTitleLocal;
+                }
+            }
+
+            private static GUIStyle centerLabelLocal;
+            public static GUIStyle centerLabel
+            {
+                get
+                {
+                    if(centerLabelLocal==null)
+                    {
+                        centerLabelLocal=new GUIStyle(EditorStyles.label);
+                        centerLabelLocal.alignment = TextAnchor.MiddleCenter;
+                    }
+                    return centerLabelLocal;
+                }
+            }
+
+            private static GUIStyle multilineLabelCenterLocal;
+            public static GUIStyle multilineLabelCenter
+            {
+                get
+                {
+                    if(multilineLabelCenterLocal==null)
+                    {
+                        multilineLabelCenterLocal=new GUIStyle(EditorStyles.label);
+                        multilineLabelCenterLocal.alignment = TextAnchor.MiddleCenter;
+                        multilineLabelCenterLocal.wordWrap=true;
+                    }
+                    return multilineLabelCenterLocal;
+                }
+            }
+
+            private static GUIStyle multilineLabelLocal;
+            public static GUIStyle multilineLabel
+            {
+                get
+                {
+                    if(multilineLabelLocal==null)
+                    {
+                        multilineLabelLocal=new GUIStyle(EditorStyles.label);
+                        multilineLabelLocal.wordWrap=true;
+                    }
+                    return multilineLabelLocal;
+                }
             }
         }
 
-        private static GUIStyle sectionTitleCenterLocal;
-        public static GUIStyle sectionTitleCenter
-        {
-            get
-            {
-                if(sectionTitleCenterLocal==null)
-                {
-                    sectionTitleCenterLocal=new GUIStyle(EditorStyles.boldLabel);
-                    sectionTitleCenterLocal.alignment = TextAnchor.MiddleCenter;
-                }
-                return sectionTitleCenterLocal;
-            }
-        }
-
-        private static GUIStyle sectionTitleLocal;
-        public static GUIStyle sectionTitle
-        { 
-            get
-            {
-                if(sectionTitleLocal==null)
-                {
-                    sectionTitleLocal=new GUIStyle(EditorStyles.boldLabel);
-                    sectionTitleLocal.alignment = TextAnchor.MiddleLeft;
-                }
-                return sectionTitleLocal;
-            }
-        }
+       
     }
 }

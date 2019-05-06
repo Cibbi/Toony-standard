@@ -1,16 +1,12 @@
-using UnityEngine;
-using UnityEditor;
-using System.Collections;
-using UnityEngine.Networking;
-using System;
-using System.Collections.Generic;
-using System.IO;
+// This entire file is just a conglomerate of classes used in conjunction with JsonUtility to fetch the response info from the Github api
 
-namespace Cibbi.ToonyStandard.GitHubAPI
+using System;
+
+namespace Cibbi.ToonyStandard.GithubAPI
 {
 
     [Serializable]
-    public class GitHubReleaseJSON{
+    public class GithubReleaseJSON{
         public string url;
         public string assets_url;
         public string upload_url;
@@ -21,31 +17,31 @@ namespace Cibbi.ToonyStandard.GitHubAPI
         public string target_commitish;
         public string name;
         public bool draft;
-        public GitHubUserJSON author;
+        public GithubUserJSON author;
         public bool prerelease;
         public string created_at;
         public string published_at;
-        public GitHubAssetJSON[] assets;
+        public GithubAssetJSON[] assets;
         public string tarball_url;
         public string zipball_url;
         public string body;
     }
 
     [Serializable]
-    public class GitHubCommitJSON{
+    public class GithubCommitJSON{
         public string sha;
         public string node_id;
-        public GitHubCommitLiteJSON commit;
+        public GithubCommitLiteJSON commit;
         public string url;
         public string html_url;
         public string comments_url;
-        public GitHubUserJSON author;
-        public GitHubUserJSON committer;
-        public GitHubCommitParentJSON[] parents;
+        public GithubUserJSON author;
+        public GithubUserJSON committer;
+        public GithubCommitParentJSON[] parents;
     }
 
     [Serializable]
-    public class GitHubUserJSON{
+    public class GithubUserJSON{
         public string login;
         public int id;
         public string node_id;
@@ -67,13 +63,13 @@ namespace Cibbi.ToonyStandard.GitHubAPI
     }
 
     [Serializable]
-    public class GitHubAssetJSON{
+    public class GithubAssetJSON{
         public string url;
         public int id;
         public string node_id;
         public string name;
         public string label;
-        public GitHubUserJSON uploader;
+        public GithubUserJSON uploader;
         public string content_type;
         public string state;
         public int size;
@@ -84,37 +80,37 @@ namespace Cibbi.ToonyStandard.GitHubAPI
     }
 
     [Serializable]
-    public class GitHubCommitLiteJSON{
-        public GitHubCommitUserJSON author;
-        public GitHubCommitUserJSON committer;
-        public GitHubCommitTreeJSON tree;
+    public class GithubCommitLiteJSON{
+        public GithubCommitUserJSON author;
+        public GithubCommitUserJSON committer;
+        public GithubCommitTreeJSON tree;
         public string message;
         public string url;
         public int comment_count;
-        public GitHubVerificationJSON verification;
+        public GithubVerificationJSON verification;
     }
 
     [Serializable]
-    public class GitHubCommitUserJSON{
+    public class GithubCommitUserJSON{
         public string name;
         public string email;
         public string date;
     }
 
     [Serializable]
-    public class GitHubCommitTreeJSON{
+    public class GithubCommitTreeJSON{
         public string sha;
         public string url;
     }
 
     [Serializable]
-    public class GitHubCommitParentJSON{
+    public class GithubCommitParentJSON{
         public string sha;
         public string url;
         public string html_url;
     }
     [Serializable]
-    public class GitHubVerificationJSON{
+    public class GithubVerificationJSON{
         public bool verified;
         public string reason;
         public string signature;
