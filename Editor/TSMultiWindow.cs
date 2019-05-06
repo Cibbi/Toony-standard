@@ -218,7 +218,7 @@ namespace Cibbi.ToonyStandard
 
 		private void DrawCredits()
 		{
-			
+			EditorGUILayout.LabelField("thanks alpha for testing lol");
 		}
 
 		public void OnInspectorUpdate()
