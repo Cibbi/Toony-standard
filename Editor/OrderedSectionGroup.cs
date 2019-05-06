@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Cibbi.ToonyStandard
 {
@@ -9,9 +10,32 @@ namespace Cibbi.ToonyStandard
     public class OrderedSectionGroup
     {
         private List<OrderedSection> sections;
+        private Color sectionBgColor;
+        SectionStyle sectionStyle;
+        GUIStyle buttonStyle;
 
         public OrderedSectionGroup()
         {
+            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+            sectionStyle=(SectionStyle)settings.sectionStyle;
+			switch(sectionStyle)
+            {
+                case SectionStyle.Bubbles:
+                    buttonStyle="button";
+                    break;
+                case SectionStyle.Foldout:
+                    buttonStyle=new GUIStyle("button");
+                    break;
+                case SectionStyle.Box:
+                    buttonStyle=new GUIStyle("box");
+                    buttonStyle.alignment=TextAnchor.MiddleCenter;
+                    buttonStyle.stretchWidth=true;
+                    buttonStyle.normal.textColor=Color.white;
+                    buttonStyle.fontStyle=FontStyle.Bold;
+                    break;
+            }
+            
+			sectionBgColor=settings.sectionColor;
             sections=new List<OrderedSection>();
         }
 
@@ -47,7 +71,16 @@ namespace Cibbi.ToonyStandard
 
         public void DrawAddButton()
         {
-            if (GUILayout.Button("+"))
+            if(ListHasMixedIndexZero(sections))
+            {
+                if(sectionStyle==SectionStyle.Foldout)
+                {
+                    TSFunctions.DrawLine(new Color(0.35f,0.35f,0.35f,1),1,0);
+                    GUILayout.Space(10);
+                }
+                Color bCol = GUI.backgroundColor;
+                GUI.backgroundColor = sectionBgColor;
+                if (GUILayout.Button("+",buttonStyle))
                 {
                     GenericMenu menu = new GenericMenu();
 
@@ -58,9 +91,10 @@ namespace Cibbi.ToonyStandard
                             menu.AddItem(section.getSectionTitle(), false, TurnOnSection, section);
                         }
                     }
-
-                    menu.ShowAsContext();
+                   menu.ShowAsContext();
                 }
+                GUI.backgroundColor = bCol;
+            }
         }
 
         public void TurnOnSection(object sectionVariable)
@@ -105,6 +139,20 @@ namespace Cibbi.ToonyStandard
                     }
                 }
             }
+        }
+
+        private static bool ListHasMixedIndexZero(List<OrderedSection> sections)
+        {
+            bool zero = false;
+            foreach(OrderedSection section in sections)
+            {
+                zero=HasMixedIndexZero(section);
+                if(zero)
+                {
+                    break;
+                }
+            }
+            return zero;
         }
 
         private static bool HasMixedIndexZero(OrderedSection section)

@@ -7,7 +7,6 @@ namespace Cibbi.ToonyStandard
 {
     public class ToonyStandardGUI : ShaderGUI
     {
-        private string version = "Toony Standard Master Build 20190422";
 
         public enum BlendMode
         {
@@ -94,8 +93,6 @@ namespace Cibbi.ToonyStandard
         }
 
         #region Properties
-        GUIStyle sectionStyle;
-
         MaterialProperty _blendMode;
         MaterialProperty _Cull;
 
@@ -191,36 +188,16 @@ namespace Cibbi.ToonyStandard
         OrderedSectionGroup group;
 
         /*properties used for selecting features: _RimLight _EnableSpecular _DetailMap */
-
-        Texture2D icon;
-
-        Texture2D gitHubIcon;
-        Texture2D patreonIcon;
-        Texture2D defaultRamp;
-
+        bool isFirstCycle=true;
         int max;
 
         #endregion
 
         public void Start(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
-            string[] icons = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
-            if (icons.Length > 0)
-            {
-                string[] pieces = AssetDatabase.GUIDToAssetPath(icons[0]).Split('/');
-                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
-                string path = string.Join("/", pieces);
-                icon = AssetDatabase.LoadAssetAtPath<Texture2D>(path + "/ToonyStandardLogo.png");
-                gitHubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(path + "/GitHubIcon.png");
-                patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(path + "/PatreonIcon.png");
-                defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>(path + "/RampDefault.png");
-
-            }
 
             EditorGUIUtility.labelWidth = 0f;
 
-            sectionStyle = new GUIStyle(EditorStyles.boldLabel);
-            sectionStyle.alignment = TextAnchor.MiddleCenter;
             material = materialEditor.target as Material;
             //initialize properties
             FindProperties(properties);
@@ -248,27 +225,20 @@ namespace Cibbi.ToonyStandard
 
             group=new OrderedSectionGroup();
 
-            group.addSection(new OrderedSection(Styles.rampOptions,new Color(0.9f, 0.9f, 0.9f, 0.75f), sectionStyle,DrawRampOptionsSection,CheckRampOptionsChanges,RampOptionsIndex));
-            group.addSection(new OrderedSection(Styles.rimOptions,new Color(0.9f, 0.9f, 0.9f, 0.75f), sectionStyle, DrawRimLightOptionsSection,CheckRimLightOptionsSection,RimLightOptionsIndex));
-            group.addSection(new OrderedSection(Styles.specularOptions,new Color(0.9f, 0.9f, 0.9f, 0.75f), sectionStyle, DrawSpecularOptionsSection,CheckSpecularOptionsSection,SpecularOptionsIndex));
-            group.addSection(new OrderedSection(Styles.detailOptions,new Color(0.9f, 0.9f, 0.9f, 0.75f), sectionStyle, DrawDetailOptionsSection,CheckDrawDetailOptionsSection,DetailOptionsIndex));
+            group.addSection(new OrderedSection(Styles.rampOptions, DrawRampOptionsSection,CheckRampOptionsChanges,RampOptionsIndex));
+            group.addSection(new OrderedSection(Styles.rimOptions, DrawRimLightOptionsSection,CheckRimLightOptionsSection,RimLightOptionsIndex));
+            group.addSection(new OrderedSection(Styles.specularOptions, DrawSpecularOptionsSection,CheckSpecularOptionsSection,SpecularOptionsIndex));
+            group.addSection(new OrderedSection(Styles.detailOptions, DrawDetailOptionsSection,CheckDrawDetailOptionsSection,DetailOptionsIndex));
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
-            if (icon == null)
+            if (isFirstCycle)
             {
                 Start(materialEditor, properties);
-                //isFirstCycle=false;
+                isFirstCycle=false;
             }
-
-            GUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                GUILayout.Label(icon, GUILayout.Width(icon.width), GUILayout.Height(icon.height));
-                GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(10);
+            TSFunctions.DrawHeader(10);
 
             FindProperties(properties);
 
@@ -286,45 +256,7 @@ namespace Cibbi.ToonyStandard
 
             group.DrawAddButton();
 
-
-            GUILayout.FlexibleSpace();
-            DrawFooter();
-
-
-        }
-
-        public void DrawFooter()
-        {
-            GUILayout.BeginHorizontal();
-                GUILayout.BeginHorizontal();
-                    if (GUILayout.Button(new GUIContent(gitHubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(43)))
-                    {
-                        Application.OpenURL("https://github.com/Cibbi/Toony-standard");
-                    }
-
-                    EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-                    if (GUILayout.Button(new GUIContent(patreonIcon, "Want to gift me pizza every month? Become a patreon!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
-                    {
-                        Application.OpenURL("https://www.patreon.com/Cibbi");
-                    }
-                    EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-                GUILayout.EndHorizontal();
-                GUILayout.FlexibleSpace();
-                GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);
-                aboutLabelStyle.alignment = TextAnchor.LowerRight;
-                aboutLabelStyle.fontStyle = FontStyle.Italic;
-                aboutLabelStyle.hover.textColor = Color.magenta;
-                //sectionStyle.normal.textColor=new Color(.7f,.7f,.7f);
-                if (GUILayout.Button(version, aboutLabelStyle, GUILayout.Height(32)))
-                {
-                    ToonyStandardAboutWindow window = EditorWindow.GetWindow(typeof(ToonyStandardAboutWindow)) as ToonyStandardAboutWindow;
-                    window.minSize = new Vector2(475, 200);
-                    window.maxSize = new Vector2(475, 200);
-                    window.titleContent = new GUIContent("About");
-                }
-
-                EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-            GUILayout.EndHorizontal();
+            TSFunctions.DrawFooter();
         }
 
         public void FindProperties(MaterialProperty[] properties)
@@ -507,7 +439,7 @@ namespace Cibbi.ToonyStandard
                 {
                     _RampOn.floatValue = 0;
                 }
-                _Ramp.textureValue=defaultRamp;
+                _Ramp.textureValue=TSConstants.defaultRamp;
                 _RampOffset.floatValue=0f;
                 _ShadowIntensity.floatValue=0.4f;
             }

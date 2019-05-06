@@ -21,7 +21,7 @@ namespace Cibbi.ToonyStandard
     {
         private IndexNumber indexNumber;
 
-        public OrderedSection(GUIContent sectionTitle, Color sectionBgColor, GUIStyle sectionStyle, SectionContent content, ChangesCheck changesCheck, IndexNumber indexNumber) : base(sectionTitle, sectionBgColor, sectionStyle, indexNumber().box.floatValue!=0, content, changesCheck)
+        public OrderedSection(GUIContent sectionTitle,  SectionContent content, ChangesCheck changesCheck, IndexNumber indexNumber) : base(sectionTitle, indexNumber().box.floatValue!=0, content, changesCheck)
         {
             this.indexNumber = indexNumber;
         }
