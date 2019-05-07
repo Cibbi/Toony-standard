@@ -93,103 +93,99 @@ namespace Cibbi.ToonyStandard
         }
 
         #region Properties
-        MaterialProperty _blendMode;
-        MaterialProperty _Cull;
 
-        MaterialProperty _MainTex;
-        MaterialProperty _Color;
-        MaterialProperty _Cutoff;
-        MaterialProperty _BumpMap;
-        MaterialProperty _BumpScale;
-        MaterialProperty _Emission;
-        MaterialProperty _EmissionColor;
-        MaterialProperty _OcclusionMap;
-        MaterialProperty _Occlusion;
+            Material material;
 
-        MaterialProperty _Ramp;
-        MaterialProperty _RampColor;
-        MaterialProperty _RampOffset;
-        MaterialProperty _ShadowIntensity;
-        MaterialProperty _OcclusionOffsetIntensity;
-        MaterialProperty _FakeLightColor;
-        MaterialProperty _FakeLightX;
-        MaterialProperty _FakeLightY;
-        MaterialProperty _FakeLightZ;
+            MaterialProperty _blendMode;
+            MaterialProperty _Cull;
 
-        MaterialProperty _RimColor;
-        MaterialProperty _RimStrength;
-        MaterialProperty _RimSharpness;
-        MaterialProperty _RimIntensity;
+            MaterialProperty _MainTex;
+            MaterialProperty _Color;
+            MaterialProperty _Cutoff;
+            MaterialProperty _BumpMap;
+            MaterialProperty _BumpScale;
+            MaterialProperty _Emission;
+            MaterialProperty _EmissionColor;
+            MaterialProperty _OcclusionMap;
+            MaterialProperty _Occlusion;
 
-        MaterialProperty _indirectSpecular;
-        MaterialProperty _workflow;
-        MaterialProperty _SpMode;
-        MaterialProperty _GlossinessMap;
-        MaterialProperty _Glossiness;
-        MaterialProperty _MetallicMap;
-        MaterialProperty _Metallic;
-        //MaterialProperty _SpecularMap;
-        MaterialProperty _AnisotropyMap;
-        MaterialProperty _Anisotropy;
-        MaterialProperty _TangentMap;
-        MaterialProperty _FakeHightlights;
-        MaterialProperty _Matcap;
-        MaterialProperty _Cubemap;
-        MaterialProperty _IndirectColor;
-        MaterialProperty _HighlightRamp;
-        MaterialProperty _HighlightRampColor;
-        MaterialProperty _HighlightRampOffset;
-        MaterialProperty _HighlightIntensity;
-        MaterialProperty _FakeHighlightIntensity;
-        MaterialProperty _HighlightPattern;
+            MaterialProperty _Ramp;
+            MaterialProperty _RampColor;
+            MaterialProperty _RampOffset;
+            MaterialProperty _ShadowIntensity;
+            MaterialProperty _OcclusionOffsetIntensity;
+            MaterialProperty _FakeLightColor;
+            MaterialProperty _FakeLightX;
+            MaterialProperty _FakeLightY;
+            MaterialProperty _FakeLightZ;
 
-        MaterialProperty _DetailMask;
-        MaterialProperty _DetailIntensity;
-        MaterialProperty _DetailTexture;
-        MaterialProperty _DetailColor;
-        MaterialProperty _DetailBumpMap;
-        MaterialProperty _DetailBumpScale;
-        MaterialProperty _DetailTileAndOffset;
+            MaterialProperty _RimColor;
+            MaterialProperty _RimStrength;
+            MaterialProperty _RimSharpness;
+            MaterialProperty _RimIntensity;
 
-        Material material;
+            MaterialProperty _indirectSpecular;
+            MaterialProperty _workflow;
+            MaterialProperty _SpMode;
+            MaterialProperty _GlossinessMap;
+            MaterialProperty _Glossiness;
+            MaterialProperty _MetallicMap;
+            MaterialProperty _Metallic;
+            //MaterialProperty _SpecularMap;
+            MaterialProperty _AnisotropyMap;
+            MaterialProperty _Anisotropy;
+            MaterialProperty _TangentMap;
+            MaterialProperty _FakeHightlights;
+            MaterialProperty _Matcap;
+            MaterialProperty _Cubemap;
+            MaterialProperty _IndirectColor;
+            MaterialProperty _HighlightRamp;
+            MaterialProperty _HighlightRampColor;
+            MaterialProperty _HighlightRampOffset;
+            MaterialProperty _HighlightIntensity;
+            MaterialProperty _FakeHighlightIntensity;
+            MaterialProperty _HighlightPattern;
 
-        //StoredToggle toonyHighlights;
+            MaterialProperty _DetailMask;
+            MaterialProperty _DetailIntensity;
+            MaterialProperty _DetailTexture;
+            MaterialProperty _DetailColor;
+            MaterialProperty _DetailBumpMap;
+            MaterialProperty _DetailBumpScale;
+            MaterialProperty _DetailTileAndOffset;
 
-        //PropertiesBox rimOptions;
-        // specularOptions;
-        //PropertiesBox detailOptions;
+            MaterialProperty occlusionOffsetOptions;
+            MaterialProperty fakeLightOptions;
+            MaterialProperty metallicWorkflow;
+            MaterialProperty specularWorkflow;
+            MaterialProperty anisotropicOptions;
+            MaterialProperty fakeHighlightOptions;
+            MaterialProperty matcapOptions;
+            MaterialProperty cubemapOptions;
+            MaterialProperty indirectColorOptions;
+            MaterialProperty toonyHighlightsOptions;
 
-        MaterialProperty occlusionOffsetOptions;
-        MaterialProperty fakeLightOptions;
-        MaterialProperty metallicWorkflow;
-        MaterialProperty specularWorkflow;
-        MaterialProperty anisotropicOptions;
-        MaterialProperty fakeHighlightOptions;
-        MaterialProperty matcapOptions;
-        MaterialProperty cubemapOptions;
-        MaterialProperty indirectColorOptions;
-        MaterialProperty toonyHighlightsOptions;
+            MaterialProperty _ToonyHighlights;
+            MaterialProperty _FakeLight;
+            MaterialProperty _OcclusionOffset;
+            MaterialProperty _EmissiveRim;
 
-        MaterialProperty _ToonyHighlights;
-        MaterialProperty _FakeLight;
-        MaterialProperty _OcclusionOffset;
-        MaterialProperty _EmissiveRim;
+            MaterialProperty _RampOn;
+            MaterialProperty _RimLightOn;
+            MaterialProperty _EnableSpecularOn;
+            MaterialProperty _DetailMapOn;
 
-        MaterialProperty _RampOn;
-        MaterialProperty _RimLightOn;
-        MaterialProperty _EnableSpecularOn;
-        MaterialProperty _DetailMapOn;
+            MaterialProperty _ToonRampBox;
+            MaterialProperty _RimLightBox;
+            MaterialProperty _SpecularBox;
+            MaterialProperty _DetailBox;
 
-        MaterialProperty _ToonRampBox;
-        MaterialProperty _RimLightBox;
-        MaterialProperty _SpecularBox;
-        MaterialProperty _DetailBox;
+            OrderedSectionGroup group;
 
-        OrderedSectionGroup group;
+            bool isFirstCycle=true;
+            int max;
 
-        /*properties used for selecting features: _RimLight _EnableSpecular _DetailMap */
-        bool isFirstCycle=true;
-        int max;
+            InspectorLevel inspectorLevel;
 
         #endregion
 
@@ -199,16 +195,48 @@ namespace Cibbi.ToonyStandard
             EditorGUIUtility.labelWidth = 0f;
 
             material = materialEditor.target as Material;
+
             //initialize properties
             FindProperties(properties);
+
+            inspectorLevel=(InspectorLevel)EditorPrefs.GetInt("TSInspectorLevel");
+
+            switch(inspectorLevel)
+            {
+                case InspectorLevel.Basic:
+                    
+                    _Occlusion.floatValue=0f;
+
+                    _FakeLight.floatValue=0f;
+
+                    _RimLightOn.floatValue=0;
+                    
+                    _workflow.floatValue=(float)Workflow.Metallic;
+                    _MetallicMap.textureValue=null;
+                    _GlossinessMap.textureValue=null;
+                    _SpMode.floatValue=(float)SpMode.Standard;
+                    _indirectSpecular.floatValue=(float)IndirectSpecular.Probe;
+                    _HighlightRamp.textureValue=TSConstants.defaultRamp;
+                    _HighlightRampOffset.floatValue=0f;
+
+                    _DetailMapOn.floatValue=0f;
+                    break;
+                case InspectorLevel.Normal:
+                    break;
+                case InspectorLevel.Expert:
+                    break;
+            }
+
+
 
             TSFunctions.SetKeyword(material, "_ENABLE_SPECULAR", _EnableSpecularOn.floatValue != 0);
             TSFunctions.SetKeyword(material, "_DETAIL_MAP", _DetailMapOn.floatValue != 0);
 
             //setup various keyword based settings
-            SetupMaterialWithBlendMode((Material)material, (BlendMode)material.GetFloat("_Mode"));
-            SetupIndirectSource((Material)material, (IndirectSpecular)material.GetFloat("_IndirectSpecular"));
-            SetupWorkflow((Material)material, (Workflow)material.GetFloat("_Workflow"));
+            SetupMaterialWithBlendMode(material, (BlendMode)material.GetFloat("_Mode"));
+            SetupIndirectSource(material, (IndirectSpecular)material.GetFloat("_IndirectSpecular"));
+            SetupWorkflow(material, (Workflow)material.GetFloat("_Workflow"));
+            SetupSpMode(material, (SpMode)_SpMode.floatValue);
 
             //setup emission
             MaterialEditor.FixupEmissiveFlag(material);
@@ -224,11 +252,17 @@ namespace Cibbi.ToonyStandard
             }
 
             group=new OrderedSectionGroup();
-
-            group.addSection(new OrderedSection(Styles.rampOptions, DrawRampOptionsSection,CheckRampOptionsChanges,RampOptionsIndex));
-            group.addSection(new OrderedSection(Styles.rimOptions, DrawRimLightOptionsSection,CheckRimLightOptionsSection,RimLightOptionsIndex));
-            group.addSection(new OrderedSection(Styles.specularOptions, DrawSpecularOptionsSection,CheckSpecularOptionsSection,SpecularOptionsIndex));
-            group.addSection(new OrderedSection(Styles.detailOptions, DrawDetailOptionsSection,CheckDrawDetailOptionsSection,DetailOptionsIndex));
+            if(inspectorLevel==InspectorLevel.Basic)
+            {
+                group.addSection(new OrderedSection(Styles.specularOptions, DrawBasicSpecularOptionsSection,CheckBasicSpecularOptionsSection,SpecularOptionsIndex));
+            }
+            else
+            {
+                group.addSection(new OrderedSection(Styles.rampOptions, DrawRampOptionsSection,CheckRampOptionsChanges,RampOptionsIndex));
+                group.addSection(new OrderedSection(Styles.rimOptions, DrawRimLightOptionsSection,CheckRimLightOptionsSection,RimLightOptionsIndex));
+                group.addSection(new OrderedSection(Styles.specularOptions, DrawSpecularOptionsSection,CheckSpecularOptionsSection,SpecularOptionsIndex));
+                group.addSection(new OrderedSection(Styles.detailOptions, DrawDetailOptionsSection,CheckDrawDetailOptionsSection,DetailOptionsIndex));
+            }        
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -249,8 +283,14 @@ namespace Cibbi.ToonyStandard
             }
 
             //draw main section
-            DrawMainSection(materialEditor);
-           
+            if(inspectorLevel==InspectorLevel.Basic)
+            {
+                DrawBasicMainSection(materialEditor);
+            }
+            else
+            {
+                DrawMainSection(materialEditor);
+            }     
             group.ReorderSections();
             group.DrawSectionsList(materialEditor);
 
@@ -390,227 +430,343 @@ namespace Cibbi.ToonyStandard
             EditorGUILayout.Space();
         }
 
-        public void DrawRampOptionsSection(MaterialEditor materialEditor)
+        public void DrawBasicMainSection(MaterialEditor materialEditor)
         {
+            EditorGUI.BeginChangeCheck();
+                TSFunctions.DrawSelector(Enum.GetNames(typeof(BlendMode)), _blendMode, Styles.blendMode, materialEditor);
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (Material mat in _blendMode.targets)
+                {
+                    SetupMaterialWithBlendMode(mat, (BlendMode)_blendMode.floatValue);
+                }
+            }
 
-            bool isOcclusionOffsetEnabled = TSFunctions.BooleanFloat(_OcclusionOffset.floatValue);
-            bool isFakeLightEnabled = TSFunctions.BooleanFloat(_FakeLight.floatValue);
+            //draw cull mode
+            materialEditor.ShaderProperty(_Cull, Styles.cullMode);
             EditorGUILayout.Space();
-            materialEditor.TexturePropertySingleLine(Styles.ramp, _Ramp, _RampColor);
+
+            //draw main properties
+            materialEditor.TexturePropertySingleLine(Styles.mainTex, _MainTex, _Color);
+            if ((BlendMode)_blendMode.floatValue == BlendMode.Cutout)
+            {
+                EditorGUI.indentLevel += MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
+                materialEditor.ShaderProperty(_Cutoff, Styles.cutOff);
+                EditorGUI.indentLevel -= MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
+            }
+            materialEditor.TexturePropertySingleLine(Styles.normal, _BumpMap, _BumpScale);
+
+
+            //emission
+            EditorGUI.BeginChangeCheck();
+                if (materialEditor.EmissionEnabledProperty())
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.emission, _Emission, _EmissionColor);
+                    materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
+                }
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (Material mat in _Emission.targets)
+                {
+                    MaterialEditor.FixupEmissiveFlag(mat);
+                    bool shouldEmissionBeEnabled = (mat.globalIlluminationFlags & MaterialGlobalIlluminationFlags.EmissiveIsBlack) == 0;
+                    TSFunctions.SetKeyword(mat, "_EMISSION", shouldEmissionBeEnabled);
+                    if (shouldEmissionBeEnabled)
+                    {
+                        mat.SetOverrideTag("IsEmissive", "true");
+                    }
+                    else
+                    {
+                        mat.SetOverrideTag("IsEmissive", "false");
+                    }
+                }
+            }
+            
             materialEditor.ShaderProperty(_RampOffset, Styles.rampOffset);
             materialEditor.ShaderProperty(_ShadowIntensity, Styles.shadowIntensity);
-            EditorGUI.BeginChangeCheck();
-                isOcclusionOffsetEnabled = EditorGUILayout.Toggle(Styles.occlusionOffset, isOcclusionOffsetEnabled);
+            
+            materialEditor.TextureScaleOffsetProperty(_MainTex);
+
+            EditorGUILayout.Space();
+        }
+
+        #region RampOptionsDelegates
+
+            public void DrawRampOptionsSection(MaterialEditor materialEditor)
+            {
+
+                bool isOcclusionOffsetEnabled;
+                bool isFakeLightEnabled;
+                EditorGUILayout.Space();
+                materialEditor.TexturePropertySingleLine(Styles.ramp, _Ramp, _RampColor);
+                materialEditor.ShaderProperty(_RampOffset, Styles.rampOffset);
+                materialEditor.ShaderProperty(_ShadowIntensity, Styles.shadowIntensity);
+
+                isOcclusionOffsetEnabled=TSFunctions.ProperToggle(ref _OcclusionOffset,Styles.occlusionOffsetIntensity);
+                if(!isOcclusionOffsetEnabled&&!_OcclusionOffset.hasMixedValue)
+                {
+                    _OcclusionOffsetIntensity.floatValue = 0;
+                }
                 if (isOcclusionOffsetEnabled)
                 {
                     materialEditor.ShaderProperty(_OcclusionOffsetIntensity, Styles.occlusionOffsetIntensity);
                 }
-            if (EditorGUI.EndChangeCheck())
-            {
-                _OcclusionOffset.floatValue = TSFunctions.floatBoolean(isOcclusionOffsetEnabled);
-                if (!isOcclusionOffsetEnabled)
+
+                isFakeLightEnabled=TSFunctions.ProperToggle(ref _FakeLight,Styles.fakeLight);
+                if (isFakeLightEnabled)
                 {
-                    _OcclusionOffsetIntensity.floatValue = 0;
+                    TSFunctions.ProperColorBox(ref _FakeLightColor, Styles.fakeLightColor);
+                    materialEditor.ShaderProperty(_FakeLightX, Styles.fakeLightX);
+                    materialEditor.ShaderProperty(_FakeLightY, Styles.fakeLightY);
+                    materialEditor.ShaderProperty(_FakeLightZ, Styles.fakeLightZ);
+                }
+
+                EditorGUILayout.Space();
+            }
+
+            public void CheckRampOptionsChanges(bool isOpen, bool isEnabled)
+            {
+                _ToonRampBox.floatValue = TSFunctions.floatBoolean(isOpen);
+                if (!isEnabled)
+                {   
+                    if(!_RampOn.hasMixedValue)
+                    {
+                        _RampOn.floatValue = 0;
+                    }
+                    _Ramp.textureValue=TSConstants.defaultRamp;
+                    _RampOffset.floatValue=0f;
+                    _ShadowIntensity.floatValue=0.4f;
+                    _OcclusionOffset.floatValue=0f;
+                    _OcclusionOffsetIntensity.floatValue=0f;
+                    _FakeLight.floatValue=0f;
                 }
             }
-            EditorGUI.BeginChangeCheck();
-                isFakeLightEnabled = EditorGUILayout.Toggle(Styles.fakeLight, isFakeLightEnabled);
-            if (EditorGUI.EndChangeCheck())
-            {
-                _FakeLight.floatValue = TSFunctions.floatBoolean(isFakeLightEnabled);
-            }
-            if (isFakeLightEnabled)
-            {
-                TSFunctions.ProperColorBox(ref _FakeLightColor, Styles.fakeLightColor);
-                materialEditor.ShaderProperty(_FakeLightX, Styles.fakeLightX);
-                materialEditor.ShaderProperty(_FakeLightY, Styles.fakeLightY);
-                materialEditor.ShaderProperty(_FakeLightZ, Styles.fakeLightZ);
-            }
 
-            EditorGUILayout.Space();
-        }
-
-        public void CheckRampOptionsChanges(bool isOpen, bool isEnabled)
-        {
-            _ToonRampBox.floatValue = TSFunctions.floatBoolean(isOpen);
-            if (!isEnabled)
-            {   
-                if(!_RampOn.hasMixedValue)
-                {
-                    _RampOn.floatValue = 0;
-                }
-                _Ramp.textureValue=TSConstants.defaultRamp;
-                _RampOffset.floatValue=0f;
-                _ShadowIntensity.floatValue=0.4f;
-            }
-        }
-
-        public BoxParameters RampOptionsIndex()
+            public BoxParameters RampOptionsIndex()
         {
             return new BoxParameters(_ToonRampBox,_RampOn);
         }
 
-        public void DrawRimLightOptionsSection(MaterialEditor materialEditor)
-        {
-            bool isEmissiveRimEnabled = TSFunctions.BooleanFloat(_EmissiveRim.floatValue);
+        #endregion
 
-            EditorGUILayout.Space();
-            TSFunctions.ProperColorBox(ref _RimColor, Styles.rimColor);
-            materialEditor.ShaderProperty(_RimIntensity, Styles.rimIntensity);
-            materialEditor.ShaderProperty(_RimStrength, Styles.rimStrength);
-            materialEditor.ShaderProperty(_RimSharpness, Styles.rimSharpness);
-            EditorGUI.BeginChangeCheck();
-            isEmissiveRimEnabled = EditorGUILayout.Toggle(Styles.emissiveRim, isEmissiveRimEnabled);
-            if (EditorGUI.EndChangeCheck())
+        #region RimLightOptionsDelegates
+
+            public void DrawRimLightOptionsSection(MaterialEditor materialEditor)
             {
-                _EmissiveRim.floatValue = TSFunctions.floatBoolean(isEmissiveRimEnabled);
-            }
+                bool isEmissiveRimEnabled;
 
-            EditorGUILayout.Space();
-        }
-
-        public void CheckRimLightOptionsSection(bool isOpen, bool isEnabled)
-        {
-            _RimLightBox.floatValue = TSFunctions.floatBoolean(isOpen);
-            if (!isEnabled)
-            {
-                if(!_RimLightOn.hasMixedValue)
+                EditorGUILayout.Space();
+                TSFunctions.ProperColorBox(ref _RimColor, Styles.rimColor);
+                materialEditor.ShaderProperty(_RimIntensity, Styles.rimIntensity);
+                materialEditor.ShaderProperty(_RimStrength, Styles.rimStrength);
+                materialEditor.ShaderProperty(_RimSharpness, Styles.rimSharpness);
+                EditorGUI.BeginChangeCheck();
+                isEmissiveRimEnabled = TSFunctions.ProperToggle(ref _EmissiveRim, Styles.emissiveRim);
+                if (EditorGUI.EndChangeCheck())
                 {
-                    _RimLightOn.floatValue = 0;
+                    _EmissiveRim.floatValue = TSFunctions.floatBoolean(isEmissiveRimEnabled);
                 }
+
+                EditorGUILayout.Space();
             }
 
-        }
+            public void CheckRimLightOptionsSection(bool isOpen, bool isEnabled)
+            {
+                _RimLightBox.floatValue = TSFunctions.floatBoolean(isOpen);
+                if (!isEnabled)
+                {
+                    if(!_RimLightOn.hasMixedValue)
+                    {
+                        _RimLightOn.floatValue = 0;
+                    }
+                }
 
-        public BoxParameters RimLightOptionsIndex()
+            }
+
+            public BoxParameters RimLightOptionsIndex()
         {
             return new BoxParameters(_RimLightBox,_RimLightOn);
         }
 
-        public void DrawSpecularOptionsSection(MaterialEditor materialEditor)
-        {
-            EditorGUILayout.Space();
+        #endregion
 
-            TSFunctions.DrawSelector(Enum.GetNames(typeof(Workflow)), _workflow, Styles.workflow, materialEditor);
-            if ((Workflow)_workflow.floatValue == Workflow.Metallic)
-            {
-                materialEditor.TexturePropertySingleLine(Styles.metallic, _MetallicMap, _Metallic);
+        #region SpecularOptionsDelegates
+
+            public void DrawSpecularOptionsSection(MaterialEditor materialEditor)
+            {   
+                bool isToonyHighlightsEnabled;
+                EditorGUILayout.Space();
+
+                TSFunctions.DrawSelector(Enum.GetNames(typeof(Workflow)), _workflow, Styles.workflow, materialEditor);
+                if ((Workflow)_workflow.floatValue == Workflow.Metallic)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.metallic, _MetallicMap, _Metallic);
+                }
+                else if ((Workflow)_workflow.floatValue == Workflow.Specular)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.specular, _MetallicMap);
+                }
+
+                materialEditor.TexturePropertySingleLine(Styles.smoothness, _GlossinessMap, _Glossiness);
+
+                TSFunctions.DrawSelector(Enum.GetNames(typeof(SpMode)), _SpMode, Styles.spMode, materialEditor);
+                if ((SpMode)_SpMode.floatValue == SpMode.Anisotropic)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.anisotropy, _AnisotropyMap, _Anisotropy);
+                    materialEditor.TexturePropertySingleLine(Styles.tangent, _TangentMap);
+                }
+                else if ((SpMode)_SpMode.floatValue == SpMode.Fake)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.fakeHighlights, _FakeHightlights);
+                    materialEditor.ShaderProperty(_FakeHighlightIntensity, Styles.fakeHighlightIntensity);
+                }
+
+                TSFunctions.DrawSelector(Enum.GetNames(typeof(IndirectSpecular)), _indirectSpecular, Styles.indirectSpecular, materialEditor);
+                if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Matcap)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.matcap, _Matcap);
+                }
+                else if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Cubemap)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.cubemap, _Cubemap);
+                }
+                else if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Color)
+                {
+                    TSFunctions.ProperColorBox(ref _IndirectColor,Styles.indirectColor);
+                }
+
+                isToonyHighlightsEnabled=TSFunctions.ProperToggle(ref _ToonyHighlights,Styles.toonyHighlight);
+
+                if (isToonyHighlightsEnabled)
+                {
+                    materialEditor.TexturePropertySingleLine(Styles.highlightRamp, _HighlightRamp, _HighlightRampColor);
+                    materialEditor.ShaderProperty(_HighlightRampOffset, Styles.hightlightRampOffset);
+                    materialEditor.ShaderProperty(_HighlightIntensity, Styles.highlightIntensity);
+                }
+
+                materialEditor.TexturePropertySingleLine(Styles.highlightPattern, _HighlightPattern);
+                EditorGUI.indentLevel++;
+                materialEditor.TextureScaleOffsetProperty(_HighlightPattern);
+                EditorGUI.indentLevel--;
+
+                EditorGUILayout.Space();
+
             }
-            else if ((Workflow)_workflow.floatValue == Workflow.Specular)
-            {
-                materialEditor.TexturePropertySingleLine(Styles.specular, _MetallicMap);
-            }
 
-            materialEditor.TexturePropertySingleLine(Styles.smoothness, _GlossinessMap, _Glossiness);
-
-            TSFunctions.DrawSelector(Enum.GetNames(typeof(SpMode)), _SpMode, Styles.spMode, materialEditor);
-            if ((SpMode)_SpMode.floatValue == SpMode.Anisotropic)
+            public void CheckSpecularOptionsSection(bool isOpen, bool isEnabled)
             {
-                materialEditor.TexturePropertySingleLine(Styles.anisotropy, _AnisotropyMap, _Anisotropy);
-                materialEditor.TexturePropertySingleLine(Styles.tangent, _TangentMap);
-            }
-            else if ((SpMode)_SpMode.floatValue == SpMode.Fake)
-            {
-                materialEditor.TexturePropertySingleLine(Styles.fakeHighlights, _FakeHightlights);
-                materialEditor.ShaderProperty(_FakeHighlightIntensity, Styles.fakeHighlightIntensity);
-            }
-
-            TSFunctions.DrawSelector(Enum.GetNames(typeof(IndirectSpecular)), _indirectSpecular, Styles.indirectSpecular, materialEditor);
-            if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Matcap)
-            {
-                materialEditor.TexturePropertySingleLine(Styles.matcap, _Matcap);
-            }
-            else if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Cubemap)
-            {
-                materialEditor.TexturePropertySingleLine(Styles.cubemap, _Cubemap);
-            }
-            else if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Color)
-            {
-                materialEditor.ShaderProperty(_IndirectColor, Styles.indirectColor);
-            }
-
-            _ToonyHighlights.floatValue = TSFunctions.floatBoolean(EditorGUILayout.Toggle(Styles.toonyHighlight, TSFunctions.BooleanFloat(_ToonyHighlights.floatValue)));
-            if (TSFunctions.BooleanFloat(_ToonyHighlights.floatValue))
-            {
-                materialEditor.TexturePropertySingleLine(Styles.highlightRamp, _HighlightRamp, _HighlightRampColor);
-                materialEditor.ShaderProperty(_HighlightRampOffset, Styles.hightlightRampOffset);
-                materialEditor.ShaderProperty(_HighlightIntensity, Styles.highlightIntensity);
-            }
-
-            materialEditor.TexturePropertySingleLine(Styles.highlightPattern, _HighlightPattern);
-            EditorGUI.indentLevel++;
-            materialEditor.TextureScaleOffsetProperty(_HighlightPattern);
-            EditorGUI.indentLevel--;
-
-            EditorGUILayout.Space();
-
-        }
-
-        public void CheckSpecularOptionsSection(bool isOpen, bool isEnabled)
-        {
-            _SpecularBox.floatValue = TSFunctions.floatBoolean(isOpen);
-            foreach (Material mat in _EnableSpecularOn.targets)
-            {
-                if (!isEnabled)
-                {   
-                    if(!_EnableSpecularOn.hasMixedValue)
-                    {
-                        TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
-                        _EnableSpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                _SpecularBox.floatValue = TSFunctions.floatBoolean(isOpen);
+                foreach (Material mat in _EnableSpecularOn.targets)
+                {
+                    if (!isEnabled)
+                    {   
+                        if(!_EnableSpecularOn.hasMixedValue)
+                        {
+                            TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
+                            _EnableSpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                        }
                     }
+                }
+
+                foreach (Material mat in _workflow.targets)
+                {
+                    SetupWorkflow(mat, (Workflow)_workflow.floatValue);
+                }
+                foreach (Material mat in _SpMode.targets)
+                {
+                    SetupSpMode(mat, (SpMode)_SpMode.floatValue);
+                }
+                foreach (Material mat in _indirectSpecular.targets)
+                {
+                    SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
                 }
             }
 
-            foreach (Material mat in _workflow.targets)
-            {
-                SetupWorkflow(mat, (Workflow)_workflow.floatValue);
-            }
-            foreach (Material mat in _SpMode.targets)
-            {
-                SetupSpMode(mat, (SpMode)_SpMode.floatValue);
-            }
-            foreach (Material mat in _indirectSpecular.targets)
-            {
-                SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
-            }
-        }
-
-        public BoxParameters SpecularOptionsIndex()
+            public BoxParameters SpecularOptionsIndex()
         {
             return new BoxParameters(_SpecularBox,_EnableSpecularOn);
         }
 
-        public void DrawDetailOptionsSection(MaterialEditor materialEditor)
-        {
-            EditorGUILayout.Space();
-            materialEditor.TexturePropertySingleLine(Styles.detailMask, _DetailMask);
-            materialEditor.ShaderProperty(_DetailIntensity, Styles.detailIntensity);
-            materialEditor.TexturePropertySingleLine(Styles.detailPattern, _DetailTexture, _DetailColor);
-            materialEditor.TexturePropertySingleLine(Styles.detailNormal, _DetailBumpMap, _DetailBumpScale);
-            materialEditor.TextureScaleOffsetProperty(_DetailTexture);
-            EditorGUILayout.Space();
-        }
+        #endregion 
 
-        public void CheckDrawDetailOptionsSection(bool isOpen, bool isEnabled)
-        {
-            _DetailBox.floatValue = TSFunctions.floatBoolean(isOpen);
-            foreach (Material mat in _DetailMapOn.targets)
+        #region DetailOptionsDelegates
+
+            public void DrawDetailOptionsSection(MaterialEditor materialEditor)
             {
-                TSFunctions.SetKeyword(mat, "_DETAIL_MAP", isEnabled);
+                EditorGUILayout.Space();
+                materialEditor.TexturePropertySingleLine(Styles.detailMask, _DetailMask);
+                materialEditor.ShaderProperty(_DetailIntensity, Styles.detailIntensity);
+                materialEditor.TexturePropertySingleLine(Styles.detailPattern, _DetailTexture, _DetailColor);
+                materialEditor.TexturePropertySingleLine(Styles.detailNormal, _DetailBumpMap, _DetailBumpScale);
+                materialEditor.TextureScaleOffsetProperty(_DetailTexture);
+                EditorGUILayout.Space();
             }
-            if (!isEnabled)
+
+            public void CheckDrawDetailOptionsSection(bool isOpen, bool isEnabled)
             {
-                 if(!_DetailMapOn.hasMixedValue)
+                _DetailBox.floatValue = TSFunctions.floatBoolean(isOpen);
+                foreach (Material mat in _DetailMapOn.targets)
                 {
-                    _DetailMapOn.floatValue = 0;
+                    TSFunctions.SetKeyword(mat, "_DETAIL_MAP", isEnabled);
+                }
+                if (!isEnabled)
+                {
+                    if(!_DetailMapOn.hasMixedValue)
+                    {
+                        _DetailMapOn.floatValue = 0;
+                    }
                 }
             }
-        }
 
-        public BoxParameters DetailOptionsIndex()
+            public BoxParameters DetailOptionsIndex()
         {
             return new BoxParameters(_DetailBox,_DetailMapOn);
         }
+
+        #endregion
+
+
+        #region BasicSpecularOptionsDelegates
+
+            public void DrawBasicSpecularOptionsSection(MaterialEditor materialEditor)
+            {   
+                bool isToonyHighlightsEnabled;
+                EditorGUILayout.Space();
+
+
+                materialEditor.ShaderProperty(_Metallic, Styles.metallic);
+                
+
+                materialEditor.ShaderProperty(_Glossiness, Styles.smoothness);
+
+                isToonyHighlightsEnabled=TSFunctions.ProperToggle(ref _ToonyHighlights,Styles.toonyHighlight);
+
+                if (isToonyHighlightsEnabled)
+                {
+                    materialEditor.ShaderProperty(_HighlightIntensity, Styles.highlightIntensity);
+                }
+
+                EditorGUILayout.Space();
+
+            }
+
+            public void CheckBasicSpecularOptionsSection(bool isOpen, bool isEnabled)
+            {
+                _SpecularBox.floatValue = TSFunctions.floatBoolean(isOpen);
+                foreach (Material mat in _EnableSpecularOn.targets)
+                {
+                    if (!isEnabled)
+                    {   
+                        if(!_EnableSpecularOn.hasMixedValue)
+                        {
+                            TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
+                            _EnableSpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                        }
+                    }
+                }
+            }
+
+        #endregion 
 
         public static void SetupMaterialWithBlendMode(Material material, BlendMode blendMode)
         {

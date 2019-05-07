@@ -97,6 +97,26 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Draws a color property with a color box that doesn't look retarded
         /// </summary>
+        /// <param name="boolProperty">Material property that contains the color property that needs to be drawn, has to be passed by reference</param>
+        /// <param name="label">Label of the property</param>
+        public static bool ProperToggle(ref MaterialProperty boolProperty, GUIContent label)
+        {
+            bool isToggleEnabled = boolProperty.floatValue>0;
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = boolProperty.hasMixedValue;
+            isToggleEnabled = EditorGUILayout.Toggle(label, isToggleEnabled);
+            EditorGUI.showMixedValue = false;
+            if (EditorGUI.EndChangeCheck())
+            {
+                boolProperty.floatValue = floatBoolean(isToggleEnabled);
+            }
+            return isToggleEnabled;
+            
+        }
+
+        /// <summary>
+        /// Draws a color property with a color box that doesn't look retarded
+        /// </summary>
         /// <param name="colorProperty">Material property that contains the color property that needs to be drawn, has to be passed by reference</param>
         /// <param name="label">Label of the property</param>
         public static void ProperColorBox(ref MaterialProperty colorProperty, GUIContent label)

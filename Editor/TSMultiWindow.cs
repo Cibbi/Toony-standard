@@ -15,6 +15,17 @@ namespace Cibbi.ToonyStandard
 		Box,
 		Foldout
 	}
+
+	/// <summary>
+	/// Inspector level enum for selecting which inspector show based on user skill level
+	/// </summary>
+	public enum InspectorLevel
+	{
+		Basic,
+		Normal,
+		Expert
+	}
+
 	/// <summary>
 	/// Window with multiple sections
 	/// </summary>
@@ -32,18 +43,6 @@ namespace Cibbi.ToonyStandard
 			Updater,
 			Credits
 		}
-
-		/// <summary>
-		/// Inspector level enum for selecting which inspector show based on user skill level
-		/// </summary>
-		private enum InspectorLevel
-		{
-			Basic,
-			Normal,
-			Expert
-		}
-
-		
 
 		private bool firstCycle=true;
 		
