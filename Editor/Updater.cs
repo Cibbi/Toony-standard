@@ -140,6 +140,7 @@ namespace Cibbi.ToonyStandard
                     if(updateStream==UpdateStream.Beta)
                     {
                         EditorGUILayout.LabelField("New beta update found");
+                        EditorGUILayout.LabelField("Released at: "+DateTime.Parse(githubBetaJSON.commit.committer.date).ToString());
                         EditorGUILayout.BeginVertical("box");
                         MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
                         EditorGUILayout.LabelField(githubBetaJSON.commit.message);               
@@ -149,6 +150,7 @@ namespace Cibbi.ToonyStandard
                     else
                     {
                         EditorGUILayout.LabelField("New version found: "+githubReleaseJSON.tag_name);
+                        EditorGUILayout.LabelField("Released at: "+DateTime.Parse(githubReleaseJSON.published_at).ToString());
                         EditorGUILayout.BeginVertical("box");
                         MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
                         EditorGUILayout.LabelField(githubReleaseJSON.body);               
