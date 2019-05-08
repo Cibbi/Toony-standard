@@ -14,6 +14,9 @@ namespace Cibbi.ToonyStandard
         SectionStyle sectionStyle;
         GUIStyle buttonStyle;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public OrderedSectionGroup()
         {
             TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
@@ -39,11 +42,18 @@ namespace Cibbi.ToonyStandard
             sections=new List<OrderedSection>();
         }
 
+        /// <summary>
+        /// adds a new Section to the list
+        /// </summary>
+        /// <param name="section"></param>
         public void addSection(OrderedSection section)
         {
             sections.Add(section);
         }
 
+        /// <summary>
+        /// Reorders the section list
+        /// </summary>
         public void ReorderSections()
         {
             sections.Sort(CompareSectionsOrder);
@@ -58,8 +68,14 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Draws the list of sections
+        /// </summary>
+        /// <param name="materialEditor">Material editor provided by the material inspector window</param>
         public void DrawSectionsList(MaterialEditor materialEditor)
         {
+            ReorderSections();
+
             foreach (OrderedSection section in sections)
             {
                 if(!HasMixedIndexZero(section))
@@ -69,6 +85,9 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Draws the add button if there are still sections that can be enabled
+        /// </summary>
         public void DrawAddButton()
         {
             if(ListHasMixedIndexZero(sections))
@@ -97,12 +116,22 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Turns on a section, setting it's index to the best number
+        /// </summary>
+        /// <param name="sectionVariable">The section to turn on</param>
         public void TurnOnSection(object sectionVariable)
         {
             OrderedSection section = (OrderedSection)sectionVariable;
             section.setIndexNumber(753);
         }
-
+        
+        /// <summary>
+        /// Compares 2 ordered section to determine which one is the first one
+        /// </summary>
+        /// <param name="x">First section to compare</param>
+        /// <param name="y">Second section to compare</param>
+        /// <returns></returns>
         private static int CompareSectionsOrder(OrderedSection x, OrderedSection y)
         {
             if (x == null)
@@ -141,6 +170,11 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Checks a list of ordered sections to see if at least one section in any material has an index value of 0, meaning is not active
+        /// </summary>
+        /// <param name="sections">List of ordered sections to check</param>
+        /// <returns>True if theres at least one section in any material that is not active, false otherwise</returns>
         private static bool ListHasMixedIndexZero(List<OrderedSection> sections)
         {
             bool zero = false;
@@ -155,6 +189,11 @@ namespace Cibbi.ToonyStandard
             return zero;
         }
 
+        /// <summary>
+        /// Checks if a section disabled on at least one of the selected materials
+        /// </summary>
+        /// <param name="section">Section to check</param>
+        /// <returns>True if the section is disabled on at least one material</returns>
         private static bool HasMixedIndexZero(OrderedSection section)
         {
             bool zero = false;

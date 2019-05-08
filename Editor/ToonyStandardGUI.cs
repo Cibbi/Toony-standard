@@ -34,6 +34,9 @@ namespace Cibbi.ToonyStandard
             Fake
         }
 
+        /// <summary>
+        /// Contains all the GUIContents used by this inspector
+        /// </summary>
         private static class Styles
         {
             public static GUIContent cullMode = new GUIContent("Cull mode", "Controls which face of the mesh is rendered \n\nOff: Double sided \n\nFront: Single sided (internal parts showing) \n\nBack: Single sided");
@@ -189,16 +192,21 @@ namespace Cibbi.ToonyStandard
 
         #endregion
 
+        /// <summary>
+        /// Initializzation that happens the first time the window is created
+        /// </summary>
+        /// <param name="materialEditor">Material editor provided by the custom inspector</param>
+        /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
         public void Start(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
 
             EditorGUIUtility.labelWidth = 0f;
-
             material = materialEditor.target as Material;
 
-            //initialize properties
+            //Initialize properties
             FindProperties(properties);
 
+            //Set some values based on the inspector level setting
             inspectorLevel=(InspectorLevel)EditorPrefs.GetInt("TSInspectorLevel");
 
             switch(inspectorLevel)
@@ -229,16 +237,19 @@ namespace Cibbi.ToonyStandard
 
 
 
-            TSFunctions.SetKeyword(material, "_ENABLE_SPECULAR", _EnableSpecularOn.floatValue != 0);
-            TSFunctions.SetKeyword(material, "_DETAIL_MAP", _DetailMapOn.floatValue != 0);
+            foreach (Material mat in _EnableSpecularOn.targets)
+            {
+                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_EnableSpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_DETAIL_MAP", mat.GetFloat(_DetailMapOn.name) != 0);
+            }
 
-            //setup various keyword based settings
+            // Setup various keyword based settings
             SetupMaterialWithBlendMode(material, (BlendMode)material.GetFloat("_Mode"));
             SetupIndirectSource(material, (IndirectSpecular)material.GetFloat("_IndirectSpecular"));
             SetupWorkflow(material, (Workflow)material.GetFloat("_Workflow"));
             SetupSpMode(material, (SpMode)_SpMode.floatValue);
 
-            //setup emission
+            // Setup emission
             MaterialEditor.FixupEmissiveFlag(material);
             bool shouldEmissionBeEnabled = (material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.EmissiveIsBlack) == 0;
             TSFunctions.SetKeyword(material, "_EMISSION", shouldEmissionBeEnabled);
@@ -251,6 +262,7 @@ namespace Cibbi.ToonyStandard
                 material.SetOverrideTag("IsEmissive", "false");
             }
 
+            // Add sections based on the inspector level
             group=new OrderedSectionGroup();
             if(inspectorLevel==InspectorLevel.Basic)
             {
@@ -265,17 +277,31 @@ namespace Cibbi.ToonyStandard
             }        
         }
 
+
+        /// <summary>
+        /// Draws the GUI
+        /// </summary>
+        /// <param name="materialEditor">Material editor provided by the custom inspector</param>
+        /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
-        {
+        {   
+            //if is the first cycle it runs, do the initializzations needed on the start function
             if (isFirstCycle)
             {
                 Start(materialEditor, properties);
                 isFirstCycle=false;
             }
+            //Fetching properties is needed only if the start function has not run since the start function already fetches them once
+            else
+            {
+                FindProperties(properties);
+            }
+            
             TSFunctions.DrawHeader(10);
 
-            FindProperties(properties);
+            
 
+            //if a keyword is used to apply the effects on the shader caused by enabling/disabling a section, it needs to be set every update
             foreach (Material mat in _EnableSpecularOn.targets)
             {
                 TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_EnableSpecularOn.name) != 0);
@@ -291,14 +317,16 @@ namespace Cibbi.ToonyStandard
             {
                 DrawMainSection(materialEditor);
             }     
-            group.ReorderSections();
             group.DrawSectionsList(materialEditor);
-
             group.DrawAddButton();
 
             TSFunctions.DrawFooter();
         }
 
+        /// <summary>
+        /// Fetches all the properties, must be done very OnGUI update to be sure property changes done by external code gets correctly updated
+        /// </summary>
+         /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
         public void FindProperties(MaterialProperty[] properties)
         {
             _blendMode = FindProperty("_Mode", properties);
@@ -373,6 +401,10 @@ namespace Cibbi.ToonyStandard
             _DetailBox = FindProperty("_DetailBox", properties);
         }
 
+        /// <summary>
+        /// Draws the main section
+        /// </summary>
+        /// <param name="materialEditor">Material editor provided by the custom inspector</param>
         public void DrawMainSection(MaterialEditor materialEditor)
         {
             EditorGUI.BeginChangeCheck();
@@ -430,6 +462,10 @@ namespace Cibbi.ToonyStandard
             EditorGUILayout.Space();
         }
 
+        /// <summary>
+        /// Draws the main section of the basic inspector level
+        /// </summary>
+        /// <param name="materialEditor">Material editor provided by the custom inspector</param>
         public void DrawBasicMainSection(MaterialEditor materialEditor)
         {
             EditorGUI.BeginChangeCheck();
@@ -442,11 +478,11 @@ namespace Cibbi.ToonyStandard
                 }
             }
 
-            //draw cull mode
+            // Draw cull mode
             materialEditor.ShaderProperty(_Cull, Styles.cullMode);
             EditorGUILayout.Space();
 
-            //draw main properties
+            // Draw main properties
             materialEditor.TexturePropertySingleLine(Styles.mainTex, _MainTex, _Color);
             if ((BlendMode)_blendMode.floatValue == BlendMode.Cutout)
             {
@@ -457,7 +493,7 @@ namespace Cibbi.ToonyStandard
             materialEditor.TexturePropertySingleLine(Styles.normal, _BumpMap, _BumpScale);
 
 
-            //emission
+            // Emission
             EditorGUI.BeginChangeCheck();
                 if (materialEditor.EmissionEnabledProperty())
                 {
@@ -490,6 +526,7 @@ namespace Cibbi.ToonyStandard
             EditorGUILayout.Space();
         }
 
+        //Functions to delegate to the ramp option section
         #region RampOptionsDelegates
 
             public void DrawRampOptionsSection(MaterialEditor materialEditor)
@@ -548,7 +585,8 @@ namespace Cibbi.ToonyStandard
         }
 
         #endregion
-
+        
+        //Functions to delegate to the rim light section
         #region RimLightOptionsDelegates
 
             public void DrawRimLightOptionsSection(MaterialEditor materialEditor)
@@ -589,7 +627,8 @@ namespace Cibbi.ToonyStandard
         }
 
         #endregion
-
+        
+        //Functions to delegate to the specular section
         #region SpecularOptionsDelegates
 
             public void DrawSpecularOptionsSection(MaterialEditor materialEditor)
@@ -688,7 +727,8 @@ namespace Cibbi.ToonyStandard
         }
 
         #endregion 
-
+        
+        //Functions to delegate to the detail section
         #region DetailOptionsDelegates
 
             public void DrawDetailOptionsSection(MaterialEditor materialEditor)
@@ -725,7 +765,7 @@ namespace Cibbi.ToonyStandard
 
         #endregion
 
-
+        //Functions to delegate to the specular section of the masic inspector level
         #region BasicSpecularOptionsDelegates
 
             public void DrawBasicSpecularOptionsSection(MaterialEditor materialEditor)

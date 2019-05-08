@@ -7,7 +7,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard Master Build 20190506";
+        public static string Version = "Toony Standard Master Build 20190508";
         public static string localJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/version.json";
         public static string settingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/settings.json";
         public static string oldSettingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/oldSettings.json";
