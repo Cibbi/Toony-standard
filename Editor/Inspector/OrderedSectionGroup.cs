@@ -83,6 +83,12 @@ namespace Cibbi.ToonyStandard
                     section.DrawSection(materialEditor);
                 }
             }
+
+            if(sectionStyle==SectionStyle.Foldout)
+            {
+                TSFunctions.DrawLine(new Color(0.35f,0.35f,0.35f,1),1,0);
+                GUILayout.Space(10);
+            }
         }
 
         /// <summary>
@@ -92,14 +98,25 @@ namespace Cibbi.ToonyStandard
         {
             if(ListHasMixedIndexZero(sections))
             {
-                if(sectionStyle==SectionStyle.Foldout)
-                {
-                    TSFunctions.DrawLine(new Color(0.35f,0.35f,0.35f,1),1,0);
-                    GUILayout.Space(10);
-                }
+                
                 Color bCol = GUI.backgroundColor;
                 GUI.backgroundColor = sectionBgColor;
-                if (GUILayout.Button("+",buttonStyle))
+                bool buttonPressed;
+                if(sectionStyle==SectionStyle.Foldout)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    buttonPressed=GUILayout.Button("+",buttonStyle,GUILayout.MinWidth(200));
+                    GUILayout.FlexibleSpace();
+                    EditorGUILayout.EndHorizontal();
+                }
+                else
+                {
+                    buttonPressed=GUILayout.Button("+",buttonStyle);
+                }
+               
+                
+                if (buttonPressed)
                 {
                     GenericMenu menu = new GenericMenu();
 
