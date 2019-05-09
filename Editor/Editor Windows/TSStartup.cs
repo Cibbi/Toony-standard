@@ -19,6 +19,23 @@ namespace Cibbi.ToonyStandard
         {
             bool update;
 
+            string path="";
+            string[] logo = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
+            if (logo.Length > 0)
+            {
+                string[] pieces = AssetDatabase.GUIDToAssetPath(logo[0]).Split('/');
+                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+                path = string.Join("/", pieces);
+            }
+
+            if(!path.Equals(TSConstants.LocalShaderAssetsFolder))
+            {
+                AssetDatabase.MoveAsset(path,TSConstants.LocalShaderAssetsFolder);
+            }
+
+
             //checks if there's old configuration settings that needs to be reimported 
             if(File.Exists(TSConstants.oldSettingsJSONPath))
 			{
