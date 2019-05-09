@@ -29,11 +29,12 @@ namespace Cibbi.ToonyStandard
                 ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
                 path = string.Join("/", pieces);
             }
-
-            if(!path.Equals(TSConstants.LocalShaderAssetsFolder))
+           
+            /* if(!path.Equals(TSConstants.LocalShaderAssetsFolder))
             {
+                 AssetDatabase.GenerateUniqueAssetPath(TSConstants.LocalShaderAssetsFolder);
                 AssetDatabase.MoveAsset(path,TSConstants.LocalShaderAssetsFolder);
-            }
+            }*/
 
 
             //checks if there's old configuration settings that needs to be reimported 
