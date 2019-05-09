@@ -11,12 +11,24 @@ namespace Cibbi.ToonyStandard
         public static string localJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/version.json";
         public static string settingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/settings.json";
         public static string oldSettingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/oldSettings.json";
+
+        public static string TSEPInspectorLevel = "TSInspectorLevel";
+        public static string TSEPNotFirstTime = "TSNotFirstTime";
         
         public static Texture2D deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/DeleteIcon.png");
         public static Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/ToonyStandardLogo.png");
         public static Texture2D githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/GitHubIcon.png");
         public static Texture2D patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/PatreonIcon.png");
         public static Texture2D defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/RampDefault.png");
+
+        public static class TSWindowLabels
+        {
+            public static GUIContent InspectorLevel = new GUIContent("Inspector level", "Sets the level of features the shader is able to expose \n\nBasic: only basic stuff for new users \n\nNormal: the standard feature sets intended for this shader \n\nExpert: allows access to features meant for experienced users");
+            public static GUIContent UpdateStream = new GUIContent("Update stream", "Selects which stream of updates the updater has to look for \n\nRelease: will check the official releases \n\nBeta: will check beta releases");
+            public static GUIContent SectionStyle = new GUIContent("Section style", "Selects the appearance of the inspector \n\nBubbles: bubble looking sections \n\nBox: Sections will have A boxed header \n\nFoldoud: simplistic unity-like look");
+            public static GUIContent Color = new GUIContent("Color", "Color of the section (may affects different things based on the style)");
+            public static GUIContent DisableAutoUpdates = new GUIContent("Disable auto updates", "Disables auto update checks on startup, you can still update manually with the updater");	
+        }
 
 
         public static class Styles

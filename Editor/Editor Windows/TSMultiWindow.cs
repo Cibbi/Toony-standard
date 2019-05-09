@@ -163,14 +163,14 @@ namespace Cibbi.ToonyStandard
 			firstCycle=false;
 
 			// Gets the inspector level from editorPrefs, if for some reason is not present it just defaults to normal and writes it (should never happen if i remembered to do the first time window)
-			if(EditorPrefs.HasKey("TSInspectorLevel"))
+			if(EditorPrefs.HasKey(TSConstants.TSEPInspectorLevel))
 			{
-				inspectorLevel=(InspectorLevel)EditorPrefs.GetInt("TSInspectorLevel");
+				inspectorLevel=(InspectorLevel)EditorPrefs.GetInt(TSConstants.TSEPInspectorLevel);
 			}
 			else
 			{
 				inspectorLevel=InspectorLevel.Normal;
-				EditorPrefs.SetInt("TSInspectorLevel",(int)InspectorLevel.Normal);
+				EditorPrefs.SetInt(TSConstants.TSEPInspectorLevel,(int)InspectorLevel.Normal);
 			}
 
 			// Loads the settings file if exists, creates a default one if not
@@ -206,14 +206,14 @@ namespace Cibbi.ToonyStandard
 		private void DrawSettings()
 		{
 			EditorGUI.BeginChangeCheck();
-			inspectorLevel = (InspectorLevel)EditorGUILayout.EnumPopup("Inspector level",inspectorLevel);
+			inspectorLevel = (InspectorLevel)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.InspectorLevel,inspectorLevel);
 			if(EditorGUI.EndChangeCheck())
 			{
-				EditorPrefs.SetInt("TSInspectorLevel",(int)inspectorLevel);
+				EditorPrefs.SetInt(TSConstants.TSEPInspectorLevel,(int)inspectorLevel);
 			}
 
 			EditorGUI.BeginChangeCheck();
-			updater.updateStream = (UpdateStream)EditorGUILayout.EnumPopup("Update stream",updater.updateStream);
+			updater.updateStream = (UpdateStream)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.UpdateStream,updater.updateStream);
 			if(EditorGUI.EndChangeCheck())
 			{
 				LocalVersionJSON local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.localJSONPath));
@@ -223,9 +223,9 @@ namespace Cibbi.ToonyStandard
 			}
 
 			EditorGUI.BeginChangeCheck();
-			sectionStyle=(SectionStyle)EditorGUILayout.EnumPopup("Section style",sectionStyle);
-			sectionColor=EditorGUILayout.ColorField("Section color",sectionColor);
-			isAutoUpdateDisabled=EditorGUILayout.Toggle("Disable auto update",isAutoUpdateDisabled);
+			sectionStyle=(SectionStyle)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.SectionStyle,sectionStyle);
+			sectionColor=EditorGUILayout.ColorField(TSConstants.TSWindowLabels.Color,sectionColor);
+			isAutoUpdateDisabled=EditorGUILayout.Toggle(TSConstants.TSWindowLabels.DisableAutoUpdates,isAutoUpdateDisabled);
 			if(EditorGUI.EndChangeCheck())
 			{
 				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
