@@ -8,19 +8,37 @@ namespace Cibbi.ToonyStandard
     public static class TSConstants
     {
         public static string Version = "Toony Standard Master Build 20190508";
-        public static string LocalShaderAssetsFolder = "Assets/Cibbi's shaders/Toony standard";
-        public static string localJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/version.json";
-        public static string settingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/settings.json";
-        public static string oldSettingsJSONPath = Application.dataPath+"/Cibbi's shaders/Toony standard/Editor/oldSettings.json";
+        public static string LocalShaderFolder;
+        public static string LocalShaderAssetsFolder;
+        public static string localJSONPath;
+        public static string settingsJSONPath;
+        public static string oldSettingsJSONPath;
 
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
         
-        public static Texture2D deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/DeleteIcon.png");
-        public static Texture2D logo = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/ToonyStandardLogo.png");
-        public static Texture2D githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/GitHubIcon.png");
-        public static Texture2D patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/PatreonIcon.png");
-        public static Texture2D defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cibbi's shaders/Toony standard/Editor/Resources/RampDefault.png");
+        public static Texture2D deleteIcon;
+        public static Texture2D logo;
+        public static Texture2D githubIcon;
+        public static Texture2D patreonIcon;
+        public static Texture2D defaultRamp;
+
+        public static void InitializeFolderReferences(string assetsPath)
+        {
+            string path=Application.dataPath+assetsPath.Substring(assetsPath.IndexOf("/"));
+
+            LocalShaderFolder=path;
+            LocalShaderAssetsFolder = assetsPath;
+            localJSONPath = path + "/version.json";
+            settingsJSONPath = path + "/Editor/settings.json";
+            oldSettingsJSONPath =path + "/Editor/oldSettings.json";
+        
+            deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DeleteIcon.png");
+            logo = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/ToonyStandardLogo.png");
+            githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/GitHubIcon.png");
+            patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/PatreonIcon.png");
+            defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/RampDefault.png");
+        }
 
         public static class TSWindowLabels
         {
