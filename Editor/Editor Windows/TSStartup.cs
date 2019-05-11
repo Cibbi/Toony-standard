@@ -31,53 +31,6 @@ namespace Cibbi.ToonyStandard
                 path = string.Join("/", pieces);
             }
             TSConstants.InitializeFolderReferences(path);
-            
-            
-
-            
-
-
-           
-            /* if(!path.Equals(TSConstants.LocalShaderAssetsFolder))
-            {
-                EditorApplication.LockReloadAssemblies();
-                if(!Directory.Exists(Application.dataPath+"/Cibbi's shaders/Toony standard")) 
-                {
-                    Directory.CreateDirectory(Application.dataPath+"/Cibbi's shaders/Toony standard");
-                }
-                else
-                {
-                    Directory.Delete(Application.dataPath+"/Cibbi's shaders/Toony standard",true);
-                    Directory.CreateDirectory(Application.dataPath+"/Cibbi's shaders/Toony standard");
-                    
-                }; 
-                string currentLocalPath=Application.dataPath + (path.Replace("Assets",""));
-                string[] fileEntries = Directory.GetFiles(currentLocalPath);
-                
-                foreach (string fileName in fileEntries)
-                {
-                    string filename=fileName.Replace("\\","/"); 
-                    //Debug.Log(filename.Substring(0,filename.IndexOf("Assets")-1)+"Assets/Cibbi's shaders/Toony standard/"+Path.GetFileName(filename));
-                    //File.Move(filename,filename.Substring(0,filename.IndexOf("Assets"))+"Assets/Cibbi's shaders/Toony standard/"+Path.GetFileName(filename));
-                    if(!filename.Contains(".meta"))
-                    {
-                        Debug.Log(AssetDatabase.CopyAsset(filename.Substring(filename.IndexOf("Assets")),"Assets/Cibbi's shaders/Toony standard/"+Path.GetFileName(filename)));
-                    }
-                } 
-                fileEntries = Directory.GetDirectories(currentLocalPath);
-                foreach (string fileName in fileEntries)
-                {
-                    string filename=fileName.Replace("\\","/"); 
-                    //Debug.Log(filename);
-                    //Directory.Move(filename,filename.Substring(0,filename.IndexOf("Assets"))+"Assets/Cibbi's shaders/Toony standard/"+filename.Substring(filename.LastIndexOf("/")+1));
-                    Debug.Log(AssetDatabase.CopyAsset(filename.Substring(filename.IndexOf("Assets")),"Assets/Cibbi's shaders/Toony standard/"+filename.Substring(filename.LastIndexOf("/")+1)));
-                }   
-                //Debug.Log(AssetDatabase.MoveAsset(path,TSConstants.LocalShaderAssetsFolder));
-                //AssetDatabase.ImportAsset("Assets/Cibbi's shaders/Toony standard/Editor/Editor Windows/TSStartup.cs");  
-                AssetDatabase.DeleteAsset(path);
-                EditorApplication.UnlockReloadAssemblies();
-                //AssetDatabase.Refresh();
-            }*/
 
 
             //checks if there's old configuration settings that needs to be reimported 

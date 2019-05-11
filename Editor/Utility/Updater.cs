@@ -173,7 +173,7 @@ namespace Cibbi.ToonyStandard
                         EditorGUILayout.LabelField("New beta update found");
                         EditorGUILayout.LabelField("Released at: "+DateTime.Parse(githubBetaJSON.commit.committer.date).ToString());
                         EditorGUILayout.BeginVertical("box");
-                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(100)); 
+                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
                         EditorGUILayout.LabelField(githubBetaJSON.commit.message);               
                         EditorGUILayout.EndScrollView();
                         EditorGUILayout.EndVertical();
@@ -184,7 +184,7 @@ namespace Cibbi.ToonyStandard
                         EditorGUILayout.LabelField("New version found: "+githubReleaseJSON.tag_name);
                         EditorGUILayout.LabelField("Released at: "+DateTime.Parse(githubReleaseJSON.published_at).ToString());
                         EditorGUILayout.BeginVertical("box");
-                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(100)); 
+                        MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
                         EditorGUILayout.LabelField(githubReleaseJSON.body);               
                         EditorGUILayout.EndScrollView();
                         EditorGUILayout.EndVertical();
@@ -336,6 +336,7 @@ namespace Cibbi.ToonyStandard
                         // extraction class that handles the basic stuff needed here, check him over https://github.com/yallie/unzip
                         if(updateStream==UpdateStream.Beta)
                         {   
+                            string localFolder=TSConstants.LocalShaderFolder;
                             // Deleting the old Toony standard version
                             if(Directory.Exists(TSConstants.LocalShaderFolder))
                             {
@@ -345,7 +346,7 @@ namespace Cibbi.ToonyStandard
                             // For each file in the zip we change the github repository path with the more user friendly one used on the releases, and then extract that file in that path
                             foreach (string fileName in zip.FileNames)
                             {
-                                string newDir = Application.dataPath + fileName.Replace("Toony-standard-"+githubBetaJSON.sha,"/Cibbi's shaders/Toony standard");
+                                string newDir = fileName.Replace("Toony-standard-"+githubBetaJSON.sha,localFolder);
                                 if(!Directory.Exists(Path.GetDirectoryName(newDir))) 
                                 {
                                     Directory.CreateDirectory(Path.GetDirectoryName(newDir));
