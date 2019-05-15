@@ -315,6 +315,12 @@ namespace Cibbi.ToonyStandard
             }
             else
             {
+                if(!_RampOn.hasMixedValue && _RampOn.floatValue==0f)
+                {
+                     _Ramp.textureValue=TSConstants.defaultRamp;
+                    _RampOffset.floatValue=0f;
+                    _ShadowIntensity.floatValue=0.4f;
+                }
                 DrawMainSection(materialEditor);
             }     
             group.DrawSectionsList(materialEditor);
@@ -492,6 +498,9 @@ namespace Cibbi.ToonyStandard
             }
             materialEditor.TexturePropertySingleLine(Styles.normal, _BumpMap, _BumpScale);
 
+            materialEditor.TexturePropertySingleLine(Styles.ramp, _Ramp, _RampColor);
+            materialEditor.ShaderProperty(_RampOffset, Styles.rampOffset);
+            materialEditor.ShaderProperty(_ShadowIntensity, Styles.shadowIntensity);
 
             // Emission
             EditorGUI.BeginChangeCheck();
@@ -517,9 +526,6 @@ namespace Cibbi.ToonyStandard
                     }
                 }
             }
-            
-            materialEditor.ShaderProperty(_RampOffset, Styles.rampOffset);
-            materialEditor.ShaderProperty(_ShadowIntensity, Styles.shadowIntensity);
             
             materialEditor.TextureScaleOffsetProperty(_MainTex);
 
