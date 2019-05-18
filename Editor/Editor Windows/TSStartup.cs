@@ -134,7 +134,7 @@ namespace Cibbi.ToonyStandard
 
         void OnGUI() 
         {
-            TSFunctions.DrawHeader(20); 
+            TSFunctions.DrawHeader(position.width,20); 
             updater.DrawGUI();
         }
 
@@ -163,7 +163,7 @@ namespace Cibbi.ToonyStandard
 
         void OnGUI() 
         {
-            TSFunctions.DrawHeader(20); 
+            TSFunctions.DrawHeader(position.width,20); 
             EditorGUILayout.LabelField("Seems like this is your first time installing Toony Standard, first of all, thanks for using it, it makes me happy.",TSConstants.Styles.multilineLabel);
             GUILayout.Space(10);
             EditorGUILayout.LabelField("Now, the only thing that you need to set immediately is the inspector level, this will tell the shader what features to expose based on your experience with making stuff in unity.",TSConstants.Styles.multilineLabel);

@@ -114,7 +114,7 @@ namespace Cibbi.ToonyStandard
 				updater=new TSUpdater();
 			}
 
-			TSFunctions.DrawHeader(10);
+			TSFunctions.DrawHeader(position.width,10);
 
 			section=(MultiWindowSection)GUILayout.Toolbar((int)section,Enum.GetNames(typeof(MultiWindowSection)),EditorStyles.toolbarButton, GUI.ToolbarButtonSize.Fixed);
 

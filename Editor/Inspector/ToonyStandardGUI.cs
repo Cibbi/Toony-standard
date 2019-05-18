@@ -175,7 +175,7 @@ namespace Cibbi.ToonyStandard
 
             MaterialProperty _RampOn;
             MaterialProperty _RimLightOn;
-            MaterialProperty _EnableSpecularOn;
+            MaterialProperty _SpecularOn;
             MaterialProperty _DetailMapOn;
 
             MaterialProperty _ToonRampBox;
@@ -186,7 +186,6 @@ namespace Cibbi.ToonyStandard
             OrderedSectionGroup group;
 
             bool isFirstCycle=true;
-            int max;
 
             InspectorLevel inspectorLevel;
 
@@ -237,9 +236,9 @@ namespace Cibbi.ToonyStandard
 
 
 
-            foreach (Material mat in _EnableSpecularOn.targets)
+            foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_EnableSpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
                 TSFunctions.SetKeyword(mat, "_DETAIL_MAP", mat.GetFloat(_DetailMapOn.name) != 0);
             }
 
@@ -296,15 +295,14 @@ namespace Cibbi.ToonyStandard
             {
                 FindProperties(properties);
             }
+            TSFunctions.DrawHeader(EditorGUIUtility.currentViewWidth,10);
             
-            TSFunctions.DrawHeader(10);
-
             
 
             //if a keyword is used to apply the effects on the shader caused by enabling/disabling a section, it needs to be set every update
-            foreach (Material mat in _EnableSpecularOn.targets)
+            foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_EnableSpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
                 TSFunctions.SetKeyword(mat, "_DETAIL_MAP", mat.GetFloat(_DetailMapOn.name) != 0);
             }
 
@@ -398,7 +396,7 @@ namespace Cibbi.ToonyStandard
 
             _RampOn = FindProperty("_RampOn", properties);
             _RimLightOn = FindProperty("_RimLightOn", properties);          
-            _EnableSpecularOn = FindProperty("_EnableSpecularOn", properties);
+            _SpecularOn = FindProperty("_SpecularOn", properties);
             _DetailMapOn = FindProperty("_DetailMapOn", properties);
 
             _ToonRampBox = FindProperty("_ToonRampBox", properties);
@@ -701,14 +699,14 @@ namespace Cibbi.ToonyStandard
             public void CheckSpecularOptionsSection(bool isOpen, bool isEnabled)
             {
                 _SpecularBox.floatValue = TSFunctions.floatBoolean(isOpen);
-                foreach (Material mat in _EnableSpecularOn.targets)
+                foreach (Material mat in _SpecularOn.targets)
                 {
                     if (!isEnabled)
                     {   
-                        if(!_EnableSpecularOn.hasMixedValue)
+                        if(!_SpecularOn.hasMixedValue)
                         {
                             TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
-                            _EnableSpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                            _SpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
                         }
                     }
                 }
@@ -729,7 +727,7 @@ namespace Cibbi.ToonyStandard
 
             public BoxParameters SpecularOptionsIndex()
         {
-            return new BoxParameters(_SpecularBox,_EnableSpecularOn);
+            return new BoxParameters(_SpecularBox,_SpecularOn);
         }
 
         #endregion 
@@ -799,14 +797,14 @@ namespace Cibbi.ToonyStandard
             public void CheckBasicSpecularOptionsSection(bool isOpen, bool isEnabled)
             {
                 _SpecularBox.floatValue = TSFunctions.floatBoolean(isOpen);
-                foreach (Material mat in _EnableSpecularOn.targets)
+                foreach (Material mat in _SpecularOn.targets)
                 {
                     if (!isEnabled)
                     {   
-                        if(!_EnableSpecularOn.hasMixedValue)
+                        if(!_SpecularOn.hasMixedValue)
                         {
                             TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
-                            _EnableSpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                            _SpecularOn.floatValue = TSFunctions.floatBoolean(material.IsKeywordEnabled("_ENABLE_SPECULAR"));
                         }
                     }
                 }

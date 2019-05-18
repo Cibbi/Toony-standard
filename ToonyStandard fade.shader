@@ -71,7 +71,7 @@
 
 		[HideInInspector] _RampOn("__RampOn", Float) = 0.0
 		[HideInInspector] _RimLightOn("__RimLight", Float) = 0.0
-		[HideInInspector] _EnableSpecularOn("__EnableSpecular", Float) = 0.0
+		[HideInInspector] _SpecularOn("__EnableSpecular", Float) = 0.0
 		[HideInInspector] _DetailMapOn("__DetailMap", Float) = 0.0
 
 		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 0.0

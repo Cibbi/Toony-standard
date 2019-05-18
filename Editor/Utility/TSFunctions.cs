@@ -142,14 +142,28 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Draws the default header of the various windows
         /// </summary>
+        /// <param name="windowWidth">the width of the current window</param>
         /// <param name="padding">Vertical padding</param>
-        public static void DrawHeader(int padding)
+        public static void DrawHeader(float windowWidth, int padding)
 		{
 			Texture2D icon=TSConstants.logo;
 			GUILayout.Space(padding);
 			GUILayout.BeginHorizontal();
 				GUILayout.FlexibleSpace();
-				GUILayout.Label(icon, GUILayout.Width(icon.width), GUILayout.Height(icon.height));
+                windowWidth-=10;
+                int width;
+                int height;
+                if(windowWidth<icon.width)
+                {
+                    width=(int)windowWidth;
+                    height=icon.height*width/icon.width;
+                }
+                else
+                {
+                    width=icon.width;
+                    height=icon.height;
+                }
+				GUILayout.Label(icon, GUILayout.Width(width),GUILayout.Height(height));
 				GUILayout.FlexibleSpace();
 			GUILayout.EndHorizontal();
 			GUILayout.Space(padding);
