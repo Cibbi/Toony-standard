@@ -7,7 +7,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard Master Build 20190511";
+        public static string Version = "Toony Standard 1.1";
         public static string LocalShaderFolder;
         public static string LocalShaderAssetsFolder;
         public static string localJSONPath;
