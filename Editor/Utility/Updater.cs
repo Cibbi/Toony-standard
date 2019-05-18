@@ -153,7 +153,7 @@ namespace Cibbi.ToonyStandard
                         EditorGUILayout.LabelField("Released at: "+DateTime.Parse(githubReleaseJSON.published_at).ToString());
                         EditorGUILayout.BeginVertical("box");
                         MainAreaScrollPos=EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100),GUILayout.MaxHeight(400)); 
-                        EditorGUILayout.LabelField(githubReleaseJSON.body);               
+                        EditorGUILayout.TextArea(githubReleaseJSON.body,TSConstants.Styles.multilineLabel);                  
                         EditorGUILayout.EndScrollView();
                         EditorGUILayout.EndVertical();
                     }
