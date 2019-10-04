@@ -174,9 +174,9 @@ namespace Cibbi.ToonyStandard
 			}
 
 			// Loads the settings file if exists, creates a default one if not
-			if(File.Exists(TSConstants.settingsJSONPath))
+			if(File.Exists(TSConstants.SettingsJSONPath))
 			{
-				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
 				sectionStyle=(SectionStyle)settings.sectionStyle;
 				sectionColor=settings.sectionColor;
 				isAutoUpdateDisabled=settings.disableUpdates;
@@ -187,7 +187,7 @@ namespace Cibbi.ToonyStandard
 				settings.sectionStyle=(int)SectionStyle.Bubbles;
 				settings.sectionColor=new Color(1,1,1,1);
 				settings.disableUpdates=false;
-				File.WriteAllText(TSConstants.settingsJSONPath,JsonUtility.ToJson(settings));
+				File.WriteAllText(TSConstants.SettingsJSONPath,JsonUtility.ToJson(settings));
 			}
 			
 		}
@@ -216,9 +216,9 @@ namespace Cibbi.ToonyStandard
 			updater.updateStream = (UpdateStream)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.UpdateStream,updater.updateStream);
 			if(EditorGUI.EndChangeCheck())
 			{
-				LocalVersionJSON local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.localJSONPath));
+				LocalVersionJSON local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.LocalJSONPath));
 				local.beta=updater.updateStream==UpdateStream.Beta;
-				File.WriteAllText(TSConstants.localJSONPath,JsonUtility.ToJson(local));
+				File.WriteAllText(TSConstants.LocalJSONPath,JsonUtility.ToJson(local));
 				updater.Reset();
 			}
 
@@ -228,11 +228,11 @@ namespace Cibbi.ToonyStandard
 			isAutoUpdateDisabled=EditorGUILayout.Toggle(TSConstants.TSWindowLabels.DisableAutoUpdates,isAutoUpdateDisabled);
 			if(EditorGUI.EndChangeCheck())
 			{
-				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
 				settings.sectionStyle=(int)sectionStyle;
 				settings.sectionColor=sectionColor;
 				settings.disableUpdates=isAutoUpdateDisabled;
-				File.WriteAllText(TSConstants.settingsJSONPath,JsonUtility.ToJson(settings));
+				File.WriteAllText(TSConstants.SettingsJSONPath,JsonUtility.ToJson(settings));
 				exampleSection=new Section(new GUIContent("Example Section"),true,delegate(MaterialEditor m){EditorGUILayout.LabelField("Example content");},delegate(bool a, bool b){});
 			}
 

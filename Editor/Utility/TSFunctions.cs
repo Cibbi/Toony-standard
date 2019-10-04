@@ -95,9 +95,9 @@ namespace Cibbi.ToonyStandard
         }
 
         /// <summary>
-        /// Draws a color property with a color box that doesn't look retarded
+        /// Draws a toggle property
         /// </summary>
-        /// <param name="boolProperty">Material property that contains the color property that needs to be drawn, has to be passed by reference</param>
+        /// <param name="boolProperty">boolean property</param>
         /// <param name="label">Label of the property</param>
         public static bool ProperToggle(ref MaterialProperty boolProperty, GUIContent label)
         {
@@ -131,7 +131,11 @@ namespace Cibbi.ToonyStandard
             Rect colorPropertyRect = EditorGUILayout.GetControlRect();
             colorPropertyRect.width = EditorGUIUtility.labelWidth + 50.0f;
             EditorGUI.showMixedValue = colorProperty.hasMixedValue;
-            boxColor = EditorGUI.ColorField(colorPropertyRect, label, boxColor, true, true, hdr, new ColorPickerHDRConfig(0, 65536, 0, 3));
+            #if UNITY_2018_1_OR_NEWER
+                boxColor = EditorGUI.ColorField(colorPropertyRect, label, boxColor, true, true, hdr);
+            #else
+                boxColor = EditorGUI.ColorField(colorPropertyRect, label, boxColor, true, true, hdr, new ColorPickerHDRConfig(0, 65536, 0, 3));
+            #endif
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
@@ -146,7 +150,7 @@ namespace Cibbi.ToonyStandard
         /// <param name="padding">Vertical padding</param>
         public static void DrawHeader(float windowWidth, int padding)
 		{
-			Texture2D icon=TSConstants.logo;
+			Texture2D icon=TSConstants.Logo;
 			GUILayout.Space(padding);
 			GUILayout.BeginHorizontal();
 				GUILayout.FlexibleSpace();
@@ -177,13 +181,13 @@ namespace Cibbi.ToonyStandard
 			GUILayout.FlexibleSpace();
 			GUILayout.BeginHorizontal();
 					GUILayout.BeginHorizontal();
-						if (GUILayout.Button(new GUIContent(TSConstants.githubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(43)))
+						if (GUILayout.Button(new GUIContent(TSConstants.GithubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(43)))
 						{
 							Application.OpenURL("https://github.com/Cibbi/Toony-standard");
 						}
 
 						EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-						if (GUILayout.Button(new GUIContent(TSConstants.patreonIcon, "Want to gift me pizza every month? Become a patreon!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+						if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patreon!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
 						{
 							Application.OpenURL("https://www.patreon.com/Cibbi");
 						}

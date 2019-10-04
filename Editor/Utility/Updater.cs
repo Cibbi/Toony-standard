@@ -66,9 +66,9 @@ namespace Cibbi.ToonyStandard
             previousTimeSinceStartup = DateTime.Now;
             
             LocalVersionJSON local;
-            if(File.Exists(TSConstants.localJSONPath))
+            if(File.Exists(TSConstants.LocalJSONPath))
             {
-                local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.localJSONPath));
+                local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.LocalJSONPath));
             }
             else
             {
@@ -76,7 +76,7 @@ namespace Cibbi.ToonyStandard
                 local.beta=true;
                 local.betaSha="";
                 local.version="beta";
-                File.WriteAllText(TSConstants.localJSONPath,JsonUtility.ToJson(local));
+                File.WriteAllText(TSConstants.LocalJSONPath,JsonUtility.ToJson(local));
             }
 
             if(local.beta)
@@ -219,9 +219,9 @@ namespace Cibbi.ToonyStandard
                 local=null;
             }
             // Checks if the version json is present and creates a new one that will trigger an update if not present
-            if(File.Exists(TSConstants.localJSONPath))
+            if(File.Exists(TSConstants.LocalJSONPath))
             { 
-                local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.localJSONPath));
+                local=JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.LocalJSONPath));
             }
             else
             {
@@ -229,7 +229,7 @@ namespace Cibbi.ToonyStandard
                 local.beta=true;
                 local.betaSha="";
                 local.version="release";
-                File.WriteAllText(TSConstants.localJSONPath,JsonUtility.ToJson(local));
+                File.WriteAllText(TSConstants.LocalJSONPath,JsonUtility.ToJson(local));
             }
             
             // Creates a web request to the github api dependent to the update stream currently selected
@@ -270,7 +270,7 @@ namespace Cibbi.ToonyStandard
                         else if(local.betaSha.Equals("nosha"))
                         {
                             local.betaSha=githubBetaJSON.sha;
-                            File.WriteAllText(TSConstants.localJSONPath,JsonUtility.ToJson(local));
+                            File.WriteAllText(TSConstants.LocalJSONPath,JsonUtility.ToJson(local));
                             state=UpdaterState.UpToDate;
                         }
                         else
@@ -330,7 +330,7 @@ namespace Cibbi.ToonyStandard
                     {
                         state=UpdaterState.Downloaded;
 
-                        TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+                        TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
 
                         // If the update stream is the beta one the downloaded file is a zip file, meaning that we have to extract it manually, fortunately a guy called Yallie made a simple
                         // extraction class that handles the basic stuff needed here, check him over https://github.com/yallie/unzip
@@ -361,7 +361,7 @@ namespace Cibbi.ToonyStandard
                             local.beta=true;
                             local.betaSha=githubBetaJSON.sha;
                             local.version="beta";
-                            File.WriteAllText(TSConstants.localJSONPath,JsonUtility.ToJson(local));
+                            File.WriteAllText(TSConstants.LocalJSONPath,JsonUtility.ToJson(local));
                             // The asset database is refreshed to be sure that the zip file is actually detected from the asset database for its deletion
                             AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
                             AssetDatabase.DeleteAsset("Assets/toonyStandard.zip");
@@ -380,7 +380,7 @@ namespace Cibbi.ToonyStandard
                             AssetDatabase.DeleteAsset("Assets/toonyStandard.unitypackage");
                         }
 
-                        File.WriteAllText(TSConstants.oldSettingsJSONPath,JsonUtility.ToJson(settings));
+                        File.WriteAllText(TSConstants.OldSettingsJSONPath,JsonUtility.ToJson(settings));
                         
                     }
                     // Executed if the request got an error response

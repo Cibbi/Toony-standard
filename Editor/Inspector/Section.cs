@@ -33,7 +33,7 @@ namespace Cibbi.ToonyStandard
             this.content = content;
             this.changesCheck = changesCheck;
 
-            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
 			sectionStyle=(SectionStyle)settings.sectionStyle;
 			this.sectionBgColor=settings.sectionColor;
         }

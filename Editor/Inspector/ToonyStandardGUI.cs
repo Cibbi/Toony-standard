@@ -223,7 +223,7 @@ namespace Cibbi.ToonyStandard
                     _GlossinessMap.textureValue=null;
                     _SpMode.floatValue=(float)SpMode.Standard;
                     _indirectSpecular.floatValue=(float)IndirectSpecular.Probe;
-                    _HighlightRamp.textureValue=TSConstants.defaultRamp;
+                    _HighlightRamp.textureValue=TSConstants.DefaultRamp;
                     _HighlightRampOffset.floatValue=0f;
 
                     _DetailMapOn.floatValue=0f;
@@ -315,7 +315,7 @@ namespace Cibbi.ToonyStandard
             {
                 if(!_RampOn.hasMixedValue && _RampOn.floatValue==0f)
                 {
-                     _Ramp.textureValue=TSConstants.defaultRamp;
+                     _Ramp.textureValue=TSConstants.DefaultRamp;
                     _RampOffset.floatValue=0f;
                     _ShadowIntensity.floatValue=0.4f;
                 }
@@ -574,7 +574,7 @@ namespace Cibbi.ToonyStandard
                     {
                         _RampOn.floatValue = 0;
                     }
-                    _Ramp.textureValue=TSConstants.defaultRamp;
+                    _Ramp.textureValue=TSConstants.DefaultRamp;
                     _RampOffset.floatValue=0f;
                     _ShadowIntensity.floatValue=0.4f;
                     _OcclusionOffset.floatValue=0f;

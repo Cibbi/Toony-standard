@@ -19,7 +19,7 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         public OrderedSectionGroup()
         {
-            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
             sectionStyle=(SectionStyle)settings.sectionStyle;
 			switch(sectionStyle)
             {

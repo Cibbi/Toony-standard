@@ -7,28 +7,182 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20190518";
-        public static string LocalShaderFolder;
-        public static string LocalShaderAssetsFolder;
-        public static string localJSONPath;
-        public static string settingsJSONPath;
-        public static string oldSettingsJSONPath;
-
+        public static string Version = "Toony Standard master build 20191005";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
-        
-        public static Texture2D deleteIcon;
-        public static Texture2D logo;
-        public static Texture2D githubIcon;
-        public static Texture2D patreonIcon;
-        public static Texture2D defaultRamp;
 
-        public static void InitializeFolderReferences(string assetsPath)
+        private static string localShaderFolder;
+        private static string localShaderAssetsFolder;
+        private static string localJSONPath;
+        private static string settingsJSONPath;
+        private static string oldSettingsJSONPath;
+
+        private static Texture2D deleteIcon;
+        private static Texture2D logo;
+        private static Texture2D githubIcon;
+        private static Texture2D patreonIcon;
+        private static Texture2D defaultRamp;
+
+        public static string LocalShaderFolder
         {
+            get
+            {
+                if(localShaderFolder==null)
+                    InitializeFolderReferences();
+                return localShaderFolder;
+            }
+
+            set
+            {
+                localShaderFolder = value;
+            }
+        }
+        public static string LocalShaderAssetsFolder
+        {
+            get
+            {
+                if(localShaderAssetsFolder==null)
+                    InitializeFolderReferences();
+                return localShaderAssetsFolder;
+            }
+
+            set
+            {
+                localShaderAssetsFolder = value;
+            }
+        }
+        public static string LocalJSONPath
+        {
+            get
+            {
+                if(localJSONPath==null)
+                    InitializeFolderReferences();
+                return localJSONPath;
+            }
+
+            set
+            {
+                localJSONPath = value;
+            }
+        }
+        public static string SettingsJSONPath
+        {
+            get
+            {
+                if(settingsJSONPath==null)
+                    InitializeFolderReferences();
+                return settingsJSONPath;
+            }
+
+            set
+            {
+                settingsJSONPath = value;
+            }
+        }
+        public static string OldSettingsJSONPath
+        {
+            get
+            {
+                if(oldSettingsJSONPath==null)
+                    InitializeFolderReferences();
+                return oldSettingsJSONPath;
+            }
+
+            set
+            {
+                oldSettingsJSONPath = value;
+            }
+        }
+
+
+        public static Texture2D DeleteIcon
+        {
+            get
+            {
+                if(deleteIcon==null)
+                    InitializeFolderReferences();
+                return deleteIcon;
+            }
+
+            set
+            {
+                deleteIcon = value;
+            }
+        }
+        public static Texture2D Logo
+        {
+            get
+            {
+                if(logo==null)
+                    InitializeFolderReferences();
+                return logo;
+            }
+
+            set
+            {
+                logo = value;
+            }
+        }
+        public static Texture2D GithubIcon
+        {
+            get
+            {
+                if(githubIcon==null)
+                    InitializeFolderReferences();
+                return githubIcon;
+            }
+
+            set
+            {
+                githubIcon = value;
+            }
+        }
+        public static Texture2D PatreonIcon
+        {
+            get
+            {
+                if(patreonIcon==null)
+                    InitializeFolderReferences();
+                return patreonIcon;
+            }
+
+            set
+            {
+                patreonIcon = value;
+            }
+        }
+        public static Texture2D DefaultRamp
+        {
+            get
+            {
+                if(defaultRamp==null)
+                    InitializeFolderReferences();
+                return defaultRamp;
+            }
+
+            set
+            {
+                defaultRamp = value;
+            }
+        }
+
+        public static void InitializeFolderReferences()
+        {
+            string assetsPath="";
+            string[] logopath = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
+            if (logopath.Length > 0)
+            {
+                string[] pieces = AssetDatabase.GUIDToAssetPath(logopath[0]).Split('/');
+                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+                assetsPath = string.Join("/", pieces);
+            }
+
             string path=Application.dataPath+assetsPath.Substring(assetsPath.IndexOf("/"));
 
-            LocalShaderFolder=path;
-            LocalShaderAssetsFolder = assetsPath;
+            localShaderFolder=path;
+            localShaderAssetsFolder = assetsPath;
             localJSONPath = path + "/version.json";
             settingsJSONPath = path + "/Editor/settings.json";
             oldSettingsJSONPath =path + "/Editor/oldSettings.json";

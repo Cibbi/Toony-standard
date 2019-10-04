@@ -18,33 +18,22 @@ namespace Cibbi.ToonyStandard
         static TSStartup ()
         {
             bool update;
-            
 
-            string path="";
-            string[] logo = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
-            if (logo.Length > 0)
-            {
-                string[] pieces = AssetDatabase.GUIDToAssetPath(logo[0]).Split('/');
-                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
-                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
-                ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
-                path = string.Join("/", pieces);
-            }
-            TSConstants.InitializeFolderReferences(path);
+            TSConstants.InitializeFolderReferences();
 
 
             //checks if there's old configuration settings that needs to be reimported 
-            if(File.Exists(TSConstants.oldSettingsJSONPath))
+            if(File.Exists(TSConstants.OldSettingsJSONPath))
 			{
-				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.oldSettingsJSONPath));
-				File.WriteAllText(TSConstants.settingsJSONPath,JsonUtility.ToJson(settings));
-                File.Delete(TSConstants.oldSettingsJSONPath);
+				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.OldSettingsJSONPath));
+				File.WriteAllText(TSConstants.SettingsJSONPath,JsonUtility.ToJson(settings));
+                File.Delete(TSConstants.OldSettingsJSONPath);
                 AssetDatabase.Refresh();
 			}
 
-            if(File.Exists(TSConstants.settingsJSONPath))
+            if(File.Exists(TSConstants.SettingsJSONPath))
 			{
-				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.settingsJSONPath));
+				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
 				update=!settings.disableUpdates;
 			}
 			else
@@ -53,7 +42,7 @@ namespace Cibbi.ToonyStandard
 				settings.sectionStyle=(int)SectionStyle.Bubbles;
 				settings.sectionColor=new Color(1,1,1,1);
 				settings.disableUpdates=false;
-				File.WriteAllText(TSConstants.settingsJSONPath,JsonUtility.ToJson(settings));
+				File.WriteAllText(TSConstants.SettingsJSONPath,JsonUtility.ToJson(settings));
                 update=true;
 			}
 
