@@ -310,6 +310,8 @@ namespace Cibbi.ToonyStandard
             //Temporary code for converting back HDR colors
             #if UNITY_2018_1_OR_NEWER
             if(FindProperty("_NeedsFix", properties).floatValue==1)
+            {
+                EditorGUILayout.BeginHorizontal();
                 if(GUILayout.Button("Convert HDR colors back to 2017 look"))
                 {
                     foreach(MaterialProperty m in properties)
@@ -320,7 +322,13 @@ namespace Cibbi.ToonyStandard
                         }
                     }
                     FindProperty("_NeedsFix", properties).floatValue=0;
-                }                    
+                }
+                if(GUILayout.Button("Keep current colors"))
+                {
+                    FindProperty("_NeedsFix", properties).floatValue=0;
+                }
+                EditorGUILayout.EndHorizontal();
+            }                
             #endif
 
             //if a keyword is used to apply the effects on the shader caused by enabling/disabling a section, it needs to be set every update
