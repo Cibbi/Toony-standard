@@ -78,6 +78,8 @@
 		[HideInInspector] _RimLightBox("__RimLightBox", Float) = 0.0
 		[HideInInspector] _SpecularBox("__SpecularBox", Float) = 0.0
 		[HideInInspector] _DetailBox("__DetailBox", Float) = 0.0
+
+		[HideInInspector] _NeedsFix("__NeedsFix", Float) = 0.5
 	}
 
 	SubShader {
