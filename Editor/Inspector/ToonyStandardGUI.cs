@@ -204,8 +204,8 @@ namespace Cibbi.ToonyStandard
         {
             foreach(Material m in FindProperty("_MainRampMin", properties).targets)
             { 
-                #if UNITY_2018_1_OR_NEWER
                 Texture2D ramp = (Texture2D)m.GetTexture("_Ramp");
+                #if UNITY_2018_1_OR_NEWER
                 if(!ramp.isReadable)
                 {
                     SetTextureImporterFormat(ramp, true);

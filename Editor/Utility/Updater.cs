@@ -344,6 +344,7 @@ namespace Cibbi.ToonyStandard
                             {
                                 Directory.Delete(TSConstants.LocalShaderFolder,true);
                             }
+                            AssetDatabase.Refresh();
                             // For each file in the zip we change the github repository path with the more user friendly one used on the releases, and then extract that file in that path
                             foreach (string fileName in zip.FileNames)
                             {
@@ -377,6 +378,7 @@ namespace Cibbi.ToonyStandard
                             {
                                 Directory.Delete(TSConstants.LocalShaderFolder,true);
                             }
+                            AssetDatabase.Refresh();
                             AssetDatabase.ImportPackage(Application.dataPath+"/toonyStandard.unitypackage",false);
                             AssetDatabase.Refresh();
                             AssetDatabase.DeleteAsset("Assets/toonyStandard.unitypackage");
