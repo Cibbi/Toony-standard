@@ -38,7 +38,7 @@ float3 GetAlbedo (Interpolators i)
 	#if defined (_DETAIL_MAP)
 		float4 detailMask=UNITY_SAMPLE_TEX2D_SAMPLER (_DetailMask, _MainTex, i.uv.xy);
 		float4 detailTexture=UNITY_SAMPLE_TEX2D_SAMPLER (_DetailTexture, _MainTex, i.uv.zw)*_DetailColor;
-		albedo=lerp(albedo, albedo * detailTexture, detailMask.r * _DetailIntensity);
+		albedo=lerp(albedo, albedo * detailTexture, detailMask.r * _DetailIntensity); 
 		
 		//float3 detailNormals =UnpackScaleNormal (UNITY_SAMPLE_TEX2D_SAMPLER(_DetailBumpMap, _MainTex, i.detailUv),_DetailBumpScale);
 		//float3 finalNormals = normalize(float3(normalMap.xy + detailNormals.xy, normalMap.z*detailNormals.z));

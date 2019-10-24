@@ -204,7 +204,7 @@ namespace Cibbi.ToonyStandard
         {
             foreach(Material m in FindProperty("_MainRampMin", properties).targets)
             { 
-
+                #if UNITY_2018_1_OR_NEWER
                 Texture2D ramp = (Texture2D)m.GetTexture("_Ramp");
                 if(!ramp.isReadable)
                 {
@@ -212,6 +212,22 @@ namespace Cibbi.ToonyStandard
                 }
                 Color min = ramp.GetPixel(0, 0);
                 Color max = ramp.GetPixel(ramp.width, ramp.height);
+                #else
+
+                Color min;
+                Color max;
+                try
+                {
+                    min = ramp.GetPixel(0, 0);
+                    max = ramp.GetPixel(ramp.width, ramp.height);
+                }
+                catch(UnityException)
+                {
+                    SetTextureImporterFormat(ramp, true);
+                    min = ramp.GetPixel(0, 0);
+                    max = ramp.GetPixel(ramp.width, ramp.height);
+                }
+                #endif
                 float intensity = m.GetFloat("_ShadowIntensity");
                 if(intensity == 0)
                 {

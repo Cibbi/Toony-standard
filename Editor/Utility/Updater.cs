@@ -337,12 +337,13 @@ namespace Cibbi.ToonyStandard
                         if(updateStream==UpdateStream.Beta)
                         {   
                             string localFolder=TSConstants.LocalShaderFolder;
+                            AssetDatabase.Refresh();
+                            Unzip zip= new Unzip(Application.dataPath+"/toonyStandard.zip");
                             // Deleting the old Toony standard version
                             if(Directory.Exists(TSConstants.LocalShaderFolder))
                             {
                                 Directory.Delete(TSConstants.LocalShaderFolder,true);
                             }
-                            Unzip zip= new Unzip(Application.dataPath+"/toonyStandard.zip");
                             // For each file in the zip we change the github repository path with the more user friendly one used on the releases, and then extract that file in that path
                             foreach (string fileName in zip.FileNames)
                             {
@@ -371,6 +372,7 @@ namespace Cibbi.ToonyStandard
                         // Since it's a unitypackage its installation is relatively easy, but we still delete the old version first for safety
                         else
                         {
+                            AssetDatabase.Refresh();
                             if(Directory.Exists(TSConstants.LocalShaderFolder))
                             {
                                 Directory.Delete(TSConstants.LocalShaderFolder,true);
