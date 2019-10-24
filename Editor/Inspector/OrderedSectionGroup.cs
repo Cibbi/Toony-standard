@@ -60,9 +60,9 @@ namespace Cibbi.ToonyStandard
             int i=1;
             foreach (OrderedSection section in sections)
             {
-                if(section.getIndexNumber()!=0  &&  !section.isIndexMixed())
+                if(section.GetIndexNumber()!=0  &&  !section.IsIndexMixed())
                 {
-                    section.setIndexNumber(i);
+                    section.SetIndexNumber(i);
                     i++;
                 }
             }
@@ -72,7 +72,7 @@ namespace Cibbi.ToonyStandard
         /// Draws the list of sections
         /// </summary>
         /// <param name="materialEditor">Material editor provided by the material inspector window</param>
-        public void DrawSectionsList(MaterialEditor materialEditor)
+        public void DrawSectionsList(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
             ReorderSections();
 
@@ -80,7 +80,7 @@ namespace Cibbi.ToonyStandard
             {
                 if(!HasMixedIndexZero(section))
                 {
-                    section.DrawSection(materialEditor);
+                    section.DrawSection(materialEditor, properties);
                 }
             }
 
@@ -140,11 +140,12 @@ namespace Cibbi.ToonyStandard
         public void TurnOnSection(object sectionVariable)
         {
             OrderedSection section = (OrderedSection)sectionVariable;
-            section.setIndexNumber(753);
+            section.SetIndexNumber(753);
+            section.OnAdd();
         }
         
         /// <summary>
-        /// Compares 2 ordered section to determine which one is the first one
+        /// Compares 2 ordered sections to determine which one is the first one
         /// </summary>
         /// <param name="x">First section to compare</param>
         /// <param name="y">Second section to compare</param>
@@ -171,11 +172,11 @@ namespace Cibbi.ToonyStandard
                 else
                 {
                     //
-                    if (x.getIndexNumber()>y.getIndexNumber())
+                    if (x.GetIndexNumber()>y.GetIndexNumber())
                     {
                         return 1;
                     }
-                    else if (x.getIndexNumber()<y.getIndexNumber())
+                    else if (x.GetIndexNumber()<y.GetIndexNumber())
                     {
                         return -1;
                     }
@@ -214,9 +215,9 @@ namespace Cibbi.ToonyStandard
         private static bool HasMixedIndexZero(OrderedSection section)
         {
             bool zero = false;
-            foreach (Material mat in section.getIndexTarget())
+            foreach (Material mat in section.GetIndexTargets())
             {
-                zero = mat.GetFloat(section.getIndexName())==0;
+                zero = mat.GetFloat(section.GetIndexName())==0;
                 if(zero)
                 {
                     break;

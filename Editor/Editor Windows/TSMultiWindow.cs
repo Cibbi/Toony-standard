@@ -229,20 +229,20 @@ namespace Cibbi.ToonyStandard
 			if(EditorGUI.EndChangeCheck())
 			{
 				TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
-				settings.sectionStyle=(int)sectionStyle;
-				settings.sectionColor=sectionColor;
-				settings.disableUpdates=isAutoUpdateDisabled;
+				settings.sectionStyle = (int)sectionStyle;
+				settings.sectionColor = sectionColor;
+				settings.disableUpdates = isAutoUpdateDisabled;
 				File.WriteAllText(TSConstants.SettingsJSONPath,JsonUtility.ToJson(settings));
-				exampleSection=new Section(new GUIContent("Example Section"),true,delegate(MaterialEditor m){EditorGUILayout.LabelField("Example content");},delegate(bool a, bool b){});
+				exampleSection = new ExampleSection(new GUIContent("Example Section"),true);
 			}
 
 
 			GUILayout.Space(20); 
-			if(exampleSection==null)
+			if(exampleSection == null)
 			{
-				exampleSection=new Section(new GUIContent("Example Section"),true,delegate(MaterialEditor m){EditorGUILayout.LabelField("Example content");},delegate(bool a, bool b){});
+				exampleSection = new ExampleSection(new GUIContent("Example Section"),true);
 			}
-			exampleSection.DrawSection(null);
+			exampleSection.DrawSection(null, null);
 		}
 
 		/// <summary>
@@ -313,4 +313,22 @@ namespace Cibbi.ToonyStandard
 		public Color sectionColor;
 		public bool disableUpdates;
 	}
+
+    public class ExampleSection : Section
+    {
+        public ExampleSection(GUIContent sectionTitle, bool open) : base(sectionTitle, open)
+        {
+			
+        }
+
+        public override void EndBoxCheck(bool isOpen, bool isEnabled)
+        {
+            
+        }
+
+        public override void SectionContent(MaterialEditor materialEditor, MaterialProperty[] properties)
+        {
+            EditorGUILayout.LabelField("Example content");
+        }
+    }
 }

@@ -154,7 +154,7 @@ namespace Cibbi.ToonyStandard
 			GUILayout.Space(padding);
 			GUILayout.BeginHorizontal();
 				GUILayout.FlexibleSpace();
-                windowWidth-=10;
+                windowWidth-=40;
                 int width;
                 int height;
                 if(windowWidth<icon.width)

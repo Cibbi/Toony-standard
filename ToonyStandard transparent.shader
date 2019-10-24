@@ -1,6 +1,7 @@
-﻿Shader "Hidden/Cibbis shaders/toony standard/Transparent" {
-	
-	Properties {
+﻿Shader "Hidden/Cibbis shaders/toony standard/Transparent"
+{
+	Properties
+	{
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		[Normal]_BumpMap("Normal Map", 2D) = "bump" {}
@@ -30,7 +31,7 @@
 		_Glossiness ("Smoothness", Range(0,1)) = 0.0
 		_GlossinessMap("Smoothness Map", 2D) = "white" {}
 		_TangentMap("Tangent Map", 2D) = "white" {}
-		_Anisotropy ("Anisotropy", Range(0,1)) = 0.0
+		_Anisotropy ("Anisotropy", Range(-1,1)) = 0.0
 		_AnisotropyMap("Anisotropy Map", 2D) = "white" {}
 		_FakeHighlights("Fake Highlights", 2D) = "black" {}
 		_Matcap("Matcap", 2D) = "white" {}
@@ -63,6 +64,8 @@
 		[HideInInspector] _SrcBlend("__src", Float) = 1.0
 		[HideInInspector] _DstBlend("__dst", Float) = 0.0
 		[HideInInspector] _ZWrite("__zw", Float) = 1.0
+		[HideInInspector] _MainRampMin("__MainRampMin", Color) = (0.001,0.001,0.001,0.001)
+		[HideInInspector] _MainRampMax("__MainRampMax", Color) = (1,1,1,1)
 
 		[HideInInspector] _ToonyHighlights("__ToonyHighlights", Float) = 0.0
 		[HideInInspector] _FakeLight("__FakeLight", Float) = 0.0
@@ -81,41 +84,137 @@
 
 		[HideInInspector] _NeedsFix("__NeedsFix", Float) = 0.5
 	}
-
-	SubShader {
-		Tags { "RenderType"="Transparent" "Queue" = "Transparent"  }
-		LOD 100
-
-
-		//Blend One OneMinusSrcAlpha
-		ZWrite Off
+	SubShader
+	{
+		Tags
+		{
+			"RenderType" = "Transparent"
+			"Queue" = "Transparent"
+		}
+		Blend One OneMinusSrcAlpha
+		ZWrite off
 		Cull [_Cull]
-		CGPROGRAM
-
-
-		#include "UnityToonyPBSLighting.cginc"
-
-		#pragma shader_feature _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
-		#pragma skip_variants _ALPHATEST_ON _ALPHABLEND_ON
-		#pragma shader_feature _SPECULAR_WORKFLOW
-		#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-		#pragma shader_feature _ENABLE_SPECULAR
-		#pragma shader_feature _DETAIL_MAP
-		#pragma shader_feature _EMISSION
-		// Physically based Standard lighting model, and enable shadows on all light types
-
-		#pragma surface surf ToonyStandard vertex:vert fullforwardshadows alpha:premul
 		
+		Pass 
+		{
+			Tags
+			{
+				"LightMode" = "ForwardBase"
+			}
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 4.0
+			CGPROGRAM
+			#pragma target 3.0
+			#pragma vertex VertexFunction
+			#pragma fragment FragmentFunction
+			#pragma multi_compile_fwdbase	
+			#pragma multi_compile_fog
+			//#pragma multi_compile _ SHADOWS_SCREEN
+			#pragma multi_compile _ VERTEXLIGHT_ON
 
-		#include "ToonyStandardSurface.cginc"
+			#define _ALPHAPREMULTIPLY_ON
+			#pragma shader_feature _SPECULAR_WORKFLOW
+			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
+			#pragma shader_feature _ENABLE_SPECULAR
+			#pragma shader_feature _DETAIL_MAP
+			#pragma shader_feature _EMISSION
+			#include "UnityCG.cginc"
+			#include "UnityLightingCommon.cginc"
+			#include "UnityStandardUtils.cginc"
+			#include "AutoLight.cginc"
 
-		ENDCG
+			//#include "UnityStandardConfig.cginc"
+
+			#include "CGInclude/TSDataStructures.cginc"
+			#include "CGInclude/TSFunctions.cginc"
+			#include "CGInclude/TSVertFrag.cginc"
+			
+			ENDCG
+		}
+
+		Pass 
+		{
+			Tags
+			{
+				"LightMode" = "ForwardAdd"
+			}
+
+			Blend SrcAlpha One
+
+			CGPROGRAM
+			#pragma target 3.0
+			#pragma vertex VertexFunction
+			#pragma fragment FragmentFunction
+			#pragma multi_compile_fwdadd_fullshadows
+			#pragma multi_compile_fog
+
+			#define _ALPHAPREMULTIPLY_ON
+			#pragma shader_feature _SPECULAR_WORKFLOW
+			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
+			#pragma shader_feature _ENABLE_SPECULAR
+			#pragma shader_feature _DETAIL_MAP
+			#include "UnityCG.cginc"
+			#include "UnityLightingCommon.cginc"
+			#include "UnityStandardUtils.cginc"
+			#include "AutoLight.cginc"
+
+			//#include "UnityStandardConfig.cginc"
+			#include "CGInclude/TSDataStructures.cginc"
+			#include "CGInclude/TSFunctions.cginc"
+			#include "CGInclude/TSVertFrag.cginc"
+			
+			ENDCG
+		}
+		Pass 
+		{
+			Tags 
+			{
+				"LightMode" = "ShadowCaster"
+			}
+
+			ZWrite On ZTest LEqual
+
+			CGPROGRAM
+
+			#pragma target 3.0
+
+			#pragma multi_compile_shadowcaster
+			#pragma skip_variants FOG_LINEAR FOG_EXP FOG_EXP2
+
+			#pragma vertex ShadowVertexFunction
+			#pragma fragment ShadowFragmentFunction
+
+			#include "UnityStandardUtils.cginc"
+
+			#define _ALPHAPREMULTIPLY_ON
+
+			#include "CGInclude/TSShadowVertFrag.cginc"
+
+			ENDCG
+		}	
+		Pass 
+		{
+			Tags 
+			{
+				"LightMode" = "Meta"
+			}
+
+			Cull Off
+
+			CGPROGRAM
+
+			#pragma vertex MetaVertexFunction
+			#pragma fragment MetaFragmentFunction
+
+			#pragma shader_feature _SPECULAR_WORKFLOW
+			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
+			#pragma shader_feature _ENABLE_SPECULAR
+			#pragma shader_feature _DETAIL_MAP
+			#pragma shader_feature _EMISSION
+
+			#include "CGInclude/TSMetaVertFrag.cginc"
+
+			ENDCG
+		}
 	}
-
-	Fallback "Standard"
-	
 	CustomEditor "Cibbi.ToonyStandard.ToonyStandardGUI"
 }
