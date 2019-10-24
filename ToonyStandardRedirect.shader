@@ -110,6 +110,7 @@
 			#pragma multi_compile_fog	
 			//#pragma multi_compile _ SHADOWS_SCREEN
 			#pragma multi_compile _ VERTEXLIGHT_ON
+			#define UNITY_PASS_FORWARDBASE
 
 			#pragma shader_feature _SPECULAR_WORKFLOW
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
