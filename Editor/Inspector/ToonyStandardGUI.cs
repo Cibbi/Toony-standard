@@ -71,7 +71,7 @@ namespace Cibbi.ToonyStandard
             switch(inspectorLevel)
             {
                 case InspectorLevel.Basic:
-                    basicMain= new BasicMainSection(properties);
+                    basicMain = new BasicMainSection(properties);
                     break;
                 case InspectorLevel.Normal:
                     main = new MainSection(properties);

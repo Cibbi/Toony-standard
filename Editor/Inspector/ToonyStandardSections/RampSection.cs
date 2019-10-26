@@ -92,17 +92,6 @@ namespace Cibbi.ToonyStandard
                 {
                     _RampOn.floatValue = 0;
                 }
-                _Ramp.textureValue=TSConstants.DefaultRamp;
-                _RampOffset.floatValue=0f;
-                _ShadowIntensity.floatValue=0.4f;
-                _OcclusionOffset.floatValue=0f;
-                _OcclusionOffsetIntensity.floatValue=0f;
-            }
-            if(!_RampOn.hasMixedValue && _RampOn.floatValue==0f)
-            {
-                _Ramp.textureValue=TSConstants.DefaultRamp;
-                _RampOffset.floatValue=0f;
-                _ShadowIntensity.floatValue=0.4f;
             }
         }
 

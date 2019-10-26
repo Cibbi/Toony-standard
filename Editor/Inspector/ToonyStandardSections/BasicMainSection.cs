@@ -46,6 +46,7 @@ namespace Cibbi.ToonyStandard
             FindProperty("_Occlusion", properties).floatValue=0;
             FindProperty("_FakeLight", properties).floatValue=0;
             FindProperty("_RimLightOn", properties).floatValue=0;
+            FindProperty("_RampOn", properties).floatValue=1;
 
             FindProperty("_MetallicMap", properties).textureValue=null;  
             FindProperty("_GlossinessMap", properties).textureValue=null;    

@@ -17,7 +17,7 @@ float _Cutoff, _Occlusion, _RampOffset, _ShadowIntensity, _OcclusionOffsetIntens
 	  _RimIntensity, _RimStrength, _RimSharpness, _Metallic, _Glossiness, _Anisotropy,
 	  _FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity;
 float _BumpScale, _DetailBumpScale;
-float _RimLightOn, _EmissiveRim, _IndirectSpecular, _ToonyHighlights;
+float _RampOn, _RimLightOn, _EmissiveRim, _IndirectSpecular, _ToonyHighlights;
 float4 _MainRampMin, _MainRampMax;
 
 sampler2D _Ramp, _HighlightRamp;
@@ -209,27 +209,28 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 
 	//BRDF
 	float4 BRDFResult = TS_BRDF(s);
+	#if defined (UNITY_PASS_FORWARDBASE)
+		//adding rim light
+		float NdotV = max(dot(s.normal, s.dir.view),0);
+		if(_RimLightOn!=0 && _EmissiveRim==0)
+		{
+			half3 rim=pow((1-NdotV),max((1-_RimStrength)*10,0.001));
+			_RimSharpness/=2;
+			rim=1+((smoothstep(_RimSharpness,1-_RimSharpness,rim)*_RimIntensity)*_RimColor);
+			BRDFResult.rgb*=rim;
+		}
+		else if(_RimLightOn!=0 && _EmissiveRim==1)
+		{
+			half3 rim=pow((1-NdotV),max((1-_RimStrength)*10,0.001));
+			_RimSharpness/=2;
+			rim=(smoothstep(_RimSharpness,1-_RimSharpness,rim)*_RimIntensity)*_RimColor;
+			BRDFResult.rgb+=rim;
+		}
 
-	//adding rim light
-    float NdotV = max(dot(s.normal, s.dir.view),0);
-	if(_RimLightOn!=0 && _EmissiveRim==0)
-	{
-		half3 rim=pow((1-NdotV),max((1-_RimStrength)*10,0.001));
-		_RimSharpness/=2;
-		rim=1+((smoothstep(_RimSharpness,1-_RimSharpness,rim)*_RimIntensity)*_RimColor);
-		BRDFResult.rgb*=rim;
-	}
-	else if(_RimLightOn!=0 && _EmissiveRim==1)
-	{
-		half3 rim=pow((1-NdotV),max((1-_RimStrength)*10,0.001));
-		_RimSharpness/=2;
-		rim=(smoothstep(_RimSharpness,1-_RimSharpness,rim)*_RimIntensity)*_RimColor;
-		BRDFResult.rgb+=rim;
-	}
-
-	//adding emission (only in the base pass)
-	#if defined (_EMISSION) && defined (UNITY_PASS_FORWARDBASE)
-		BRDFResult.rgb += (UNITY_SAMPLE_TEX2D_SAMPLER(_EmissionMap, _MainTex, i.uv) * _EmissionColor).rgb;
+		//adding emission (only in the base pass)
+		#if defined (_EMISSION)
+			BRDFResult.rgb += (UNITY_SAMPLE_TEX2D_SAMPLER(_EmissionMap, _MainTex, i.uv) * _EmissionColor).rgb;
+		#endif
 	#endif
 	//apply fog
 	UNITY_APPLY_FOG(i.fogCoord, BRDFResult);

@@ -16,10 +16,6 @@
 		_ShadowIntensity("Shadow Intensity", Range(0,1)) = 0.4
 		_RampOffset("Ramp Offset", Range(-1,1)) = 0.0
 		_OcclusionOffsetIntensity("Occlusion Offset", Range(0,1)) = 0.0
-		[HDR]_FakeLightColor("Fake Light Color", Color) = (1,1,1,1)
-		_FakeLightX("Fake Light X", Range(-1,1)) = 1.0
-		_FakeLightY("Fake Light Y", Range(-1,1)) = 0.7
-		_FakeLightZ("Fake Light Z", Range(-1,1)) = 0.0
 
 		_RimStrength("Rim Strength", Range(0,1)) = 0.0
 		_RimSharpness("Rim Sharpness", Range(0,1)) = 0.0
@@ -68,16 +64,15 @@
 		[HideInInspector] _MainRampMax("__MainRampMax", Color) = (1,1,1,1)
  
 		[HideInInspector] _ToonyHighlights("__ToonyHighlights", Float) = 0.0
-		[HideInInspector] _FakeLight("__FakeLight", Float) = 0.0
 		[HideInInspector] _OcclusionOffset("__OcclusionOffset", Float) = 0.0
 		[HideInInspector] _EmissiveRim("__EmissiveRim", Float) = 0.0
 
-		[HideInInspector] _RampOn("__RampOn", Float) = 0.0
+		[HideInInspector] _RampOn("__RampOn", Float) = 1.0
 		[HideInInspector] _RimLightOn("__RimLight", Float) = 0.0
 		[HideInInspector] _SpecularOn("__EnableSpecular", Float) = 0.0
 		[HideInInspector] _DetailMapOn("__DetailMap", Float) = 0.0
 
-		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 0.0
+		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 1.0
 		[HideInInspector] _RimLightBox("__RimLightBox", Float) = 0.0
 		[HideInInspector] _SpecularBox("__SpecularBox", Float) = 0.0
 		[HideInInspector] _DetailBox("__DetailBox", Float) = 0.0

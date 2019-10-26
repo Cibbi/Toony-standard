@@ -89,6 +89,18 @@ half3 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyE
 //
 //end probe sampling functions
 
+//unity's base diffuse based on disney implementation
+float DisneyDiffuse(half NdotV, half NdotL, half LdotH, half perceptualRoughness)
+{
+    float fd90 = 0.5 + 2 * LdotH * LdotH * perceptualRoughness;
+    // Two schlick fresnel term
+    float lightScatter   = (1 + (fd90 - 1) * Pow5(1 - NdotL));
+    float viewScatter    = (1 + (fd90 - 1) * Pow5(1 - NdotV));
+
+    return lightScatter * viewScatter;
+}
+
+
 //calculation for normal maps based on xiexe's one
 void CalculateNormals(inout float3 normal, inout float3 tangent, inout float3 bitangent, float3 normalmap)
 {
@@ -178,6 +190,35 @@ half3 Unity_SafeNormalize(half3 inVec)
 {
     half dp3 = max(0.001f, dot(inVec, inVec));
     return inVec * rsqrt(dp3);
+}
+//modified version of Shade4PointLights
+float3 Shade4PointLights(float3 normal, float3 worldPos)
+{
+    float4 toLightX = unity_4LightPosX0 - worldPos.x;
+    float4 toLightY = unity_4LightPosY0 - worldPos.y;
+    float4 toLightZ = unity_4LightPosZ0 - worldPos.z;
+    float4 lengthSq = 0;
+    lengthSq += toLightX * toLightX;
+    lengthSq += toLightY * toLightY;
+    lengthSq += toLightZ * toLightZ;
+    float4 NdotL = 0;
+	NdotL += toLightX * normal.x;
+	NdotL += toLightY * normal.y;
+	NdotL += toLightZ * normal.z;
+    // correct NdotL
+	float4 corr = rsqrt(lengthSq);
+	NdotL =  NdotL * corr;
+    //attenuation
+    float4 atten = 1.0 / (1.0 + lengthSq * unity_4LightAtten0);
+
+    float4 diff = max(NdotL,0) * atten;
+    // final color
+    float3 col = 0;
+    col += unity_LightColor[0] * diff.x;
+    col += unity_LightColor[1] * diff.y;
+    col += unity_LightColor[2] * diff.z;
+    col += unity_LightColor[3] * diff.w;
+    return col;
 }
 
 float3 RampDotLVertLight(float3 normal, float3 worldPos, RampData rampData, float3 rampMin, float3 rampMax, float occlusion, float occlusionOffsetIntensity)

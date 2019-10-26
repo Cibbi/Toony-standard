@@ -1,6 +1,7 @@
 float4 TS_BRDF(BRDFData i)
 {
     float4 lightCol = float4(_LightColor0.rgb, i.attenuation);
+    float4 specLightCol = lightCol;
     float3 indirectDiffuse=0;
     #if defined(UNITY_PASS_FORWARDBASE)
         float3 probeLightDir = 0;
@@ -33,8 +34,12 @@ float4 TS_BRDF(BRDFData i)
             if(any(_WorldSpaceLightPos0.xyz)==0)
             {
                 probeLightDir = unity_SHAr.xyz + unity_SHAg.xyz + unity_SHAb.xyz;
-                lightCol.rgb = indirectDiffuse; 
-                indirectDiffuse=0;
+                specLightCol.rgb = indirectDiffuse;
+                if(_RampOn>0)
+                {  
+                    lightCol.rgb = indirectDiffuse;            
+                    indirectDiffuse=0;
+                }
             }     
             i.dir.light = normalize(UnityWorldSpaceLightDir(i.worldPos) + probeLightDir);
         #endif
@@ -51,13 +56,6 @@ float4 TS_BRDF(BRDFData i)
     dots.LdotH = max(dot(i.dir.light, i.dir.halfD),0);
     
     dots.NdotL = min(dots.NdotL,lightCol.a);
-    
-    //toon version of the NdotL for the direct light
-	float4 ramp = RampDotL(dots.NdotL, lightCol, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
-    
-
-    //The max operation is done after cause we needed the -1 to 0 values for correctly sampling the ramp
-    dots.NdotL=max(dots.NdotL,0);
 
     //setup the albedo based on workflow and premultiply alpha
     float oneMinusReflectivity;
@@ -78,13 +76,38 @@ float4 TS_BRDF(BRDFData i)
             i.albedo *= i.alpha;
         #endif
     #endif
-    //diffuse color
-    float3 DiffuseColor = i.albedo * ramp * (lightCol.rgb + indirectDiffuse);
-    float3 vertexDiffuse=0;
-    #if defined(VERTEXLIGHT_ON)
-        vertexDiffuse = RampDotLVertLight(i.normal, i.worldPos, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
-        vertexDiffuse*=i.albedo;
-    #endif
+    float3 DiffuseColor = 0;
+    float3 vertexDiffuse = 0;
+    float4 ramp = 0;
+    if(_RampOn!=0)
+    {
+        //toon version of the NdotL for the direct light
+        ramp = RampDotL(dots.NdotL, lightCol, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
+        //The max operation is done after cause we needed the -1 to 0 values for correctly sampling the ramp
+        dots.NdotL=max(dots.NdotL,0);
+
+        //diffuse color
+        DiffuseColor = i.albedo * ramp * (lightCol.rgb + indirectDiffuse);
+        #if defined(VERTEXLIGHT_ON)
+            vertexDiffuse = RampDotLVertLight(i.normal, i.worldPos, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
+            vertexDiffuse*=i.albedo;
+        #endif
+    }
+    else
+    {
+        #if defined (_ENABLE_SPECULAR)
+            float diffuseRoughness = i.roughness;
+        #else
+            float diffuseRoughness = 1;
+        #endif
+        dots.NdotL=max(dots.NdotL,0);
+        ramp = DisneyDiffuse(dots.NdotV, dots.NdotL, dots.LdotH, diffuseRoughness) * dots.NdotL;
+        DiffuseColor = i.albedo * (lightCol.rgb * lightCol.a * ramp + indirectDiffuse);
+         #if defined(VERTEXLIGHT_ON)
+            vertexDiffuse = Shade4PointLights(i.normal, i.worldPos);
+            vertexDiffuse*=i.albedo;
+        #endif
+    }
 
     float3 specularTerm=0;
     float3 indirectSpecular=0;
@@ -137,7 +160,7 @@ float4 TS_BRDF(BRDFData i)
     //Final color calculation = Diffuse color (that contains also rhe indirect component) 
     //                        + the vertex lights contribution 
     //                        + direct specular + indirect specular
-    float4 finalColor = float4(DiffuseColor + vertexDiffuse +  specularTerm * lightCol.rgb * lightCol.a + indirectSpecular*i.occlusion,1);
+    float4 finalColor = float4(DiffuseColor + vertexDiffuse +  specularTerm * specLightCol.rgb * specLightCol.a + indirectSpecular*i.occlusion,1);
     #if defined(_ALPHABLEND_ON) || defined(_ALPHAPREMULTIPLY_ON)
         finalColor.a = i.alpha;
     #endif
