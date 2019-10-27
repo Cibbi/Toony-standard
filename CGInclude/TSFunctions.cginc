@@ -319,7 +319,7 @@ inline half3 DecodeDirectionalToonLightmap (
     //return color * halfLambert / max(1e-4h, dirTex.w);
 }
 
-float PbrToToonHighlights(float toonyHighlights, RampData highlightRamp, float D, float metallic)
+float3 PbrToToonHighlights(float toonyHighlights, RampData highlightRamp, float D, float metallic)
 {
     UNITY_BRANCH
     if(toonyHighlights>0)
@@ -329,7 +329,7 @@ float PbrToToonHighlights(float toonyHighlights, RampData highlightRamp, float D
         half newMax = max(highlightRamp.offset + 1, 0);
         half Duv=remap(clamp(D,0,2), 0, 2, newMin, newMax);	
         //have to recheck the metallic thing in here in case of a specular workflow where there's no metallic value
-        return (tex2D(highlightRamp.ramp, float2(Duv, Duv)).rgb*highlightRamp.color*10*(1-metallic+(0.2*metallic)));
+        return (tex2D(highlightRamp.ramp, float2(Duv, Duv)).rgb*highlightRamp.color.rgb*10*(1-metallic+(0.2*metallic)));
     }
     else
     {
@@ -339,7 +339,7 @@ float PbrToToonHighlights(float toonyHighlights, RampData highlightRamp, float D
 
 float3 DirectSpecular(BaseDots dots, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
-    float D = GTR2(dots.NdotH, roughness);
+    float3 D = GTR2(dots.NdotH, roughness);
     float V = smithG_GGX(max(dots.NdotL,lerp(0.3,0,roughness)), roughness) * smithG_GGX(dots.NdotV, roughness);
 
     D = PbrToToonHighlights(toonyHighlights, highlightRamp, D, metallic);
@@ -359,7 +359,7 @@ float3 DirectSpecular(BaseDots dots, float toonyHighlights, RampData highlightRa
 float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
     half V = 1;
-    float D = fakeHighlights*50*(1-metallic+(0.1*metallic));
+    float3 D = fakeHighlights*50*(1-metallic+(0.1*metallic));
 
     D = PbrToToonHighlights(toonyHighlights, highlightRamp, D, metallic);
     //masking with the highlight pattern
@@ -393,7 +393,7 @@ float3 DirectAnisotropicSpecular(DirectionData dir, BaseDots dots, float anisotr
 	float ay = max(roughness * (1.0 - anisotropy), 0.005);
 
 
-    float D = GTR2_aniso(dots.NdotH, TdotH, BdotH, ax, ay);
+    float3 D = GTR2_aniso(dots.NdotH, TdotH, BdotH, ax, ay);
     
     float V  = smithG_GGX_aniso(dots.NdotL, TdotL, BdotL, ax, ay);
     V *= smithG_GGX_aniso(dots.NdotV, TdotV, BdotV, ax, ay);

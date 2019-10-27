@@ -20,8 +20,6 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         /// <param name="sectionTitle">Title of the section</param>
         /// <param name="open">If is open or closed upon creation</param>
-        /// <param name="content">Delegate function for drawing the section content</param>
-        /// <param name="changesCheck">Delegate fucntion for checks that need to be done knowing if the box is open or enabled at all</param>
         public Section(GUIContent sectionTitle, bool open)
         {
             this.sectionTitle = sectionTitle;
@@ -32,37 +30,11 @@ namespace Cibbi.ToonyStandard
 			this.sectionBgColor=settings.sectionColor;
         }
 
-        protected void BeginSection()
-        {
-            isEnabled=true;
-            Color bCol = GUI.backgroundColor;
-            GUI.backgroundColor = sectionBgColor;
-            switch(sectionStyle)
-            {
-                case SectionStyle.Bubbles:
-                    drawBubblesSection(bCol);
-                    break;
-                case SectionStyle.Foldout:
-                    drawFoldoutSection(bCol);
-                    break;
-                case SectionStyle.Box:
-                    drawBoxSection(bCol);
-                    break;
-            }
-        }
-
-        protected void EndSection()
-        {
-            if(sectionStyle==SectionStyle.Bubbles)
-            {
-                EditorGUILayout.EndVertical();
-            }
-        }
-
         /// <summary>
         /// Draws the section
         /// </summary>
         /// <param name="materialEditor">Material editor provided by the custom inspector window</param>
+        /// <param name="properties">Material properties provided by the custom inspector window</param>
         public void DrawSection(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
             isEnabled=true;
@@ -83,7 +55,17 @@ namespace Cibbi.ToonyStandard
             }
             if (isOpen)
             {
-               SectionContent(materialEditor, properties);
+                try
+                {
+                    SectionContent(materialEditor, properties);
+                }
+                catch(ArgumentException)
+                {
+                    //do nothing since the argumentException thrown is not going to cause problems
+                    //since the only time it gets thrown is when an undo operation is done
+                    //and that is only a visualization error of the editor on a single cycle
+                }
+               
             }
             if(sectionStyle==SectionStyle.Bubbles)
             {
@@ -98,6 +80,11 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Displays the content of the section, must be ovewritten by a child class
+        /// </summary>
+        /// <param name="materialEditor">Material editor provided by the custom inspector window</param>
+        /// <param name="properties">Material properties provided by the custom inspector window</param>
         public abstract void SectionContent(MaterialEditor materialEditor, MaterialProperty[] properties);
 
         public abstract void EndBoxCheck(bool isOpen, bool isEnabled);

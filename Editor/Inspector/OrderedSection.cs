@@ -25,9 +25,8 @@ namespace Cibbi.ToonyStandard
         /// Main constructor
         /// </summary>
         /// <param name="sectionTitle">Title of the section</param>
-        /// <param name="content">Delegate function for drawing the section content</param>
-        /// <param name="changesCheck">Delegate function for checks that need to be done knowing if the box is open or enabled at all</param>
-        /// <param name="indexNumber">Delegate function that returns a BoxParameters object that contains the index and box properties</param>
+        /// <param name="open">Is the section expanded?</param>
+        /// <param name="enabled">IS the section enabled?</param>
         /// <returns></returns>
         public OrderedSection(GUIContent sectionTitle, bool open, bool enabled) : base(sectionTitle, open)
         {
