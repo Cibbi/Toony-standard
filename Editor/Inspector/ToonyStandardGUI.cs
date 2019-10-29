@@ -206,8 +206,8 @@ namespace Cibbi.ToonyStandard
             foreach(Material m in FindProperty("_MainRampMin", properties).targets)
             { 
                 Texture2D ramp = (Texture2D)m.GetTexture("_Ramp");
-                Color min;
-                Color max;
+                Color min= new Color(100,100,100,0);
+                Color max= new Color(0,0,0,1);
                 if(ramp != null)
                 {
                     #if UNITY_2018_1_OR_NEWER
@@ -215,27 +215,59 @@ namespace Cibbi.ToonyStandard
                     {
                         SetTextureImporterFormat(ramp, true);
                     }
-                    min = ramp.GetPixel(0, 0);
-                    max = ramp.GetPixel(ramp.width, ramp.height);
+                    foreach (Color c in ramp.GetPixels())
+                    {
+                        if(min.r > c.r) {min.r = c.r;}
+                        if(min.g > c.g) {min.g = c.g;}
+                        if(min.b > c.b) {min.b = c.b;}
+                        if(max.r < c.r) {max.r = c.r;}
+                        if(max.g < c.g) {max.g = c.g;}
+                        if(max.b < c.b) {max.b = c.b;}
+                        
+                    }
+                    //Debug.Log("1: m "+min+" max "+max);
+                    //min = ramp.GetPixel(0, 0);
+                    //max = ramp.GetPixel(ramp.width, ramp.height);
+                    //Debug.Log("2: m "+min+" max "+max);
                     #else
 
                     
                     try
                     {
-                        min = ramp.GetPixel(0, 0);
-                        max = ramp.GetPixel(ramp.width, ramp.height);
+                    foreach (Color c in ramp.GetPixels())
+                    {
+                        if(min.r > c.r) {min.r = c.r;}
+                        if(min.g > c.g) {min.g = c.g;}
+                        if(min.b > c.b) {min.b = c.b;}
+                        if(max.r < c.r) {max.r = c.r;}
+                        if(max.g < c.g) {max.g = c.g;}
+                        if(max.b < c.b) {max.b = c.b;}
+                        
+                    }
+                        //min = ramp.GetPixel(0, 0);
+                        //max = ramp.GetPixel(ramp.width, ramp.height);
                     }
                     catch(UnityException)
                     {
                         SetTextureImporterFormat(ramp, true);
-                        min = ramp.GetPixel(0, 0);
-                        max = ramp.GetPixel(ramp.width, ramp.height);
+                        foreach (Color c in ramp.GetPixels())
+                        {
+                            if(min.r > c.r) {min.r = c.r;}
+                            if(min.g > c.g) {min.g = c.g;}
+                            if(min.b > c.b) {min.b = c.b;}
+                            if(max.r < c.r) {max.r = c.r;}
+                            if(max.g < c.g) {max.g = c.g;}
+                            if(max.b < c.b) {max.b = c.b;}
+                            
+                        }
+                        //min = ramp.GetPixel(0, 0);
+                        //max = ramp.GetPixel(ramp.width, ramp.height);
                     }
                     #endif
                 }
                 else
                 {
-                    min = min= new Color(0.9f,0.9f,0.9f,1);
+                    min = new Color(0.9f,0.9f,0.9f,1);
                     max = Color.white;
                 }
                 float intensity = m.GetFloat("_ShadowIntensity");

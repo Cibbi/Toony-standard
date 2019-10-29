@@ -54,7 +54,7 @@ namespace Cibbi.ToonyStandard
 		InspectorLevel inspectorLevel;
 		SectionStyle sectionStyle;
 		Color sectionColor;
-		Section exampleSection;
+		OrderedSection exampleSection;
 		bool isAutoUpdateDisabled;
 
 		/// <summary>
@@ -233,14 +233,14 @@ namespace Cibbi.ToonyStandard
 				settings.sectionColor = sectionColor;
 				settings.disableUpdates = isAutoUpdateDisabled;
 				File.WriteAllText(TSConstants.SettingsJSONPath,JsonUtility.ToJson(settings));
-				exampleSection = new ExampleSection(new GUIContent("Example Section"),true);
+				exampleSection = new ExampleSection(new GUIContent("Example Section"),true,true);
 			}
 
 
 			GUILayout.Space(20); 
 			if(exampleSection == null)
 			{
-				exampleSection = new ExampleSection(new GUIContent("Example Section"),true);
+				exampleSection = new ExampleSection(new GUIContent("Example Section"),true,true);
 			}
 			exampleSection.DrawSection(null, null);
 		}
@@ -314,11 +314,10 @@ namespace Cibbi.ToonyStandard
 		public bool disableUpdates;
 	}
 
-    public class ExampleSection : Section
+    public class ExampleSection : OrderedSection
     {
-        public ExampleSection(GUIContent sectionTitle, bool open) : base(sectionTitle, open)
+        public ExampleSection(GUIContent sectionTitle, bool open, bool enabled) : base(sectionTitle, open, enabled)
         {
-			
         }
 
         public override void EndBoxCheck(bool isOpen, bool isEnabled)
@@ -329,6 +328,16 @@ namespace Cibbi.ToonyStandard
         public override void SectionContent(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
             EditorGUILayout.LabelField("Example content");
+        }
+
+        protected override MaterialProperty GetBox()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override MaterialProperty GetIndex()
+        {
+            throw new NotImplementedException();
         }
     }
 }

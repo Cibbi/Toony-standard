@@ -18,6 +18,8 @@ namespace Cibbi.ToonyStandard
         private static string oldSettingsJSONPath;
 
         private static Texture2D deleteIcon;
+        private static Texture2D upIcon;
+        private static Texture2D downIcon;
         private static Texture2D logo;
         private static Texture2D githubIcon;
         private static Texture2D patreonIcon;
@@ -109,6 +111,34 @@ namespace Cibbi.ToonyStandard
                 deleteIcon = value;
             }
         }
+        public static Texture2D UpIcon
+        {
+            get
+            {
+                if(upIcon==null)
+                    InitializeFolderReferences();
+                return upIcon;
+            }
+
+            set
+            {
+                deleteIcon = value;
+            }
+        }
+        public static Texture2D DownIcon
+        {
+            get
+            {
+                if(downIcon==null)
+                    InitializeFolderReferences();
+                return downIcon;
+            }
+
+            set
+            {
+                downIcon = value;
+            }
+        }
         public static Texture2D Logo
         {
             get
@@ -188,6 +218,8 @@ namespace Cibbi.ToonyStandard
             oldSettingsJSONPath =path + "/Editor/oldSettings.json";
         
             deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DeleteIcon.png");
+            upIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/UpIcon.png");
+            downIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DownIcon.png");
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/ToonyStandardLogo.png");
             githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/GitHubIcon.png");
             patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/PatreonIcon.png");
@@ -214,9 +246,37 @@ namespace Cibbi.ToonyStandard
                     if(deleteStyleLocal==null)
                     {
                         deleteStyleLocal=new GUIStyle();
-                        deleteStyleLocal.normal.background=TSConstants.deleteIcon;
+                        deleteStyleLocal.normal.background=TSConstants.DeleteIcon;
                     }
                     return deleteStyleLocal;
+                }
+            }
+
+            private static GUIStyle upStyleLocal;
+            public static GUIStyle upStyle
+            {
+                get
+                {
+                    if(upStyleLocal==null)
+                    {
+                        upStyleLocal=new GUIStyle();
+                        upStyleLocal.normal.background=TSConstants.UpIcon;
+                    }
+                    return upStyleLocal;
+                }
+            }
+
+            private static GUIStyle downStyleLocal;
+            public static GUIStyle downStyle
+            {
+                get
+                {
+                    if(downStyleLocal==null)
+                    {
+                        downStyleLocal=new GUIStyle();
+                        downStyleLocal.normal.background=TSConstants.DownIcon;
+                    }
+                    return downStyleLocal;
                 }
             }
 

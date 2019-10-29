@@ -56,14 +56,31 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         public void ReorderSections()
         {
+            OrderedSection[] sectionsList = sections.ToArray();
+            for(int i=0;i<sectionsList.Length;i++)
+            {
+                if(sectionsList[i].pushState==1 && i<sectionsList.Length-1)
+                {
+                    int swap = sectionsList[i].GetIndexNumber();
+                    sectionsList[i].SetIndexNumber(sectionsList[i+1].GetIndexNumber());
+                    sectionsList[i+1].SetIndexNumber(swap);                  
+                }
+                else if(sectionsList[i].pushState==-1 && i>0 && sectionsList[i-1].GetIndexNumber()!=0)
+                {
+                    int swap = sectionsList[i].GetIndexNumber();
+                    sectionsList[i].SetIndexNumber(sectionsList[i-1].GetIndexNumber());
+                    sectionsList[i-1].SetIndexNumber(swap);
+                }
+                sectionsList[i].pushState=0;
+            }
             sections.Sort(CompareSectionsOrder);
-            int i=1;
+            int j=1;
             foreach (OrderedSection section in sections)
             {
                 if(section.GetIndexNumber()!=0  &&  !section.IsIndexMixed())
                 {
-                    section.SetIndexNumber(i);
-                    i++;
+                    section.SetIndexNumber(j);
+                    j++;
                 }
             }
         }

@@ -87,7 +87,12 @@ float4 TS_BRDF(BRDFData i)
         dots.NdotL=max(dots.NdotL,0);
 
         //diffuse color
-        DiffuseColor = i.albedo * ramp * (lightCol.rgb + indirectDiffuse);
+        #if defined(DIRECTIONAL) || defined(DIRECTIONAL_COOKIE) 
+            DiffuseColor = i.albedo * ramp * (lightCol.rgb + indirectDiffuse);
+        #else
+            DiffuseColor = i.albedo * ramp * lightCol.rgb * lightCol.a;
+        #endif
+        
         #if defined(VERTEXLIGHT_ON)
             vertexDiffuse = RampDotLVertLight(i.normal, i.worldPos, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
             vertexDiffuse*=i.albedo;
