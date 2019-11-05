@@ -2,9 +2,10 @@ UNITY_DECLARE_TEX2D(_MainTex);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailBumpMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionMap);
-UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
+UNITY_DECLARE_TEX2D_NOSAMPLER(_MSOD);
+//UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_MetallicMap);
-UNITY_DECLARE_TEX2D_NOSAMPLER(_GlossinessMap);
+//UNITY_DECLARE_TEX2D_NOSAMPLER(_GlossinessMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_AnisotropyMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_TangentMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailTexture);
@@ -85,17 +86,20 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
     float3 ViewDirection   = normalize(UnityWorldSpaceViewDir(i.worldPos));
 	float3 worldRefl       = reflect(-ViewDirection, NormalDirection);
 	
+	//sampling MSOD map
+	float4 msod = UNITY_SAMPLE_TEX2D_SAMPLER(_MSOD, _MainTex, i.uv);
+
 	//sampling occlusion
-	float occlusion = lerp(1,UNITY_SAMPLE_TEX2D_SAMPLER(_OcclusionMap, _MainTex, i.uv),_Occlusion).r;
+	float occlusion = lerp(1,msod.b,_Occlusion).r;
 
 	//sampling specular related textures
 	#if defined (_ENABLE_SPECULAR)
 		#if defined(_SPECULAR_WORKFLOW)
 			float3 specular = UNITY_SAMPLE_TEX2D_SAMPLER(_MetallicMap, _MainTex, i.uv).rgb;
 		#else
-			float metallic = (UNITY_SAMPLE_TEX2D_SAMPLER(_MetallicMap, _MainTex, i.uv) * _Metallic).r;
+			float metallic = msod.r * _Metallic;
 		#endif
-		float roughness = 1-(UNITY_SAMPLE_TEX2D_SAMPLER(_GlossinessMap, _MainTex, i.uv) * _Glossiness).r;
+		float roughness = 1-(msod.g * _Glossiness);
 
 		#if defined(_ANISOTROPIC_SPECULAR)
 			float3 tangentTS = UNITY_SAMPLE_TEX2D_SAMPLER(_TangentMap, _MainTex, i.uv);

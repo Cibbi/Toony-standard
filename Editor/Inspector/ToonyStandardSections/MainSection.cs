@@ -17,9 +17,24 @@ namespace Cibbi.ToonyStandard
             public static GUIContent normal = new GUIContent("Normal", "Normal Map");
             public static GUIContent emission = new GUIContent("Color", "Emission map and Color");
             public static GUIContent occlusion = new GUIContent("Occlusion", "Occlusion map and intensity");
+            public static GUIContent MSOD = new GUIContent("MSOD Map", "Multiple maps in a single texture \n\nR: metallic\nG: smoothness\nB: Occlusion\nA: detail map");
+            public static GUIContent TexturePackerButton = new GUIContent("Open texture packer", "Open the texture packer for generating the MSOD texture");
+            public static void ToggleTexturePackerContent(bool isOpen)
+            {
+                if(isOpen)
+                {
+                    Styles.TexturePackerButton.text = "Close texture packer";
+                    Styles.TexturePackerButton.tooltip = "Close the texture packer for generating the MSOD texture";
+                }
+                else
+                {
+                    Styles.TexturePackerButton.text = "Open texture packer";
+                    Styles.TexturePackerButton.tooltip = "Open the texture packer for generating the MSOD texture";
+                }
+            }
         }
 
-         MaterialProperty _blendMode;
+        MaterialProperty _blendMode;
         MaterialProperty _Cull;
 
         MaterialProperty _MainTex;
@@ -31,10 +46,21 @@ namespace Cibbi.ToonyStandard
         MaterialProperty _EmissionColor;
         MaterialProperty _OcclusionMap;
         MaterialProperty _Occlusion;
+        MaterialProperty _MSOD;
 
-        public MainSection(MaterialProperty[] properties)
+        InspectorLevel level;
+        bool isTexturePackerOpen;
+        TexturePacker packer;
+        ToonyStandardGUI gui;
+
+        public MainSection(MaterialProperty[] properties,InspectorLevel level, TexturePacker packer, ToonyStandardGUI gui)
         {
             FindProperties(properties);
+            this.level=level;
+            isTexturePackerOpen = false;
+            Styles.ToggleTexturePackerContent(isTexturePackerOpen);
+            this.packer = packer;
+            this.gui=gui;
         }
 
         private void InitializeInspectorLevel()
@@ -56,6 +82,7 @@ namespace Cibbi.ToonyStandard
             _EmissionColor = FindProperty("_EmissionColor", properties);
             _OcclusionMap = FindProperty("_OcclusionMap", properties);
             _Occlusion = FindProperty("_Occlusion", properties);
+            _MSOD = FindProperty("_MSOD", properties);
         }
 
         public void DrawSection(MaterialEditor materialEditor)
@@ -83,8 +110,30 @@ namespace Cibbi.ToonyStandard
                 EditorGUI.indentLevel -= MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
             }
             materialEditor.TexturePropertySingleLine(Styles.normal, _BumpMap, _BumpScale);
-            materialEditor.TexturePropertySingleLine(Styles.occlusion, _OcclusionMap, _Occlusion);
+            
+            if(level==InspectorLevel.Normal)
+            {   
+                //materialEditor.TexturePropertySingleLine(Styles.occlusion, _OcclusionMap);
+                Rect r = TSFunctions.GetControlRectForSingleLine(); 
+                EditorGUI.BeginChangeCheck();
+                materialEditor.TexturePropertyMiniThumbnail(r,_OcclusionMap, Styles.occlusion.text,Styles.occlusion.tooltip);
+                //Rect r2 =MaterialEditor.GetRectAfterLabelWidth(r);
+                //r2.width = 76;
+                //r.x=r.x+81;
+                //r.width=r.width-81;
+                //GUI.Toolbar(r2,0,new string[]{"R","G","B","A"},EditorStyles.miniButton);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    //packer.
+                    gui.RegenerateMSOD();
+                }
+                TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Occlusion);
 
+            }
+            else
+            {
+                materialEditor.ShaderProperty(_Occlusion, Styles.occlusion);
+            }
 
             //emission
             EditorGUI.BeginChangeCheck();
@@ -110,6 +159,35 @@ namespace Cibbi.ToonyStandard
                     }
                 }
             }
+            //if in expert mode show the MSOD map and a button for the texture packer
+            if(level==InspectorLevel.Expert)
+            {   
+                EditorGUILayout.BeginHorizontal();
+                    materialEditor.TexturePropertySingleLine(Styles.MSOD, _MSOD);
+                if(GUILayout.Button(Styles.TexturePackerButton))
+                {
+                    EditorGUILayout.EndHorizontal();
+                    isTexturePackerOpen=!isTexturePackerOpen;
+                    Styles.ToggleTexturePackerContent(isTexturePackerOpen);
+                }
+                else
+                {
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                if(isTexturePackerOpen)
+                {
+                    EditorGUILayout.BeginVertical("box");
+                    packer.DrawGUI();
+                    EditorGUILayout.EndVertical();
+                    if(_MSOD.textureValue != (Texture)packer.resultTex && packer.resultTex != null)
+                    {   
+                        _MSOD.textureValue = packer.resultTex;
+                        packer.resultTex = null;
+                    }
+                }
+            }
+            EditorGUILayout.Space();
             materialEditor.TextureScaleOffsetProperty(_MainTex);
 
             EditorGUILayout.Space();

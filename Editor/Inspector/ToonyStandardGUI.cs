@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.IO;
 
 namespace Cibbi.ToonyStandard
 {
@@ -38,6 +39,7 @@ namespace Cibbi.ToonyStandard
             bool isFirstCycle=true;
 
             InspectorLevel inspectorLevel;
+            public TexturePacker packer;
 
         #endregion
 
@@ -74,10 +76,12 @@ namespace Cibbi.ToonyStandard
                     basicMain = new BasicMainSection(properties);
                     break;
                 case InspectorLevel.Normal:
-                    main = new MainSection(properties);
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0]));
+                    main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
                 case InspectorLevel.Expert:
-                    main = new MainSection(properties);
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0]));
+                    main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
             }
 
@@ -112,7 +116,7 @@ namespace Cibbi.ToonyStandard
             {
                 group.addSection(new RampSection(this, properties, TSFunctions.BooleanFloat(_ToonRampBox.floatValue), TSFunctions.BooleanFloat(_RampOn.floatValue)));
                 group.addSection(new RimLightSection(properties, TSFunctions.BooleanFloat(_RimLightBox.floatValue), TSFunctions.BooleanFloat(_RimLightOn.floatValue)));
-                group.addSection(new SpecularSection(properties, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
+                group.addSection(new SpecularSection(properties, inspectorLevel, this, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
                 group.addSection(new DetailSection(properties, TSFunctions.BooleanFloat(_DetailBox.floatValue), TSFunctions.BooleanFloat(_DetailMapOn.floatValue)));
             }       
         }
@@ -287,6 +291,73 @@ namespace Cibbi.ToonyStandard
                 m.SetColor("_MainRampMax", max); 
             }
         }
+        
+        public string GetTextureDestinationPath(Material mat)
+        {
+            string path = AssetDatabase.GetAssetPath(mat);
+            string[] pieces = path.Split('/');
+            ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+            path = string.Join("/", pieces);
+            ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
+            string pathTexture = string.Join("/", pieces);
+            if(Directory.Exists(Application.dataPath + pathTexture.Substring(-1==pathTexture.IndexOf("/")?0:pathTexture.IndexOf("/")) + "/Textures"))
+            {
+                path = pathTexture + "/Textures/" + mat.name + "MSOD.png";
+            }
+            else
+            {
+                path = path + "/" + mat.name + "MSOD.png";
+            }
+            return path;
+        }
+
+        public void RegenerateMSOD()
+        {
+            foreach (Material mat in _RampOn.targets)
+            {
+                string path = GetTextureDestinationPath(mat);
+                if(mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_DetailMask") != null)
+                {   
+                    packer.resolution = TexturePacker.Resolution.XS_128x128;
+                    packer.rTexture = (Texture2D)mat.GetTexture("_MetallicMap");
+                    if(packer.rTexture != null)
+                        while(packer.rTexture.width>(float)packer.resolution||packer.rTexture.height>(float)packer.resolution)
+                        {
+                            if(packer.RiseResolutionByOneLevel()==0)
+                                break;
+                        }
+                    packer.gTexture = (Texture2D)mat.GetTexture("_GlossinessMap");
+                    if(packer.gTexture != null)
+                        while(packer.gTexture.width>(float)packer.resolution||packer.gTexture.height>(float)packer.resolution)
+                        {
+                            if(packer.RiseResolutionByOneLevel()==0)
+                                break;
+                        }
+                    packer.bTexture = (Texture2D)mat.GetTexture("_OcclusionMap");
+                    if(packer.bTexture != null)
+                        while(packer.bTexture.width>(float)packer.resolution||packer.bTexture.height>(float)packer.resolution)
+                        {
+                            if(packer.RiseResolutionByOneLevel()==0)
+                                break;
+                        }
+                    packer.aTexture = (Texture2D)mat.GetTexture("_DetailMask");
+                    if(packer.aTexture != null)
+                        while(packer.aTexture.width>(float)packer.resolution||packer.aTexture.height>(float)packer.resolution)
+                        {
+                            if(packer.RiseResolutionByOneLevel()==0)
+                                break;
+                        }
+
+                    packer.PackTexture(path);
+                    mat.SetTexture("_MSOD", packer.resultTex);
+                }
+                else
+                {
+                    mat.SetTexture("_MSOD", null);
+                }
+            }
+        }
+
         private static Color remap(Color value, Color oldMin, Color oldMax, Color newMin, Color newMax) 
         {
             float r =(value.r - oldMin.r) / (oldMax.r - oldMin.r) * (newMax.r - newMin.r) + newMin.r;
@@ -341,6 +412,6 @@ namespace Cibbi.ToonyStandard
                     material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
                     break;
             }
-        }
+        }  
     }
 }

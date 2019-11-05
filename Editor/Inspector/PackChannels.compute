@@ -1,0 +1,133 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel PackTexture
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+Texture2D<float4> RChannel;
+Texture2D<float4> GChannel;
+Texture2D<float4> BChannel;
+Texture2D<float4> AChannel;
+RWTexture2D<float4> Result;
+
+float rSelectedChannel;
+float rGamma;
+float rWidth;
+float rHeight;
+float rReverse;
+
+float gSelectedChannel;
+float gGamma;
+float gWidth;
+float gHeight;
+float gReverse;
+
+float bSelectedChannel;
+float bGamma;
+float bWidth;
+float bHeight;
+float bReverse;
+
+float aSelectedChannel;
+float aGamma;
+float aWidth;
+float aHeight;
+float aReverse;
+
+float width;
+float height;
+
+inline float GammaToLinearSpaceExact (float value)
+{
+    if (value <= 0.04045F)
+        return value / 12.92F;
+    else if (value < 1.0F)
+        return pow(abs((value + 0.055F))/1.055F, 2.4F);
+    else
+        return pow(abs(value), 2.2F);
+}
+inline float LinearToGammaSpaceExact (float value)
+{
+    if (value <= 0.0F)
+        return 0.0F;
+    else if (value <= 0.0031308F)
+        return 12.92F * value;
+    else if (value < 1.0F)
+        return 1.055F * pow(abs(value), 0.4166667F) - 0.055F;
+    else
+        return pow(abs(value), 0.45454545F);
+}
+
+float SelectChannel(float4 tex, float channel)
+{
+    if(channel==0)
+    {
+        return tex.r;
+    }
+    else if(channel==1)
+    {
+        return tex.g;
+    }
+    else if(channel==2)
+    {
+        return tex.b;
+    }
+    else
+    {   
+        return tex.a;
+    }
+
+}
+
+float DoColorCorrectionIfNeeded(float gamma, float value)
+{
+    if(gamma == 1)
+    { 
+        return LinearToGammaSpaceExact(value);
+    }
+    else
+    {
+        return value;
+    }
+}
+
+float DoReverseIfNeeded(float reverse, float value)
+{
+    if(reverse == 1)
+    { 
+        return 1-value;
+    }
+    else
+    {
+        return value;
+    }
+}
+
+[numthreads(16,16,1)]
+void PackTexture (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    float4 pixel = 0;
+    float2 uv1=float2(id.x*rWidth/width,id.y*rHeight/height);
+    float2 uv2=float2(id.x*gWidth/width,id.y*gHeight/height);
+    float2 uv3=float2(id.x*bWidth/width,id.y*bHeight/height);
+    float2 uv4=float2(id.x*aWidth/width,id.y*aHeight/height);
+
+    float selected1 = SelectChannel(RChannel[uv1.xy], rSelectedChannel);
+    float selected2 = SelectChannel(GChannel[uv2.xy], gSelectedChannel);
+    float selected3 = SelectChannel(BChannel[uv3.xy], bSelectedChannel);
+    float selected4 = SelectChannel(AChannel[uv4.xy], aSelectedChannel);
+
+    selected1 = DoColorCorrectionIfNeeded(rGamma, selected1);
+    selected2 = DoColorCorrectionIfNeeded(gGamma, selected2);
+    selected3 = DoColorCorrectionIfNeeded(bGamma, selected3);
+    selected4 = DoColorCorrectionIfNeeded(aGamma, selected4);
+
+    pixel.r = DoReverseIfNeeded(rReverse, selected1);
+    pixel.g = DoReverseIfNeeded(gReverse, selected2);
+    pixel.b = DoReverseIfNeeded(bReverse, selected3);
+    pixel.a = DoReverseIfNeeded(aReverse, selected4);
+
+    
+    
+    Result[id.xy] = pixel;
+}

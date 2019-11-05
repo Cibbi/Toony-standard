@@ -143,6 +143,36 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        public static void ProperSlider(Rect r, ref MaterialProperty sliderProperty, GUIContent label)
+        {
+            float value = sliderProperty.floatValue;
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = sliderProperty.hasMixedValue;
+            if(label!=null)
+            {
+                value = EditorGUI.Slider(r, label,value,0,1);
+            }
+            else
+            {
+                value = EditorGUI.Slider(r, value,0,1);
+            }
+            EditorGUI.showMixedValue = false;
+            if (EditorGUI.EndChangeCheck())
+            {
+                sliderProperty.floatValue = value;
+            }
+        }
+        public static void ProperSlider(Rect r, ref MaterialProperty sliderProperty) 
+        {
+            ProperSlider(r, ref sliderProperty, null);
+        }
+
+        public static Rect GetControlRectForSingleLine()
+        {
+            const float extraSpacing = 2f; // The shader properties needs a little more vertical spacing due to the mini texture field (looks cramped without)
+            return EditorGUILayout.GetControlRect(true, 18f + extraSpacing, EditorStyles.layerMaskField);
+        }
+
         /// <summary>
         /// Draws the default header of the various windows
         /// </summary>

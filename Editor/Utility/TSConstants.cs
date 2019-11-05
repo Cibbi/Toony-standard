@@ -7,7 +7,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20191027";
+        public static string Version = "Toony Standard master build 20191105";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
 
@@ -24,6 +24,7 @@ namespace Cibbi.ToonyStandard
         private static Texture2D githubIcon;
         private static Texture2D patreonIcon;
         private static Texture2D defaultRamp;
+        private static ComputeShader packerCompute;
 
         public static string LocalShaderFolder
         {
@@ -195,6 +196,20 @@ namespace Cibbi.ToonyStandard
                 defaultRamp = value;
             }
         }
+        public static ComputeShader PackerCompute
+        {
+            get
+            {
+                if(packerCompute==null)
+                    InitializeFolderReferences();
+                return packerCompute;
+            }
+
+            set
+            {
+                packerCompute = value;
+            }
+        }
 
         public static void InitializeFolderReferences()
         {
@@ -224,6 +239,7 @@ namespace Cibbi.ToonyStandard
             githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/GitHubIcon.png");
             patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/PatreonIcon.png");
             defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/RampDefault.png");
+            packerCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>(assetsPath + "/Editor/Inspector/PackChannels.compute");
         }
 
         public static class TSWindowLabels

@@ -247,7 +247,7 @@ namespace Cibbi.ToonyStandard
             GUILayout.Space(10);
             EditorGUILayout.LabelField("Now, the only thing that you need to set immediately is the inspector level, this will tell the shader what features to expose based on your experience with making stuff in unity.",TSConstants.Styles.multilineLabel);
             GUILayout.Space(10);
-            EditorGUILayout.LabelField("You can edit this choise later and modify other options by going on Window/Toony Standard/Settings ",TSConstants.Styles.multilineLabel);
+            EditorGUILayout.LabelField("You can edit this choice later and modify other options by going on Window/Toony Standard/Settings ",TSConstants.Styles.multilineLabel);
             GUILayout.Space(10);
             EditorGUI.BeginChangeCheck();
 			inspectorLevel = (InspectorLevel)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.InspectorLevel,inspectorLevel);

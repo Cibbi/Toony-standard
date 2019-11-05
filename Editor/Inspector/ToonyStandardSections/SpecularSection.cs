@@ -76,9 +76,14 @@ namespace Cibbi.ToonyStandard
         MaterialProperty _SpecularBox;
         MaterialProperty _SpecularOn;
 
-        public SpecularSection(MaterialProperty[] properties, bool open, bool enabled) : base(Styles.title, open, enabled)
+        ToonyStandardGUI gui;
+        InspectorLevel level;
+
+        public SpecularSection(MaterialProperty[] properties,InspectorLevel level, ToonyStandardGUI gui, bool open, bool enabled) : base(Styles.title, open, enabled)
         {
             FindProperties(properties);
+            this.gui = gui;
+            this.level = level;
 
             foreach (Material mat in _SpecularOn.targets)
             {
@@ -128,14 +133,45 @@ namespace Cibbi.ToonyStandard
             TSFunctions.DrawSelector(Enum.GetNames(typeof(Workflow)), _workflow, Styles.workflow, materialEditor);
             if ((Workflow)_workflow.floatValue == Workflow.Metallic)
             {
-                materialEditor.TexturePropertySingleLine(Styles.metallic, _MetallicMap, _Metallic);
+                if(level==InspectorLevel.Normal)
+                {   
+                    Rect r = TSFunctions.GetControlRectForSingleLine(); 
+                    EditorGUI.BeginChangeCheck();
+                    materialEditor.TexturePropertyMiniThumbnail(r,_MetallicMap, Styles.metallic.text,Styles.metallic.tooltip);
+                    if(EditorGUI.EndChangeCheck())
+                    {
+                        gui.RegenerateMSOD();
+                    }
+                    TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Metallic);
+
+                }
+                else
+                {
+                    materialEditor.ShaderProperty(_Metallic, Styles.metallic);
+                }
+                //materialEditor.TexturePropertySingleLine(Styles.metallic, _MetallicMap, _Metallic);
             }
             else if ((Workflow)_workflow.floatValue == Workflow.Specular)
             {
                 materialEditor.TexturePropertySingleLine(Styles.specular, _MetallicMap);
             }
 
-            materialEditor.TexturePropertySingleLine(Styles.smoothness, _GlossinessMap, _Glossiness);
+            if(level==InspectorLevel.Normal)
+            {   
+                Rect r = TSFunctions.GetControlRectForSingleLine(); 
+                EditorGUI.BeginChangeCheck();
+                materialEditor.TexturePropertyMiniThumbnail(r,_GlossinessMap, Styles.smoothness.text, Styles.smoothness.tooltip);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    gui.RegenerateMSOD();
+                }
+                TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Glossiness);
+            }
+            else
+            {
+                materialEditor.ShaderProperty(_Glossiness, Styles.smoothness);
+            }
+            //materialEditor.TexturePropertySingleLine(Styles.smoothness, _GlossinessMap, _Glossiness);
 
             TSFunctions.DrawSelector(Enum.GetNames(typeof(SpMode)), _SpMode, Styles.spMode, materialEditor);
             if ((SpMode)_SpMode.floatValue == SpMode.Anisotropic)
