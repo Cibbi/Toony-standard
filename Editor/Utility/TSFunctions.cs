@@ -217,7 +217,7 @@ namespace Cibbi.ToonyStandard
 						}
 
 						EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-						if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patreon!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+						if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patron!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
 						{
 							Application.OpenURL("https://www.patreon.com/Cibbi");
 						}

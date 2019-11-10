@@ -76,11 +76,11 @@ namespace Cibbi.ToonyStandard
                     basicMain = new BasicMainSection(properties);
                     break;
                 case InspectorLevel.Normal:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0]));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
                 case InspectorLevel.Expert:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0]));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
             }
@@ -120,7 +120,6 @@ namespace Cibbi.ToonyStandard
                 group.addSection(new DetailSection(properties, TSFunctions.BooleanFloat(_DetailBox.floatValue), TSFunctions.BooleanFloat(_DetailMapOn.floatValue)));
             }       
         }
-
 
         /// <summary>
         /// Draws the GUI
@@ -292,7 +291,7 @@ namespace Cibbi.ToonyStandard
             }
         }
         
-        public string GetTextureDestinationPath(Material mat)
+        public string GetTextureDestinationPath(Material mat, string name)
         {
             string path = AssetDatabase.GetAssetPath(mat);
             string[] pieces = path.Split('/');
@@ -302,11 +301,11 @@ namespace Cibbi.ToonyStandard
             string pathTexture = string.Join("/", pieces);
             if(Directory.Exists(Application.dataPath + pathTexture.Substring(-1==pathTexture.IndexOf("/")?0:pathTexture.IndexOf("/")) + "/Textures"))
             {
-                path = pathTexture + "/Textures/" + mat.name + "MSOD.png";
+                path = pathTexture + "/Textures/" + mat.name + name;
             }
             else
             {
-                path = path + "/" + mat.name + "MSOD.png";
+                path = path + "/" + mat.name + name;
             }
             return path;
         }
@@ -315,7 +314,7 @@ namespace Cibbi.ToonyStandard
         {
             foreach (Material mat in _RampOn.targets)
             {
-                string path = GetTextureDestinationPath(mat);
+                string path = GetTextureDestinationPath(mat, "MSOD.png");
                 if(mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_DetailMask") != null)
                 {   
                     packer.resolution = TexturePacker.Resolution.XS_128x128;

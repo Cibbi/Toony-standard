@@ -20,6 +20,9 @@ namespace Cibbi.ToonyStandard
         private static Texture2D deleteIcon;
         private static Texture2D upIcon;
         private static Texture2D downIcon;
+        private static Texture2D upColor;
+        private static Texture2D upColorSelected;
+        private static Texture2D upColorInternal;
         private static Texture2D logo;
         private static Texture2D githubIcon;
         private static Texture2D patreonIcon;
@@ -140,6 +143,48 @@ namespace Cibbi.ToonyStandard
                 downIcon = value;
             }
         }
+        public static Texture2D UpColor
+        {
+            get
+            {
+                if(upColor==null)
+                    InitializeFolderReferences();
+                return upColor;
+            }
+
+            set
+            {
+                upColor = value;
+            }
+        }
+        public static Texture2D UpColorSelected
+        {
+            get
+            {
+                if(upColorSelected==null)
+                    InitializeFolderReferences();
+                return upColorSelected;
+            }
+
+            set
+            {
+                upColorSelected = value;
+            }
+        }
+        public static Texture2D UpColorInternal
+        {
+            get
+            {
+                if(upColorInternal==null)
+                    InitializeFolderReferences();
+                return upColorInternal;
+            }
+
+            set
+            {
+                upColorInternal = value;
+            }
+        }
         public static Texture2D Logo
         {
             get
@@ -235,11 +280,14 @@ namespace Cibbi.ToonyStandard
             deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DeleteIcon.png");
             upIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/UpIcon.png");
             downIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DownIcon.png");
+            upColor = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/upColor.png");
+            upColorSelected = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/upColorSelected.png");
+            upColorInternal = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/upColorInternal.png");
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/ToonyStandardLogo.png");
             githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/GitHubIcon.png");
             patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/PatreonIcon.png");
             defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/RampDefault.png");
-            packerCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>(assetsPath + "/Editor/Inspector/PackChannels.compute");
+            packerCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>(assetsPath + "/Editor/Utility/PackChannels.compute");
         }
 
         public static class TSWindowLabels

@@ -113,18 +113,11 @@ namespace Cibbi.ToonyStandard
             
             if(level==InspectorLevel.Normal)
             {   
-                //materialEditor.TexturePropertySingleLine(Styles.occlusion, _OcclusionMap);
                 Rect r = TSFunctions.GetControlRectForSingleLine(); 
                 EditorGUI.BeginChangeCheck();
                 materialEditor.TexturePropertyMiniThumbnail(r,_OcclusionMap, Styles.occlusion.text,Styles.occlusion.tooltip);
-                //Rect r2 =MaterialEditor.GetRectAfterLabelWidth(r);
-                //r2.width = 76;
-                //r.x=r.x+81;
-                //r.width=r.width-81;
-                //GUI.Toolbar(r2,0,new string[]{"R","G","B","A"},EditorStyles.miniButton);
                 if(EditorGUI.EndChangeCheck())
                 {
-                    //packer.
                     gui.RegenerateMSOD();
                 }
                 TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Occlusion);

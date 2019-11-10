@@ -48,6 +48,21 @@ namespace Cibbi.ToonyStandard
             public static GUIContent highlightIntensity = new GUIContent("Highlight intensity", "Defines how intense the highlight ramp is");
             public static GUIContent fakeHighlightIntensity = new GUIContent("Highlight intensity", "Defines how intense the fake highlight is");
             public static GUIContent highlightPattern = new GUIContent("Highlight pattern", "Pattern mask for the highlights (clearly not inspired by Xiexe's shader)");
+
+            public static GUIContent GradientEditorButton = new GUIContent("Open gradient editor", "Open the gradient editor for creating a custom toon ramp");
+            public static void ToggleGradientEditorToggle(bool isOpen)
+            {
+                if(isOpen)
+                {
+                    Styles.GradientEditorButton.text = "Close gradient editor";
+                    Styles.GradientEditorButton.tooltip = "Close the gradient editor";
+                }
+                else
+                {
+                    Styles.GradientEditorButton.text = "Open gradient editor";
+                    Styles.GradientEditorButton.tooltip = "Open the gradient editor for creating a custom toon ramp";
+                }
+            }
         }
 
         MaterialProperty _indirectSpecular;
@@ -76,13 +91,20 @@ namespace Cibbi.ToonyStandard
         MaterialProperty _SpecularBox;
         MaterialProperty _SpecularOn;
 
-        ToonyStandardGUI gui;
+        ToonyStandardGUI inspector;
         InspectorLevel level;
+
+        GradientEditor gradientEditor;
+
+        bool isGradientEditorOpen;
+        bool needToStorePreviousRamp;
+
+        Texture PreviousRamp;
 
         public SpecularSection(MaterialProperty[] properties,InspectorLevel level, ToonyStandardGUI gui, bool open, bool enabled) : base(Styles.title, open, enabled)
         {
             FindProperties(properties);
-            this.gui = gui;
+            this.inspector = gui;
             this.level = level;
 
             foreach (Material mat in _SpecularOn.targets)
@@ -92,6 +114,11 @@ namespace Cibbi.ToonyStandard
                 SetupSpMode(mat, (SpMode)_SpMode.floatValue);
                 SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
             }
+
+            gradientEditor = new GradientEditor();
+            isGradientEditorOpen = false;
+            needToStorePreviousRamp = true;
+            Selection.selectionChanged += ResetRampTexture;
         }
 
         private void FindProperties(MaterialProperty[] properties)
@@ -140,7 +167,7 @@ namespace Cibbi.ToonyStandard
                     materialEditor.TexturePropertyMiniThumbnail(r,_MetallicMap, Styles.metallic.text,Styles.metallic.tooltip);
                     if(EditorGUI.EndChangeCheck())
                     {
-                        gui.RegenerateMSOD();
+                        inspector.RegenerateMSOD();
                     }
                     TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Metallic);
 
@@ -163,7 +190,7 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertyMiniThumbnail(r,_GlossinessMap, Styles.smoothness.text, Styles.smoothness.tooltip);
                 if(EditorGUI.EndChangeCheck())
                 {
-                    gui.RegenerateMSOD();
+                    inspector.RegenerateMSOD();
                 }
                 TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Glossiness);
             }
@@ -203,7 +230,55 @@ namespace Cibbi.ToonyStandard
 
             if (isToonyHighlightsEnabled)
             {
+                EditorGUILayout.BeginHorizontal();
                 materialEditor.TexturePropertySingleLine(Styles.highlightRamp, _HighlightRamp, _HighlightRampColor);
+                
+                if(GUILayout.Button(Styles.GradientEditorButton))
+                {
+                    EditorGUILayout.EndHorizontal();
+                    isGradientEditorOpen=!isGradientEditorOpen;
+                    Styles.ToggleGradientEditorToggle(isGradientEditorOpen);
+                }
+                else
+                {
+                    EditorGUILayout.EndHorizontal();
+                }
+                if(isGradientEditorOpen)
+                {
+                    EditorGUILayout.BeginVertical("box");
+                    if(needToStorePreviousRamp)
+                    {
+                        needToStorePreviousRamp = false;
+                        PreviousRamp = _HighlightRamp.textureValue;
+                    }
+                    if(_HighlightRamp.textureValue != (Texture)gradientEditor.GetGradientTexture())
+                    {
+                        _HighlightRamp.textureValue = (Texture)gradientEditor.GetGradientTexture();
+                    }
+                    if(gradientEditor.DrawGUI())
+                    {
+                        materialEditor.Repaint();
+                    }
+                    if(GUILayout.Button("Save and apply"))
+                    {
+                        string path = inspector.GetTextureDestinationPath((Material)_HighlightRamp.targets[0],"_highlight_ramp.png");
+                        _HighlightRamp.textureValue = (Texture) gradientEditor.SaveGradient(path);
+                        needToStorePreviousRamp = true;
+                        PreviousRamp = null;
+                        isGradientEditorOpen = false;
+                    }
+                    EditorGUILayout.EndVertical();
+                }
+                else
+                {
+                    if(PreviousRamp != null)
+                    {
+                        _HighlightRamp.textureValue = PreviousRamp;
+                        PreviousRamp = null;
+                        needToStorePreviousRamp = true;
+                    }
+                }
+                
                 materialEditor.ShaderProperty(_HighlightRampOffset, Styles.hightlightRampOffset);
                 materialEditor.ShaderProperty(_HighlightIntensity, Styles.highlightIntensity);
             }
@@ -316,6 +391,17 @@ namespace Cibbi.ToonyStandard
                     material.EnableKeyword("_FAKE_SPECULAR");
                     break;
             }
+        }
+
+        public void ResetRampTexture()
+        {
+             if(PreviousRamp != null)
+            {
+                _HighlightRamp.textureValue = PreviousRamp;
+                PreviousRamp = null;
+                needToStorePreviousRamp = true;
+            }
+            Selection.selectionChanged -= ResetRampTexture;
         }
     }
 }
