@@ -26,11 +26,13 @@ namespace Cibbi.ToonyStandard
             MaterialProperty _RimLightOn;
             MaterialProperty _SpecularOn;
             MaterialProperty _DetailMapOn;
+            MaterialProperty _SSSOn;
 
             MaterialProperty _ToonRampBox;
             MaterialProperty _RimLightBox;
             MaterialProperty _SpecularBox;
             MaterialProperty _DetailBox;
+            MaterialProperty _SSSBox;
 
             MainSection main;
             BasicMainSection basicMain;
@@ -118,6 +120,7 @@ namespace Cibbi.ToonyStandard
                 group.addSection(new RimLightSection(properties, TSFunctions.BooleanFloat(_RimLightBox.floatValue), TSFunctions.BooleanFloat(_RimLightOn.floatValue)));
                 group.addSection(new SpecularSection(properties, inspectorLevel, this, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
                 group.addSection(new DetailSection(properties, TSFunctions.BooleanFloat(_DetailBox.floatValue), TSFunctions.BooleanFloat(_DetailMapOn.floatValue)));
+                group.addSection(new SubsurfaceSection(properties, TSFunctions.BooleanFloat(_SSSBox.floatValue), TSFunctions.BooleanFloat(_SSSOn.floatValue)));
             }       
         }
 
@@ -197,11 +200,13 @@ namespace Cibbi.ToonyStandard
             _RimLightOn = FindProperty("_RimLightOn", properties);          
             _SpecularOn = FindProperty("_SpecularOn", properties);
             _DetailMapOn = FindProperty("_DetailMapOn", properties);
+            _SSSOn = FindProperty("_SSSOn", properties);
 
             _ToonRampBox = FindProperty("_ToonRampBox", properties);
             _RimLightBox = FindProperty("_RimLightBox", properties);
             _SpecularBox = FindProperty("_SpecularBox", properties);
             _DetailBox = FindProperty("_DetailBox", properties);
+            _SSSBox = FindProperty("_SSSBox", properties);
         }
 
         public void GenerateRampMinMax(MaterialProperty[] properties)

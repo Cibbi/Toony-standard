@@ -49,6 +49,12 @@
 		[Normal]_DetailBumpMap("Detail Normal Map", 2D) = "bump" {}
 		_DetailBumpScale("Detail Normal Scale", Float) = 1.0
 
+		_ThicknessMap("Thickness Map", 2D) = "white" {}
+        _SSColor ("Subsurface Color", Color) = (0,0,0,0)
+        _SSDistortion("Distortion", Range(0,3)) = 1
+        _SSPower("Power", Range(0,3)) = 1
+        _SSScale("Scale", Range(0,3)) = 1
+
 
 		_Cutoff("Alpha cutoff", Range(0,1)) = 0.5
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull Mode", Int) = 2
@@ -72,11 +78,13 @@
 		[HideInInspector] _RimLightOn("__RimLight", Float) = 0.0
 		[HideInInspector] _SpecularOn("__EnableSpecular", Float) = 0.0
 		[HideInInspector] _DetailMapOn("__DetailMap", Float) = 0.0
+		[HideInInspector] _SSSOn("__SSSOn", Float) = 0.0
 
 		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 1.0
 		[HideInInspector] _RimLightBox("__RimLightBox", Float) = 0.0
 		[HideInInspector] _SpecularBox("__SpecularBox", Float) = 0.0
 		[HideInInspector] _DetailBox("__DetailBox", Float) = 0.0
+		[HideInInspector] _SSSBox("__SSSBox", Float) = 0.0
 
 		[HideInInspector] _NeedsFix("__NeedsFix", Float) = 0.5
 	}

@@ -57,6 +57,15 @@ struct RampData
     float4 color;
 };
 
+struct SSSData
+{
+    float3 color;
+    float thickness;
+    float distortion;
+    float power;
+    float scale;
+};
+
 //struct that is passed to the BRDF
 struct BRDFData 
 {
@@ -92,6 +101,8 @@ struct BRDFData
         RampData highlightRamp;
         float highlightPattern;
     #endif
+
+    SSSData sss;
 
     #if defined(LIGHTMAP_ON)
         float3 lightmap;

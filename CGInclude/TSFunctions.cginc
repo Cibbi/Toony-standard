@@ -370,7 +370,6 @@ float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighligh
     #endif    
     specularTerm = max(0, specularTerm * ramp.a);
     specularTerm *= any(specColor) ? 1.0 : 0.0;
-    //specularTerm = specColor;
     specularTerm *= FresnelTerm(specColor, LdotH);
     return specularTerm;
 }
@@ -413,4 +412,25 @@ float3 DirectAnisotropicSpecular(DirectionData dir, BaseDots dots, float anisotr
     #else
     return 0;
     #endif
+}
+
+//Subsurface Scattering - Based on a 2011 GDC Conference from by Colin Barre-Bresebois & Marc Bouchard and modified by Xiexe
+float3 calcSubsurfaceScattering(SSSData sss, BaseDots dots, DirectionData dir, float atten, float3 normal, float4 lightCol, float3 indirectDiffuse, float3 albedo)
+{
+    UNITY_BRANCH
+    if(any(sss.color.rgb)) // Skip all the SSS stuff if the color is 0.
+    {
+        //d.ndl = smoothstep(_SSSRange - _SSSSharpness, _SSSRange + _SSSSharpness, d.ndl);
+        float attenuation = saturate(atten * (dots.NdotL * 0.5 + 0.5));
+        float3 H = normalize(dir.light + normal * sss.distortion);
+        float VdotH = pow(saturate(dot(dir.view, -H)), sss.power);
+        float3 I = sss.color * (VdotH + indirectDiffuse) * attenuation * sss.thickness * sss.scale;
+        float3 SSS = lightCol.rgb * I * albedo.rgb;
+        SSS = max(0, SSS); // Make sure it doesn't go NaN
+        return SSS;
+    }
+    else
+    {
+        return 0;
+    }
 }

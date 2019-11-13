@@ -160,12 +160,15 @@ float4 TS_BRDF(BRDFData i)
         #endif
     //
     //End indirect specular calculation
-    
     #endif
-    //Final color calculation = Diffuse color (that contains also rhe indirect component) 
+
+    float3 sssColor = calcSubsurfaceScattering(i.sss, dots, i.dir,ramp.a, i.normal, lightCol, indirectDiffuse, i.albedo);
+
+    //Final color calculation = Diffuse color (that contains also the indirect component) 
     //                        + the vertex lights contribution 
+    //                        + subsurface scattering contribution
     //                        + direct specular + indirect specular
-    float4 finalColor = float4(DiffuseColor + vertexDiffuse +  specularTerm * specLightCol.rgb * specLightCol.a + indirectSpecular*i.occlusion,1);
+    float4 finalColor = float4(DiffuseColor + vertexDiffuse + sssColor + specularTerm * specLightCol.rgb * specLightCol.a + indirectSpecular*i.occlusion,1);
     #if defined(_ALPHABLEND_ON) || defined(_ALPHAPREMULTIPLY_ON)
         finalColor.a = i.alpha;
     #endif

@@ -10,15 +10,17 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_AnisotropyMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_TangentMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailTexture);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailMask);
+UNITY_DECLARE_TEX2D_NOSAMPLER(_ThicknessMap);
 
 float4 _MainTex_ST, _DetailTexture_ST, _HighlightPattern_ST;
-float4 _Color, _RampColor, _HighlightRampColor, _IndirectColor, _DetailColor, _RimColor, _EmissionColor;
+float4 _Color, _RampColor, _HighlightRampColor, _IndirectColor, _DetailColor, _RimColor, _EmissionColor, _SSColor;
 
 float _Cutoff, _Occlusion, _RampOffset, _ShadowIntensity, _OcclusionOffsetIntensity,
 	  _RimIntensity, _RimStrength, _RimSharpness, _Metallic, _Glossiness, _Anisotropy,
-	  _FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity;
+	  _FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity,
+	  _SSDistortion, _SSPower, _SSScale;
 float _BumpScale, _DetailBumpScale;
-float _RampOn, _RimLightOn, _EmissiveRim, _IndirectSpecular, _ToonyHighlights;
+float _RampOn, _RimLightOn, _SSSOn, _EmissiveRim, _IndirectSpecular, _ToonyHighlights;
 float4 _MainRampMin, _MainRampMax;
 
 sampler2D _Ramp, _HighlightRamp;
@@ -138,6 +140,13 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 			customIndirect=_IndirectColor.rgb*occlusion;
 		}
 	#endif
+
+    float SSSthickness = 0;
+
+	if(_SSSOn > 0)
+	{
+		SSSthickness = UNITY_SAMPLE_TEX2D_SAMPLER(_ThicknessMap, _MainTex, i.uv).r;
+	}
 	
 	//passing the required data to the brdf 
 	BRDFData s;
@@ -191,7 +200,13 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 		s.highlightRamp.color  = _HighlightRampColor*_HighlightIntensity;
 		s.highlightRamp.offset = _HighlightRampOffset;
 		s.highlightPattern     = tex2D(_HighlightPattern, i.HPuv).r;
-	#endif				
+	#endif	
+
+	s.sss.color = _SSColor.rgb * min(1, _SSSOn);
+    s.sss.thickness = SSSthickness;
+    s.sss.distortion = _SSDistortion;
+    s.sss.power = _SSPower;
+    s.sss.scale = _SSScale;			
 
 	//lightmap sampling
 	#if defined(LIGHTMAP_ON)
