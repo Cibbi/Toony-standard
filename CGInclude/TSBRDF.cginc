@@ -60,8 +60,8 @@ float4 TS_BRDF(BRDFData i)
     //setup the albedo based on workflow and premultiply alpha
     float oneMinusReflectivity;
     float3 specColor;
-    #if defined (_ENABLE_SPECULAR)
-        #if defined(_SPECULAR_WORKFLOW)
+    #if !defined (_SPECULARHIGHLIGHTS_OFF)
+        #if defined(_SPECGLOSSMAP)
             i.albedo = EnergyConservationBetweenDiffuseAndSpecular(i.albedo, i.specular, /*out*/ oneMinusReflectivity);
             specColor = i.specular;
         #else
@@ -100,7 +100,7 @@ float4 TS_BRDF(BRDFData i)
     }
     else
     {
-        #if defined (_ENABLE_SPECULAR)
+        #if !defined (_SPECULARHIGHLIGHTS_OFF)
             float diffuseRoughness = i.roughness;
         #else
             float diffuseRoughness = 1;
@@ -116,7 +116,7 @@ float4 TS_BRDF(BRDFData i)
 
     float3 specularTerm=0;
     float3 indirectSpecular=0;
-    #if defined (_ENABLE_SPECULAR)
+    #if !defined (_SPECULARHIGHLIGHTS_OFF)
     //the original roughness value is saved cause it is needed on the indirect specular for sampling the specular probe
     float3 baseRoughness=i.roughness;
     //Direct specular calculation

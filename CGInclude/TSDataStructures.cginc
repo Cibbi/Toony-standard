@@ -34,7 +34,7 @@ struct DirectionData
     float3 light;
     float3 view;
     float3 tangent;
-    #if defined(_ANISOTROPIC_SPECULAR) && defined (_ENABLE_SPECULAR)
+    #if defined(_ANISOTROPIC_SPECULAR) && !defined (_SPECULARHIGHLIGHTS_OFF)
         float3 tangentMap;
     #endif
     float3 bitangent;
@@ -82,9 +82,9 @@ struct BRDFData
     RampData mainRamp;
     float3 mainRampMin;
 	float3 mainRampMax;
-    #if defined (_ENABLE_SPECULAR)
+    #if !defined (_SPECULARHIGHLIGHTS_OFF)
         float metallic;
-        #if defined(_SPECULAR_WORKFLOW)
+        #if defined(_SPECGLOSSMAP)
             float3 specular;
         #endif
         float roughness;

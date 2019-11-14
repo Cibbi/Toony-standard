@@ -109,7 +109,7 @@ namespace Cibbi.ToonyStandard
 
             foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
                 SetupWorkflow(mat, (Workflow)_workflow.floatValue);
                 SetupSpMode(mat, (SpMode)_SpMode.floatValue);
                 SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
@@ -301,8 +301,8 @@ namespace Cibbi.ToonyStandard
                 {
                     foreach (Material mat in _SpecularOn.targets)
                     {
-                        TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
-                        _SpecularOn.floatValue = TSFunctions.floatBoolean(mat.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                        TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !isEnabled);
+                        _SpecularOn.floatValue = TSFunctions.floatBoolean(!mat.IsKeywordEnabled("_SPECULARHIGHLIGHTS_OFF"));
                     }
                 }
             }
@@ -325,7 +325,7 @@ namespace Cibbi.ToonyStandard
         {
             foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
                 SetupWorkflow(mat, (Workflow)_workflow.floatValue);
                 SetupSpMode(mat, (SpMode)_SpMode.floatValue);
                 SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
@@ -365,10 +365,10 @@ namespace Cibbi.ToonyStandard
             {
                 case Workflow.Metallic:
 
-                    material.DisableKeyword("_SPECULAR_WORKFLOW");
+                    material.DisableKeyword("_SPECGLOSSMAP");
                     break;
                 case Workflow.Specular:
-                    material.EnableKeyword("_SPECULAR_WORKFLOW");
+                    material.EnableKeyword("_SPECGLOSSMAP");
                     break;
             }
         }

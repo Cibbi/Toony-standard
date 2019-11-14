@@ -55,6 +55,9 @@
         _SSPower("Power", Range(0,3)) = 1
         _SSScale("Scale", Range(0,3)) = 1
 
+		[IntRange] _StencilID ("Stencil ID (0-255)", Range(0,255)) = 0
+        [Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp ("Stencil Comparison", Int) = 0
+        [Enum(UnityEngine.Rendering.StencilOp)] _StencilOp ("Stencil Operation", Int) = 0
 
 		_Cutoff("Alpha cutoff", Range(0,1)) = 0.5
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull Mode", Int) = 2
@@ -79,12 +82,14 @@
 		[HideInInspector] _SpecularOn("__EnableSpecular", Float) = 0.0
 		[HideInInspector] _DetailMapOn("__DetailMap", Float) = 0.0
 		[HideInInspector] _SSSOn("__SSSOn", Float) = 0.0
+		[HideInInspector] _StencilOn("__StencilOn", Float) = 0.0
 
 		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 1.0
 		[HideInInspector] _RimLightBox("__RimLightBox", Float) = 0.0
 		[HideInInspector] _SpecularBox("__SpecularBox", Float) = 0.0
 		[HideInInspector] _DetailBox("__DetailBox", Float) = 0.0
 		[HideInInspector] _SSSBox("__SSSBox", Float) = 0.0
+		[HideInInspector] _StencilBox("__StencilBox", Float) = 0.0
 
 		[HideInInspector] _NeedsFix("__NeedsFix", Float) = 0.5
 	}
@@ -98,6 +103,12 @@
 		Blend One Zero
 		ZWrite On
 		Cull [_Cull]
+		Stencil 
+        {
+            Ref [_StencilID]
+            Comp [_StencilComp]
+            Pass [_StencilOp]
+        }
 
 		Pass 
 		{
@@ -114,13 +125,15 @@
 			#pragma multi_compile_fog
 			//#pragma multi_compile _ SHADOWS_SCREEN
 			#pragma multi_compile VERTEXLIGHT_ON
-			#define UNITY_PASS_FORWARDBASE
+			#ifndef UNITY_PASS_FORWARDBASE
+                #define UNITY_PASS_FORWARDBASE
+            #endif
 
 			#define _ALPHATEST_ON
-			#pragma shader_feature _SPECULAR_WORKFLOW
+			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-			#pragma shader_feature _ENABLE_SPECULAR
-			#pragma shader_feature _DETAIL_MAP
+			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
+			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION
 			#include "UnityCG.cginc"
 			#include "UnityLightingCommon.cginc"
@@ -153,10 +166,10 @@
 			#pragma multi_compile_fog
 
 			#define _ALPHATEST_ON
-			#pragma shader_feature _SPECULAR_WORKFLOW
+			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-			#pragma shader_feature _ENABLE_SPECULAR
-			#pragma shader_feature _DETAIL_MAP
+			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
+			#pragma shader_feature _DETAIL_MULX2
 			#include "UnityCG.cginc"
 			#include "UnityLightingCommon.cginc"
 			#include "UnityStandardUtils.cginc"
@@ -206,10 +219,10 @@
 			#pragma vertex MetaVertexFunction
 			#pragma fragment MetaFragmentFunction
 
-			#pragma shader_feature _SPECULAR_WORKFLOW
+			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-			#pragma shader_feature _ENABLE_SPECULAR
-			#pragma shader_feature _DETAIL_MAP
+			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
+			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION
 
 			#include "CGInclude/TSMetaVertFrag.cginc"

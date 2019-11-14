@@ -7,7 +7,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20191105";
+        public static string Version = "Toony Standard master build 20191114";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
 

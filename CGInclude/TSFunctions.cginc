@@ -376,7 +376,7 @@ float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighligh
 
 float3 DirectAnisotropicSpecular(DirectionData dir, BaseDots dots, float anisotropy, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
-    #if defined(_ANISOTROPIC_SPECULAR) && defined (_ENABLE_SPECULAR)
+    #if defined(_ANISOTROPIC_SPECULAR) && !defined (_SPECULARHIGHLIGHTS_OFF)
     //Anisotropic specific dot products
     float TdotH = dot(dir.tangentMap, dir.halfD);
     float TdotL = dot(dir.tangentMap, dir.light);

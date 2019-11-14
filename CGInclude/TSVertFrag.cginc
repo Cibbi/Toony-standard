@@ -62,7 +62,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	//early albedo sampling in order to clip as soon as possible
 	float4 albedo;
 	albedo = UNITY_SAMPLE_TEX2D (_MainTex, i.uv) * _Color;
-	#if defined (_DETAIL_MAP)
+	#if defined (_DETAIL_MULX2)
 		float4 detailMask=UNITY_SAMPLE_TEX2D_SAMPLER (_DetailMask, _MainTex, i.uv);
 		float4 detailTexture=UNITY_SAMPLE_TEX2D_SAMPLER (_DetailTexture, _MainTex, i.detailUv)*_DetailColor;
 		albedo=lerp(albedo, albedo * detailTexture, detailMask.r * _DetailIntensity);
@@ -73,7 +73,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	#endif
 	
 	float3 normalMap = UnpackScaleNormal (UNITY_SAMPLE_TEX2D_SAMPLER(_BumpMap, _MainTex, i.uv),_BumpScale);
-	#if defined (_DETAIL_MAP)
+	#if defined (_DETAIL_MULX2)
 		float3 detailNormals =UnpackScaleNormal (UNITY_SAMPLE_TEX2D_SAMPLER(_DetailBumpMap, _MainTex, i.detailUv),_DetailBumpScale);
 		float3 finalNormals = normalize(float3(normalMap.xy + detailNormals.xy, normalMap.z*detailNormals.z));
 		normalMap = lerp(normalMap,finalNormals,detailMask.r*_DetailIntensity);
@@ -95,8 +95,8 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	float occlusion = lerp(1,msod.b,_Occlusion).r;
 
 	//sampling specular related textures
-	#if defined (_ENABLE_SPECULAR)
-		#if defined(_SPECULAR_WORKFLOW)
+	#if !defined (_SPECULARHIGHLIGHTS_OFF)
+		#if defined(_SPECGLOSSMAP)
 			float3 specular = UNITY_SAMPLE_TEX2D_SAMPLER(_MetallicMap, _MainTex, i.uv).rgb;
 		#else
 			float metallic = msod.r * _Metallic;
@@ -175,8 +175,8 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	s.mainRampMin = _MainRampMin.rgb;
 	s.mainRampMax = _MainRampMax.rgb;
 
-	#if defined (_ENABLE_SPECULAR)
-		#if defined(_SPECULAR_WORKFLOW)
+	#if !defined (_SPECULARHIGHLIGHTS_OFF)
+		#if defined(_SPECGLOSSMAP)
 			s.metallic = 1;
 			s.specular = specular;
 		#else

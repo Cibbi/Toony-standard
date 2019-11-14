@@ -34,7 +34,7 @@ namespace Cibbi.ToonyStandard
 
             foreach (Material mat in _DetailMapOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_DETAIL_MAP", mat.GetFloat(_DetailMapOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_DETAIL_MULX2", mat.GetFloat(_DetailMapOn.name) != 0);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Cibbi.ToonyStandard
             _DetailBox.floatValue = TSFunctions.floatBoolean(isOpen);
             foreach (Material mat in _DetailMapOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_DETAIL_MAP", isEnabled);
+                TSFunctions.SetKeyword(mat, "_DETAIL_MULX2", isEnabled);
             }
             if (!isEnabled)
             {
@@ -84,7 +84,7 @@ namespace Cibbi.ToonyStandard
         {
             foreach (Material mat in _DetailMapOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_DETAIL_MAP", mat.GetFloat(_DetailMapOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_DETAIL_MULX2", mat.GetFloat(_DetailMapOn.name) != 0);
             }
         }
 

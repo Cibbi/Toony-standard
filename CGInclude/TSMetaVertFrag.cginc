@@ -35,7 +35,7 @@ float3 GetAlbedo (Interpolators i)
     float4 albedo;
 	albedo = UNITY_SAMPLE_TEX2D (_MainTex, i.uv.xy) * _Color;
 	//float3 normalMap = UnpackScaleNormal (UNITY_SAMPLE_TEX2D_SAMPLER(_BumpMap, _MainTex, i.uv),_BumpScale);
-	#if defined (_DETAIL_MAP)
+	#if defined (_DETAIL_MULX2)
 		float4 detailMask=UNITY_SAMPLE_TEX2D_SAMPLER (_DetailMask, _MainTex, i.uv.xy);
 		float4 detailTexture=UNITY_SAMPLE_TEX2D_SAMPLER (_DetailTexture, _MainTex, i.uv.zw)*_DetailColor;
 		albedo=lerp(albedo, albedo * detailTexture, detailMask.r * _DetailIntensity); 
@@ -76,10 +76,10 @@ void GetMetaSurfaceData (Interpolators i, inout UnityMetaInput data)
     float3 emission = GetEmission(i);
     float3 specular = 0;
     float roughness = 0;
-    #if defined (_ENABLE_SPECULAR)
+    #if !defined (_SPECULARHIGHLIGHTS_OFF)
     roughness = GetRoughness(i);
     float oneMinusReflectivity;
-        #if defined(_SPECULAR_WORKFLOW)
+        #if defined(_SPECGLOSSMAP)
             specular = GetSpecular(i);
             albedo = EnergyConservationBetweenDiffuseAndSpecular(albedo, specular, /*out*/ oneMinusReflectivity);
         #else

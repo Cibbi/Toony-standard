@@ -27,12 +27,14 @@ namespace Cibbi.ToonyStandard
             MaterialProperty _SpecularOn;
             MaterialProperty _DetailMapOn;
             MaterialProperty _SSSOn;
+            MaterialProperty _StencilOn;
 
             MaterialProperty _ToonRampBox;
             MaterialProperty _RimLightBox;
             MaterialProperty _SpecularBox;
             MaterialProperty _DetailBox;
             MaterialProperty _SSSBox;
+            MaterialProperty _StencilBox;
 
             MainSection main;
             BasicMainSection basicMain;
@@ -121,7 +123,18 @@ namespace Cibbi.ToonyStandard
                 group.addSection(new SpecularSection(properties, inspectorLevel, this, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
                 group.addSection(new DetailSection(properties, TSFunctions.BooleanFloat(_DetailBox.floatValue), TSFunctions.BooleanFloat(_DetailMapOn.floatValue)));
                 group.addSection(new SubsurfaceSection(properties, TSFunctions.BooleanFloat(_SSSBox.floatValue), TSFunctions.BooleanFloat(_SSSOn.floatValue)));
-            }       
+            }   
+
+            if(inspectorLevel == InspectorLevel.Expert)
+            {
+                 group.addSection(new StencilSection(properties, TSFunctions.BooleanFloat(_StencilBox.floatValue), TSFunctions.BooleanFloat(_StencilOn.floatValue)));
+            }
+            else
+            {
+                FindProperty("_StencilID", properties).floatValue = 0;
+                FindProperty("_StencilComp", properties).floatValue = 0;
+                FindProperty("_StencilOp", properties).floatValue = 0;
+            }  
         }
 
         /// <summary>
@@ -171,8 +184,8 @@ namespace Cibbi.ToonyStandard
             //if a keyword is used to apply the effects on the shader caused by enabling/disabling a section, it needs to be set every update
             foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
-                TSFunctions.SetKeyword(mat, "_DETAIL_MAP", mat.GetFloat(_DetailMapOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
+                TSFunctions.SetKeyword(mat, "_DETAIL_MULX2", mat.GetFloat(_DetailMapOn.name) != 0);
             }
 
             //draw main section
@@ -201,12 +214,14 @@ namespace Cibbi.ToonyStandard
             _SpecularOn = FindProperty("_SpecularOn", properties);
             _DetailMapOn = FindProperty("_DetailMapOn", properties);
             _SSSOn = FindProperty("_SSSOn", properties);
+            _StencilOn = FindProperty("_StencilOn", properties);
 
             _ToonRampBox = FindProperty("_ToonRampBox", properties);
             _RimLightBox = FindProperty("_RimLightBox", properties);
             _SpecularBox = FindProperty("_SpecularBox", properties);
             _DetailBox = FindProperty("_DetailBox", properties);
             _SSSBox = FindProperty("_SSSBox", properties);
+            _StencilBox = FindProperty("_StencilBox", properties);
         }
 
         public void GenerateRampMinMax(MaterialProperty[] properties)

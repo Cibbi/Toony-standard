@@ -51,7 +51,7 @@ namespace Cibbi.ToonyStandard
 
             foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
             }
         }
 
@@ -93,8 +93,8 @@ namespace Cibbi.ToonyStandard
                 {   
                     if(!_SpecularOn.hasMixedValue)
                     {
-                        TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", isEnabled);
-                        _SpecularOn.floatValue = TSFunctions.floatBoolean(mat.IsKeywordEnabled("_ENABLE_SPECULAR"));
+                        TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !isEnabled);
+                        _SpecularOn.floatValue = TSFunctions.floatBoolean(!mat.IsKeywordEnabled("_SPECULARHIGHLIGHTS_OFF"));
                     }
                 }
             }
@@ -104,7 +104,7 @@ namespace Cibbi.ToonyStandard
         {
             foreach (Material mat in _SpecularOn.targets)
             {
-                TSFunctions.SetKeyword(mat, "_ENABLE_SPECULAR", mat.GetFloat(_SpecularOn.name) != 0);
+                TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
             }
         }
 
