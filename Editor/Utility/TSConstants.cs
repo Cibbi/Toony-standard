@@ -386,6 +386,20 @@ namespace Cibbi.ToonyStandard
                 }
             }
 
+            private static GUIStyle rightLabelLocal;
+            public static GUIStyle rightLabel
+            {
+                get
+                {
+                    if(rightLabelLocal==null)
+                    {
+                        rightLabelLocal=new GUIStyle(EditorStyles.label);
+                        rightLabelLocal.alignment = TextAnchor.MiddleRight;
+                    }
+                    return rightLabelLocal;
+                }
+            }
+
             private static GUIStyle multilineLabelCenterLocal;
             public static GUIStyle multilineLabelCenter
             {

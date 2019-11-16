@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.Collections;
+using System.IO;
 
 namespace Cibbi.ToonyStandard
 {
@@ -232,6 +233,25 @@ namespace Cibbi.ToonyStandard
 
 				GUILayout.EndHorizontal();
 		}
+        /// <summary>
+        /// Get the currently open window in the Project window or the root if the former is not available
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSelectedPathOrFallback()
+        {
+            string path = "Assets";
+            
+            foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+            {
+                path = AssetDatabase.GetAssetPath(obj);
+                if ( !string.IsNullOrEmpty(path) && File.Exists(path) ) 
+                {
+                    path = Path.GetDirectoryName(path);
+                    break;
+                }
+            }
+            return path;
+        }
     }
 
 

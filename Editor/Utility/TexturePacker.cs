@@ -53,9 +53,13 @@ namespace Cibbi.ToonyStandard
 
         private string defaultPath;
 
+        private string[] names;
+
         int kernel;
 
-        public TexturePacker(Resolution res, string defaultPath)
+        public bool drawInternalConfirmButton;
+
+        public TexturePacker(Resolution res,string[] textureNames, string defaultPath)
         {
             resolution = res;
             result = new RenderTexture((int)resolution, (int)resolution,32,RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
@@ -65,7 +69,35 @@ namespace Cibbi.ToonyStandard
             compute = TSConstants.PackerCompute;
 
             tex = new Texture2D(result.width, result.height, TextureFormat.RGBA32, false);
+            names = textureNames;
+            if(names.Length>4)
+            {
+                string[] oldNames = names;
+                names = new string[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    names[i] = oldNames[i];
+                }
+            }
+            else if(names.Length<4)
+            {
+                string[] oldNames = names;
+                names = new string[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    if(i<oldNames.Length)
+                    {
+                        names[i] = oldNames[i];
+                    }
+                    else
+                    {
+                        names[i] = "Texture";
+                    }    
+                }
+            }
+
             this.defaultPath = defaultPath;
+            drawInternalConfirmButton = true;
         }
 
         public int RiseResolutionByOneLevel()
@@ -143,99 +175,74 @@ namespace Cibbi.ToonyStandard
             bytes = tex.EncodeToPNG();
             
             System.IO.File.WriteAllBytes(path, bytes);
+            path = path.Substring(path.LastIndexOf("Assets"));
             AssetDatabase.ImportAsset(path);
             resultTex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        }
+
+        private void DrawLeft(string name, ref int channel, ref bool reverse, ref DefaultTexture defaultTexture, ref Texture2D texture)
+        {
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginVertical();
+                    EditorGUILayout.BeginHorizontal();
+                        EditorGUI.LabelField(GUILayoutUtility.GetRect(110,16), name, TSConstants.Styles.rightLabel);
+                    EditorGUILayout.EndHorizontal();
+                    channel = GUILayout.Toolbar(channel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
+                    EditorGUILayout.BeginHorizontal();
+                        GUILayout.Space(44);
+                        EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
+                        reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),reverse);
+                    EditorGUILayout.EndHorizontal();
+                    defaultTexture = (DefaultTexture) EditorGUILayout.EnumPopup(defaultTexture,GUILayout.Width(110));
+                EditorGUILayout.EndVertical();
+                texture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),texture,typeof(Texture2D),false);
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawRight(string name, ref int channel, ref bool reverse, ref DefaultTexture defaultTexture, ref Texture2D texture)
+        {
+            EditorGUILayout.BeginHorizontal("box");
+                texture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),texture,typeof(Texture2D),false);
+                EditorGUILayout.BeginVertical();
+                    EditorGUILayout.BeginHorizontal();
+                        EditorGUI.LabelField(GUILayoutUtility.GetRect(110,16),name);
+                    EditorGUILayout.EndHorizontal();
+                    channel = GUILayout.Toolbar(channel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
+                    EditorGUILayout.BeginHorizontal();
+                        GUILayout.Space(4);
+                        reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),reverse);
+                        EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
+                        GUILayout.Space(40);
+                    EditorGUILayout.EndHorizontal();
+                    defaultTexture = (DefaultTexture) EditorGUILayout.EnumPopup(defaultTexture, GUILayout.Width(110));
+                EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal(); 
+            GUILayout.FlexibleSpace();
         }
 
         public void DrawGUI()
         {
             EditorGUILayout.Space();
-            //compute = (ComputeShader) EditorGUILayout.ObjectField("compute",compute,typeof(ComputeShader),false);
             EditorGUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                EditorGUILayout.BeginHorizontal("box");
-                    EditorGUILayout.BeginVertical();
-                        EditorGUILayout.BeginHorizontal();
-                            GUILayout.Space(60);
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Metallic");
-                        EditorGUILayout.EndHorizontal();
-                        rChannel = GUILayout.Toolbar(rChannel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
-                        EditorGUILayout.BeginHorizontal();
-                            GUILayout.Space(44);
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
-                            rReverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),rReverse);
-                        EditorGUILayout.EndHorizontal();
-                        rDefault = (DefaultTexture) EditorGUILayout.EnumPopup(rDefault,GUILayout.Width(110));
-                    EditorGUILayout.EndVertical();
-                    rTexture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),rTexture,typeof(Texture2D),false);
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.BeginHorizontal("box");
-                    gTexture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),gTexture,typeof(Texture2D),false);
-                    EditorGUILayout.BeginVertical();
-                        EditorGUILayout.BeginHorizontal();
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(75,16),"Smoothness");
-                            GUILayout.Space(35);
-                        EditorGUILayout.EndHorizontal();
-                        gChannel = GUILayout.Toolbar(gChannel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
-                        EditorGUILayout.BeginHorizontal();
-                            GUILayout.Space(4);
-                            gReverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),gReverse);
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
-                            GUILayout.Space(40);
-                        EditorGUILayout.EndHorizontal();
-                        gDefault = (DefaultTexture) EditorGUILayout.EnumPopup(gDefault,GUILayout.Width(110));
-                    EditorGUILayout.EndVertical();
-                EditorGUILayout.EndHorizontal(); 
-                GUILayout.FlexibleSpace();
+                DrawLeft(names[0], ref rChannel, ref rReverse, ref rDefault, ref rTexture);
+                DrawRight(names[1], ref gChannel, ref gReverse, ref gDefault, ref gTexture);
             EditorGUILayout.EndHorizontal();
-
             EditorGUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                EditorGUILayout.BeginHorizontal("box");
-                    EditorGUILayout.BeginVertical();
-                        EditorGUILayout.BeginHorizontal();
-                            GUILayout.Space(0);
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(110,16),"Ambient Occlusion");
-                        EditorGUILayout.EndHorizontal();
-                        bChannel = GUILayout.Toolbar(bChannel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
-                        EditorGUILayout.BeginHorizontal();
-                            GUILayout.Space(44);
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
-                            bReverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),bReverse);
-                        EditorGUILayout.EndHorizontal();
-                        bDefault = (DefaultTexture) EditorGUILayout.EnumPopup(bDefault,GUILayout.Width(110));
-                    EditorGUILayout.EndVertical();
-                    bTexture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),bTexture,typeof(Texture2D),false);
-                EditorGUILayout.EndHorizontal();
-                                
-                EditorGUILayout.BeginHorizontal("box");
-                    aTexture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),aTexture,typeof(Texture2D),false);
-                    EditorGUILayout.BeginVertical();
-                        EditorGUILayout.BeginHorizontal();
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(110,16),"Detail mask");
-                            GUILayout.Space(0);
-                        EditorGUILayout.EndHorizontal();
-                        aChannel = GUILayout.Toolbar(aChannel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
-                        EditorGUILayout.BeginHorizontal();
-                            GUILayout.Space(4);
-                            aReverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),aReverse);
-                            EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
-                            GUILayout.Space(40);
-                        EditorGUILayout.EndHorizontal();
-                        aDefault = (DefaultTexture) EditorGUILayout.EnumPopup(aDefault,GUILayout.Width(110));
-                    EditorGUILayout.EndVertical();
-                EditorGUILayout.EndHorizontal(); 
-                GUILayout.FlexibleSpace();
+                DrawLeft(names[2], ref bChannel, ref bReverse, ref bDefault, ref bTexture);
+                DrawRight(names[3], ref aChannel, ref aReverse, ref aDefault, ref aTexture);               
             EditorGUILayout.EndHorizontal();
             //result = (RenderTexture) EditorGUILayout.ObjectField("result",result,typeof(RenderTexture),false);
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Resolution",GUILayout.Width(65));
             resolution = (Resolution) EditorGUILayout.EnumPopup(resolution,GUILayout.Width(120));
             GUILayout.FlexibleSpace();
-            if(GUILayout.Button("Pack textures",GUILayout.Width(150)))
+            if(drawInternalConfirmButton)
             {
-                PackTexture(defaultPath);
+                if(GUILayout.Button("Pack textures",GUILayout.Width(150)))
+                {
+                    PackTexture(defaultPath);
+                }
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();

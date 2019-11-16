@@ -163,7 +163,8 @@ namespace Cibbi.ToonyStandard
             bytes = gradient.GetTexture().EncodeToPNG();
             
             System.IO.File.WriteAllBytes(path, bytes);
-            AssetDatabase.ImportAsset(path);
+            AssetDatabase.Refresh();
+            path = path.Substring(path.LastIndexOf("Assets"));
             TextureImporter t = AssetImporter.GetAtPath(path) as TextureImporter;
             t.wrapMode = TextureWrapMode.Clamp;
             t.isReadable = true;

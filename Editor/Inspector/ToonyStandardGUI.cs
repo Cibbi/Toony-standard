@@ -80,11 +80,11 @@ namespace Cibbi.ToonyStandard
                     basicMain = new BasicMainSection(properties);
                     break;
                 case InspectorLevel.Normal:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Detail map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
                 case InspectorLevel.Expert:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Detail map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
             }
