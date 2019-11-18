@@ -142,9 +142,9 @@
 
 			//#include "UnityStandardConfig.cginc"
 
-			#include "CGInclude/TSDataStructures.cginc"
-			#include "CGInclude/TSFunctions.cginc"
-			#include "CGInclude/TSVertFrag.cginc"
+			#include "../CGIncludes/TSDataStructures.cginc"
+			#include "../CGIncludes/TSFunctions.cginc"
+			#include "../CGIncludes/TSVertFrag.cginc"
 			
 			ENDCG
 		}
@@ -176,9 +176,9 @@
 			#include "AutoLight.cginc"
 
 			//#include "UnityStandardConfig.cginc"
-			#include "CGInclude/TSDataStructures.cginc"
-			#include "CGInclude/TSFunctions.cginc"
-			#include "CGInclude/TSVertFrag.cginc"
+			#include "../CGIncludes/TSDataStructures.cginc"
+			#include "../CGIncludes/TSFunctions.cginc"
+			#include "../CGIncludes/TSVertFrag.cginc"
 			
 			ENDCG
 		}
@@ -201,11 +201,9 @@
 			#pragma vertex ShadowVertexFunction
 			#pragma fragment ShadowFragmentFunction
 
-			#include "UnityStandardUtils.cginc"
-
 			#define _ALPHAPREMULTIPLY_ON
 
-			#include "CGInclude/TSShadowVertFrag.cginc"
+			#include "../CGIncludes/TSShadowVertFrag.cginc"
 
 			ENDCG
 		}	
@@ -229,7 +227,7 @@
 			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION
 
-			#include "CGInclude/TSMetaVertFrag.cginc"
+			#include "../CGIncludes/TSMetaVertFrag.cginc"
 
 			ENDCG
 		}

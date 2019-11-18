@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Cibbis shaders/toony standard/Cutout"
+﻿Shader "Cibbis shaders/toony standard"
 {
 	Properties
 	{
@@ -72,7 +72,7 @@
 		[HideInInspector] _ZWrite("__zw", Float) = 1.0
 		[HideInInspector] _MainRampMin("__MainRampMin", Color) = (0.001,0.001,0.001,0.001)
 		[HideInInspector] _MainRampMax("__MainRampMax", Color) = (1,1,1,1)
- 
+
 		[HideInInspector] _ToonyHighlights("__ToonyHighlights", Float) = 0.0
 		[HideInInspector] _OcclusionOffset("__OcclusionOffset", Float) = 0.0
 		[HideInInspector] _EmissiveRim("__EmissiveRim", Float) = 0.0
@@ -97,8 +97,8 @@
 	{
 		Tags
 		{
-			"RenderType" = "TransparentCutout" 
-			"Queue" = "AlphaTest"
+			"RenderType" = "Opaque"
+			"Queue" = "Geometry"
 		}
 		Blend One Zero
 		ZWrite On
@@ -109,7 +109,7 @@
             Comp [_StencilComp]
             Pass [_StencilOp]
         }
-
+		
 		Pass 
 		{
 			Tags
@@ -121,15 +121,14 @@
 			#pragma target 3.0
 			#pragma vertex VertexFunction
 			#pragma fragment FragmentFunction
-			#pragma multi_compile_fwdbase	
-			#pragma multi_compile_fog
+			#pragma multi_compile_fwdbase
+			#pragma multi_compile_fog	
 			//#pragma multi_compile _ SHADOWS_SCREEN
-			#pragma multi_compile VERTEXLIGHT_ON
+			#pragma multi_compile _ VERTEXLIGHT_ON
 			#ifndef UNITY_PASS_FORWARDBASE
                 #define UNITY_PASS_FORWARDBASE
             #endif
 
-			#define _ALPHATEST_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
@@ -142,9 +141,9 @@
 
 			//#include "UnityStandardConfig.cginc"
 
-			#include "CGInclude/TSDataStructures.cginc"
-			#include "CGInclude/TSFunctions.cginc"
-			#include "CGInclude/TSVertFrag.cginc"
+			#include "../CGIncludes/TSDataStructures.cginc"
+			#include "../CGIncludes/TSFunctions.cginc"
+			#include "../CGIncludes/TSVertFrag.cginc"
 			
 			ENDCG
 		}
@@ -164,8 +163,6 @@
 			#pragma fragment FragmentFunction
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
-
-			#define _ALPHATEST_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
@@ -176,9 +173,9 @@
 			#include "AutoLight.cginc"
 
 			//#include "UnityStandardConfig.cginc"
-			#include "CGInclude/TSDataStructures.cginc"
-			#include "CGInclude/TSFunctions.cginc"
-			#include "CGInclude/TSVertFrag.cginc"
+			#include "../CGIncludes/TSDataStructures.cginc"
+			#include "../CGIncludes/TSFunctions.cginc"
+			#include "../CGIncludes/TSVertFrag.cginc"
 			
 			ENDCG
 		}
@@ -199,12 +196,10 @@
 			#pragma vertex ShadowVertexFunction
 			#pragma fragment ShadowFragmentFunction
 
-			#define _ALPHATEST_ON
-
-			#include "CGInclude/TSShadowVertFrag.cginc"
+			#include "../CGIncludes/TSShadowVertFrag.cginc"
 
 			ENDCG
-		}	
+		}
 		Pass 
 		{
 			Tags 
@@ -225,7 +220,7 @@
 			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION
 
-			#include "CGInclude/TSMetaVertFrag.cginc"
+			#include "../CGIncludes/TSMetaVertFrag.cginc" 
 
 			ENDCG
 		}
