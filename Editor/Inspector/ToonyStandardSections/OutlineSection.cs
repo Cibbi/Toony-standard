@@ -14,7 +14,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent outlineWidth = new GUIContent("Outline width (px)", "Width of the outline, the value is in pixel");
             public static GUIContent outlineOffsetX = new GUIContent("Horizzontal offset (px)", "Horizzontal offset of the outline, the value is in pixel");
             public static GUIContent outlineOffsetY = new GUIContent("Vertical offset (px)", "Vertical offset of the outline, the value is in pixel");
-            public static GUIContent outlineColor = new GUIContent("Outline Color", "Color of the outline");
+            public static GUIContent outlineColor = new GUIContent("Outline color", "Color of the outline");
             public static GUIContent isOutlineEmissive = new GUIContent("Emissive outline", "When enabled the outline will ignore the average light");
         }
 

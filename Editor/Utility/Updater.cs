@@ -373,6 +373,7 @@ namespace Cibbi.ToonyStandard
                             local.beta=true;
                             local.betaSha=githubBetaJSON.sha;
                             local.version="beta";
+                            local.lastCheck = DateTime.Now.ToString();
                             File.WriteAllText(TSConstants.LocalJSONPath,JsonUtility.ToJson(local));
                             // The asset database is refreshed to be sure that the zip file is actually detected from the asset database for its deletion
                             File.Delete(Application.dataPath+"/toonyStandard.zip");
