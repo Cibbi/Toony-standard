@@ -1,4 +1,4 @@
-﻿Shader "Hidden/Cibbis shaders/toony standard/Transparent"
+Shader "Hidden/Cibbis shaders/toony standard/Transparent"
 {
 	Properties
 	{
@@ -59,6 +59,12 @@
         [Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp ("Stencil Comparison", Int) = 0
         [Enum(UnityEngine.Rendering.StencilOp)] _StencilOp ("Stencil Operation", Int) = 0
 
+		[IntRange] _OutlineWidth("Outline Width", Range(0,10)) = 2.0
+		[IntRange] _OutlineOffsetX("Outline Offset X",Range(-10,10)) = 0.0
+		[IntRange] _OutlineOffsetY("Outline Offset Y",Range(-10,10)) = 0.0
+		_OutlineColor ("Outline Color", Color) = (0,0,0,1)
+		_IsOutlineEmissive("Emissive Outline", Float) = 0.0
+
 		_Cutoff("Alpha cutoff", Range(0,1)) = 0.5
 		[Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull Mode", Int) = 2
 
@@ -83,6 +89,7 @@
 		[HideInInspector] _DetailMapOn("__DetailMap", Float) = 0.0
 		[HideInInspector] _SSSOn("__SSSOn", Float) = 0.0
 		[HideInInspector] _StencilOn("__StencilOn", Float) = 0.0
+		[HideInInspector] _OutlineOn("__OutlineOn", Float) = 0.0
 
 		[HideInInspector] _ToonRampBox("__ToonRampBox", Float) = 1.0
 		[HideInInspector] _RimLightBox("__RimLightBox", Float) = 0.0
@@ -90,6 +97,7 @@
 		[HideInInspector] _DetailBox("__DetailBox", Float) = 0.0
 		[HideInInspector] _SSSBox("__SSSBox", Float) = 0.0
 		[HideInInspector] _StencilBox("__StencilBox", Float) = 0.0
+		[HideInInspector] _OutlineBox("__OutlineBox", Float) = 0.0
 
 		[HideInInspector] _NeedsFix("__NeedsFix", Float) = 0.5
 	}
@@ -101,7 +109,7 @@
 			"Queue" = "Transparent"
 		}
 		Blend One OneMinusSrcAlpha
-		ZWrite off
+		ZWrite Off
 		Cull [_Cull]
 		Stencil 
         {
@@ -121,15 +129,15 @@
 			#pragma target 3.0
 			#pragma vertex VertexFunction
 			#pragma fragment FragmentFunction
-			#pragma multi_compile_fwdbase	
-			#pragma multi_compile_fog
+			#pragma multi_compile_fwdbase
+			#pragma multi_compile_fog	
 			//#pragma multi_compile _ SHADOWS_SCREEN
 			#pragma multi_compile _ VERTEXLIGHT_ON
 			#ifndef UNITY_PASS_FORWARDBASE
                 #define UNITY_PASS_FORWARDBASE
             #endif
 
-			#define _ALPHAPREMULTIPLY_ON
+            #define _ALPHAPREMULTIPLY_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
@@ -165,7 +173,7 @@
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
 
-			#define _ALPHAPREMULTIPLY_ON
+            #define _ALPHAPREMULTIPLY_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
@@ -188,8 +196,7 @@
 			{
 				"LightMode" = "ShadowCaster"
 			}
-
-			ZWrite On ZTest LEqual
+            ZWrite On ZTest LEqual
 
 			CGPROGRAM
 
@@ -201,12 +208,12 @@
 			#pragma vertex ShadowVertexFunction
 			#pragma fragment ShadowFragmentFunction
 
-			#define _ALPHAPREMULTIPLY_ON
+            #define _ALPHAPREMULTIPLY_ON
 
 			#include "../CGIncludes/TSShadowVertFrag.cginc"
 
 			ENDCG
-		}	
+		}
 		Pass 
 		{
 			Tags 
@@ -227,10 +234,12 @@
 			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION
 
-			#include "../CGIncludes/TSMetaVertFrag.cginc"
+			#include "../CGIncludes/TSMetaVertFrag.cginc" 
 
 			ENDCG
 		}
+
+        
 	}
 	CustomEditor "Cibbi.ToonyStandard.ToonyStandardGUI"
 }

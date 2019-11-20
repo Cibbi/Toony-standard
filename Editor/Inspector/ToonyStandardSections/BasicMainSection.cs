@@ -85,7 +85,7 @@ namespace Cibbi.ToonyStandard
             {
                 foreach (Material mat in _blendMode.targets)
                 {
-                    ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)_blendMode.floatValue);
+                    ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)_blendMode.floatValue, mat.GetFloat("_OutlineOn")>0);
                 }
             }
 

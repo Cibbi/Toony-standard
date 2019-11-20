@@ -1,4 +1,4 @@
-Shader "Hidden/Cibbis shaders/toony standard/Opaque"
+Shader "Hidden/Cibbis shaders/toony standard/FadeOutlined"
 {
 	Properties
 	{
@@ -105,11 +105,11 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
 	{
 		Tags
 		{
-			"RenderType" = "Opaque"
-			"Queue" = "Geometry"
+			"RenderType" = "Transparent"
+			"Queue" = "Transparent"
 		}
-		Blend One Zero
-		ZWrite On
+		Blend SrcAlpha OneMinusSrcAlpha
+		ZWrite Off
 		Cull [_Cull]
 		Stencil 
         {
@@ -137,7 +137,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
                 #define UNITY_PASS_FORWARDBASE
             #endif
 
-            
+            #define _ALPHABLEND_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
@@ -164,7 +164,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
 				"LightMode" = "ForwardAdd"
 			}
 
-			Blend One One
+			Blend SrcAlpha One
 
 			CGPROGRAM
 			#pragma target 3.0
@@ -173,7 +173,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
 
-            
+            #define _ALPHABLEND_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
@@ -196,7 +196,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
 			{
 				"LightMode" = "ShadowCaster"
 			}
-            
+            ZWrite On ZTest LEqual
 
 			CGPROGRAM
 
@@ -208,7 +208,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
 			#pragma vertex ShadowVertexFunction
 			#pragma fragment ShadowFragmentFunction
 
-            
+            #define _ALPHABLEND_ON
 
 			#include "../CGIncludes/TSShadowVertFrag.cginc"
 
@@ -239,7 +239,36 @@ Shader "Hidden/Cibbis shaders/toony standard/Opaque"
 			ENDCG
 		}
 
-        
+        Pass 
+		{
+			Name "Outline"
+			//Blend One Zero
+			ZWrite On
+			Cull Front
+			Tags
+			{
+				"LightMode" = "ForwardBase"
+			}
+
+			Stencil 
+			{
+				//Ref 1
+				//Comp NotEqual
+			}
+
+			CGPROGRAM
+			#pragma target 3.0
+			#pragma vertex VertexOutlineFunction
+			#pragma fragment FragmentOutlineFunction
+			//#pragma multi_compile_fwdbase
+			#pragma multi_compile_fog	
+			//#pragma multi_compile _ SHADOWS_SCREEN
+			//#pragma multi_compile _ VERTEXLIGHT_ON
+
+			#include "../CGIncludes/TSOutlineVertFrag.cginc"
+			
+			ENDCG
+		}
 	}
 	CustomEditor "Cibbi.ToonyStandard.ToonyStandardGUI"
 }
