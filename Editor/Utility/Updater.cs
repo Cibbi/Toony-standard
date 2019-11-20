@@ -57,6 +57,8 @@ namespace Cibbi.ToonyStandard
         Texture2D icon;
 
         Vector2 MainAreaScrollPos;
+
+        bool isManualUpdate = false;
         /// <summary>
         /// Constructor for the TSUpdater class
         /// </summary>
@@ -129,7 +131,8 @@ namespace Cibbi.ToonyStandard
             {
                 case UpdaterState.Waiting:
                     if(GUILayout.Button("Check for Update"))
-                    {     
+                    {
+                        isManualUpdate = true;
                         StartCoroutine(CheckForUpdate());         
                     }
                     break;
@@ -159,6 +162,7 @@ namespace Cibbi.ToonyStandard
                         EditorGUILayout.EndScrollView();
                         EditorGUILayout.EndVertical();
                     }
+                    isManualUpdate = false;
                     if(GUILayout.Button("Update"))
                     {     
                         StartCoroutine(DownloadUpdate());         
@@ -231,11 +235,11 @@ namespace Cibbi.ToonyStandard
                 local.beta = true;
                 local.betaSha = "";
                 local.version = "release";
-                local.lastCheck = DateTime.Now.ToString();
+                local.lastCheck = DateTime.Now.AddDays(2).ToString();
                 File.WriteAllText(TSConstants.LocalJSONPath, JsonUtility.ToJson(local));
             }
             // If it was checked recently, do not update it
-            if(DateTime.Parse(local.lastCheck).AddDays(1)>DateTime.Now) 
+            if(DateTime.Parse(local.lastCheck).AddDays(1)>DateTime.Now && !isManualUpdate) 
             {
                 state = UpdaterState.doNotUpdate; 
                 yield break;
