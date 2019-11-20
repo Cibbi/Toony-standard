@@ -235,8 +235,12 @@ namespace Cibbi.ToonyStandard
                 local.beta = true;
                 local.betaSha = "";
                 local.version = "release";
-                local.lastCheck = DateTime.Now.AddDays(2).ToString();
+                local.lastCheck = DateTime.Now.AddDays(-2).ToString();
                 File.WriteAllText(TSConstants.LocalJSONPath, JsonUtility.ToJson(local));
+            }
+            if(local.lastCheck=="")
+            {
+                local.lastCheck = DateTime.Now.AddDays(-2).ToString();
             }
             // If it was checked recently, do not update it
             if(DateTime.Parse(local.lastCheck).AddDays(1)>DateTime.Now && !isManualUpdate) 
