@@ -43,17 +43,23 @@ namespace Cibbi.ToonyStandard
 
         private void InitializeInspectorLevel(MaterialProperty[] properties)
         {
-            FindProperty("_Occlusion", properties).floatValue=0;
-            FindProperty("_FakeLight", properties).floatValue=0;
-            FindProperty("_RimLightOn", properties).floatValue=0;
-            FindProperty("_RampOn", properties).floatValue=1;
+            FindProperty("_Occlusion", properties).floatValue = 0;
+            FindProperty("_RimLightOn", properties).floatValue = 0;
+            FindProperty("_RampOn", properties).floatValue = 1;
 
-            FindProperty("_MetallicMap", properties).textureValue=null;  
-            FindProperty("_GlossinessMap", properties).textureValue=null;    
-            FindProperty("_GlossinessMap", properties).textureValue=null;  
-            FindProperty("_HighlightRamp", properties).textureValue=TSConstants.DefaultRamp; 
-            FindProperty("_HighlightRampOffset", properties).floatValue=0;  
-            FindProperty("_DetailMapOn", properties).floatValue=0;
+            FindProperty("_MetallicMap", properties).textureValue = null;  
+            FindProperty("_GlossinessMap", properties).textureValue = null;    
+            FindProperty("_GlossinessMap", properties).textureValue = null;  
+            FindProperty("_HighlightRamp", properties).textureValue = TSConstants.DefaultRamp; 
+            FindProperty("_HighlightRampOffset", properties).floatValue = 0;  
+            FindProperty("_DetailMapOn", properties).floatValue = 0;
+
+            FindProperty("_SSSOn", properties).floatValue = 0;
+
+            FindProperty("_StencilID", properties).floatValue = 0;
+            FindProperty("_StencilComp", properties).floatValue = 0;
+            FindProperty("_StencilOp", properties).floatValue = 0;
+            FindProperty("_StencilOn", properties).floatValue = 0;
             // _workflow.floatValue=(float)Workflow.Metallic;
             //_SpMode.floatValue=(float)SpMode.Standard;
             //_indirectSpecular.floatValue=(float)IndirectSpecular.Probe;

@@ -117,6 +117,7 @@ namespace Cibbi.ToonyStandard
             if(inspectorLevel==InspectorLevel.Basic)
             {
                 group.addSection(new BasicSpecularSection(properties, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
+                group.addSection(new OutlineSection(properties, TSFunctions.BooleanFloat(_OutlineBox.floatValue), TSFunctions.BooleanFloat(_OutlineOn.floatValue)));
             }
             else
             {
