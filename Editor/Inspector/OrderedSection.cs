@@ -200,6 +200,11 @@ namespace Cibbi.ToonyStandard
         {
 
         }
+        
+        public virtual bool CanBeEnabled(MaterialProperty[] properties)
+        {
+            return true;
+        }
 
         protected abstract MaterialProperty GetIndex();
 

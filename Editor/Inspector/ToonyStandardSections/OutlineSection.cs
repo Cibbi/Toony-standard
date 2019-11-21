@@ -14,14 +14,15 @@ namespace Cibbi.ToonyStandard
             public static GUIContent outlineWidth = new GUIContent("Outline width (px)", "Width of the outline, the value is in pixel");
             public static GUIContent outlineOffsetX = new GUIContent("Horizzontal offset (px)", "Horizzontal offset of the outline, the value is in pixel");
             public static GUIContent outlineOffsetY = new GUIContent("Vertical offset (px)", "Vertical offset of the outline, the value is in pixel");
-            public static GUIContent outlineColor = new GUIContent("Outline color", "Color of the outline");
+            public static GUIContent outlineTexture = new GUIContent("Outline texture", "Texture of the outline");
             public static GUIContent isOutlineEmissive = new GUIContent("Emissive outline", "When enabled the outline will ignore the average light");
         }
-
+        MaterialProperty _OutlineWidthMap;
         MaterialProperty _OutlineWidth;
         MaterialProperty _OutlineOffsetX;
         MaterialProperty _OutlineOffsetY;
         MaterialProperty _OutlineColor;
+        MaterialProperty _OutlineTexture;
         MaterialProperty _IsOutlineEmissive;
 
         MaterialProperty _OutlineBox;
@@ -34,10 +35,12 @@ namespace Cibbi.ToonyStandard
 
         private void FindProperties(MaterialProperty[] properties)
         {
+            _OutlineWidthMap = FindProperty("_OutlineWidthMap", properties);
             _OutlineWidth = FindProperty("_OutlineWidth", properties);
             _OutlineOffsetX = FindProperty("_OutlineOffsetX", properties);
             _OutlineOffsetY = FindProperty("_OutlineOffsetY", properties);
             _OutlineColor = FindProperty("_OutlineColor", properties);
+            _OutlineTexture = FindProperty("_OutlineTexture", properties);
             _IsOutlineEmissive = FindProperty("_IsOutlineEmissive", properties);
 
             _OutlineBox = FindProperty("_OutlineBox", properties);
@@ -49,10 +52,10 @@ namespace Cibbi.ToonyStandard
             FindProperties(properties);
 
             EditorGUILayout.Space();
-            materialEditor.ShaderProperty(_OutlineWidth, Styles.outlineWidth);
+            materialEditor.TexturePropertySingleLine(Styles.outlineTexture, _OutlineTexture, _OutlineColor);
+            materialEditor.TexturePropertySingleLine(Styles.outlineWidth, _OutlineWidthMap, _OutlineWidth);
             materialEditor.ShaderProperty(_OutlineOffsetX, Styles.outlineOffsetX);
-            materialEditor.ShaderProperty(_OutlineOffsetY, Styles.outlineOffsetY);
-            TSFunctions.ProperColorBox(ref _OutlineColor, Styles.outlineColor);
+            materialEditor.ShaderProperty(_OutlineOffsetY, Styles.outlineOffsetY);           
             TSFunctions.ProperToggle(ref _IsOutlineEmissive, Styles.isOutlineEmissive);
 
             EditorGUILayout.Space();
@@ -82,6 +85,11 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        public override bool CanBeEnabled(MaterialProperty[] properties)
+        {
+            ToonyStandardGUI.BlendMode mode = (ToonyStandardGUI.BlendMode)FindProperty("_Mode", properties).floatValue;
+            return mode == ToonyStandardGUI.BlendMode.Opaque || mode == ToonyStandardGUI.BlendMode.Cutout;
+        }
         protected override MaterialProperty GetIndex()
         {
             return _OutlineOn;

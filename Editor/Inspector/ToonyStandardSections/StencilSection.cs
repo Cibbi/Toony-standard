@@ -20,6 +20,11 @@ namespace Cibbi.ToonyStandard
         MaterialProperty _StencilComp;
         MaterialProperty _StencilOp;
 
+        MaterialProperty _OutlineStencilID;
+        MaterialProperty _OutlineStencilComp;
+        MaterialProperty _OutlineStencilOp;
+        MaterialProperty _OutlineOn;
+
         MaterialProperty _StencilBox;
         MaterialProperty _StencilOn;
 
@@ -34,6 +39,11 @@ namespace Cibbi.ToonyStandard
             _StencilComp = FindProperty("_StencilComp", properties);
             _StencilOp = FindProperty("_StencilOp", properties);
 
+            _OutlineStencilID = FindProperty("_OutlineStencilID", properties);
+            _OutlineStencilComp = FindProperty("_OutlineStencilComp", properties);
+            _OutlineStencilOp = FindProperty("_OutlineStencilOp", properties);
+            _OutlineOn = FindProperty("_OutlineOn", properties);
+
             _StencilBox = FindProperty("_StencilBox", properties);
             _StencilOn = FindProperty("_StencilOn", properties);
         }
@@ -47,6 +57,16 @@ namespace Cibbi.ToonyStandard
             materialEditor.ShaderProperty(_StencilComp, Styles.stencilComp);
             materialEditor.ShaderProperty(_StencilOp, Styles.stencilOperation);
 
+            if(_OutlineOn.floatValue>0)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Outline Stencil Options", EditorStyles.boldLabel);
+                EditorGUILayout.Space();
+                materialEditor.ShaderProperty(_OutlineStencilID, Styles.stencilID);
+                materialEditor.ShaderProperty(_OutlineStencilComp, Styles.stencilComp);
+                materialEditor.ShaderProperty(_OutlineStencilOp, Styles.stencilOperation);
+            }
+
             EditorGUILayout.Space();
         }
 
@@ -58,9 +78,14 @@ namespace Cibbi.ToonyStandard
                 if(!_StencilOn.hasMixedValue)
                 {
                     _StencilOn.floatValue = 0;
+
                     _StencilID.floatValue = 0;
                     _StencilComp.floatValue = 0;
                     _StencilOp.floatValue = 0;
+
+                    _OutlineStencilID.floatValue = 0;
+                    _OutlineStencilComp.floatValue = 0;
+                    _OutlineStencilOp.floatValue = 0;
                 }
             }
         }

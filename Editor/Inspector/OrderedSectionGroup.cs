@@ -111,7 +111,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Draws the add button if there are still sections that can be enabled
         /// </summary>
-        public void DrawAddButton()
+        public void DrawAddButton(MaterialProperty[] properties)
         {
             if(ListHasMixedIndexZero(sections))
             {
@@ -130,8 +130,7 @@ namespace Cibbi.ToonyStandard
                 else
                 {
                     buttonPressed=GUILayout.Button("+",buttonStyle);
-                }
-               
+                }     
                 
                 if (buttonPressed)
                 {
@@ -139,7 +138,7 @@ namespace Cibbi.ToonyStandard
 
                     foreach (OrderedSection section in sections)
                     {
-                        if(HasMixedIndexZero(section))
+                        if(HasMixedIndexZero(section) && section.CanBeEnabled(properties))
                         {
                             menu.AddItem(section.getSectionTitle(), false, TurnOnSection, section);
                         }
