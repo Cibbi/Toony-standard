@@ -83,11 +83,11 @@ namespace Cibbi.ToonyStandard
                     basicMain = new BasicMainSection(properties);
                     break;
                 case InspectorLevel.Normal:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Detail map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Thickness map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOT.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
                 case InspectorLevel.Expert:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Detail map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOD.png"));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Thickness map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOT.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
             }
@@ -125,7 +125,7 @@ namespace Cibbi.ToonyStandard
                 group.addSection(new RimLightSection(properties, TSFunctions.BooleanFloat(_RimLightBox.floatValue), TSFunctions.BooleanFloat(_RimLightOn.floatValue)));
                 group.addSection(new SpecularSection(properties, inspectorLevel, this, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
                 group.addSection(new DetailSection(properties, TSFunctions.BooleanFloat(_DetailBox.floatValue), TSFunctions.BooleanFloat(_DetailMapOn.floatValue)));
-                group.addSection(new SubsurfaceSection(properties, TSFunctions.BooleanFloat(_SSSBox.floatValue), TSFunctions.BooleanFloat(_SSSOn.floatValue)));
+                group.addSection(new SubsurfaceSection(properties, inspectorLevel, this, TSFunctions.BooleanFloat(_SSSBox.floatValue), TSFunctions.BooleanFloat(_SSSOn.floatValue)));
                 group.addSection(new OutlineSection(properties, TSFunctions.BooleanFloat(_OutlineBox.floatValue), TSFunctions.BooleanFloat(_OutlineOn.floatValue)));
             }   
 
@@ -323,12 +323,12 @@ namespace Cibbi.ToonyStandard
             return path;
         }
 
-        public void RegenerateMSOD()
+        public void RegenerateMSOT()
         {
             foreach (Material mat in _RampOn.targets)
             {
-                string path = GetTextureDestinationPath(mat, "MSOD.png");
-                if(mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_DetailMask") != null)
+                string path = GetTextureDestinationPath(mat, "MSOT.png");
+                if(mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_ThicknessMap") != null)
                 {   
                     packer.resolution = TexturePacker.Resolution.XS_128x128;
                     packer.rTexture = (Texture2D)mat.GetTexture("_MetallicMap");
@@ -352,7 +352,7 @@ namespace Cibbi.ToonyStandard
                             if(packer.RiseResolutionByOneLevel()==0)
                                 break;
                         }
-                    packer.aTexture = (Texture2D)mat.GetTexture("_DetailMask");
+                    packer.aTexture = (Texture2D)mat.GetTexture("_ThicknessMap");
                     if(packer.aTexture != null)
                         while(packer.aTexture.width>(float)packer.resolution||packer.aTexture.height>(float)packer.resolution)
                         {
@@ -361,11 +361,11 @@ namespace Cibbi.ToonyStandard
                         }
 
                     packer.PackTexture(path);
-                    mat.SetTexture("_MSOD", packer.resultTex);
+                    mat.SetTexture("_MSOT", packer.resultTex);
                 }
                 else
                 {
-                    mat.SetTexture("_MSOD", null);
+                    mat.SetTexture("_MSOT", null);
                 }
             }
         }

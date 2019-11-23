@@ -18,19 +18,19 @@ namespace Cibbi.ToonyStandard
             public static GUIContent normal = new GUIContent("Normal", "Normal Map");
             public static GUIContent emission = new GUIContent("Color", "Emission map and Color");
             public static GUIContent occlusion = new GUIContent("Occlusion", "Occlusion map and intensity");
-            public static GUIContent MSOD = new GUIContent("MSOD Map", "Multiple maps in a single texture \n\nR: metallic\nG: smoothness\nB: Occlusion\nA: detail map");
-            public static GUIContent TexturePackerButton = new GUIContent("Open texture packer", "Open the texture packer for generating the MSOD texture");
+            public static GUIContent MSOT = new GUIContent("MSOT Map", "Multiple maps in a single texture \n\nR: metallic\nG: smoothness\nB: Occlusion\nA: SSS Thickness map");
+            public static GUIContent TexturePackerButton = new GUIContent("Open texture packer", "Open the texture packer for generating the MSOT texture");
             public static void ToggleTexturePackerContent(bool isOpen)
             {
                 if(isOpen)
                 {
                     Styles.TexturePackerButton.text = "Close texture packer";
-                    Styles.TexturePackerButton.tooltip = "Close the texture packer for generating the MSOD texture";
+                    Styles.TexturePackerButton.tooltip = "Close the texture packer for generating the MSOT texture";
                 }
                 else
                 {
                     Styles.TexturePackerButton.text = "Open texture packer";
-                    Styles.TexturePackerButton.tooltip = "Open the texture packer for generating the MSOD texture";
+                    Styles.TexturePackerButton.tooltip = "Open the texture packer for generating the MSOT texture";
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace Cibbi.ToonyStandard
         MaterialProperty _EmissionColor;
         MaterialProperty _OcclusionMap;
         MaterialProperty _Occlusion;
-        MaterialProperty _MSOD;
+        MaterialProperty _MSOT;
 
         InspectorLevel level;
         bool isTexturePackerOpen;
@@ -83,7 +83,7 @@ namespace Cibbi.ToonyStandard
             _EmissionColor = FindProperty("_EmissionColor", properties);
             _OcclusionMap = FindProperty("_OcclusionMap", properties);
             _Occlusion = FindProperty("_Occlusion", properties);
-            _MSOD = FindProperty("_MSOD", properties);
+            _MSOT = FindProperty("_MSOT", properties);
         }
 
         public void DrawSection(MaterialEditor materialEditor)
@@ -119,7 +119,7 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertyMiniThumbnail(r,_OcclusionMap, Styles.occlusion.text,Styles.occlusion.tooltip);
                 if(EditorGUI.EndChangeCheck())
                 {
-                    gui.RegenerateMSOD();
+                    gui.RegenerateMSOT();
                 }
                 TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Occlusion);
 
@@ -153,11 +153,11 @@ namespace Cibbi.ToonyStandard
                     }
                 }
             }
-            //if in expert mode show the MSOD map and a button for the texture packer
+            //if in expert mode show the MSOT map and a button for the texture packer
             if(level==InspectorLevel.Expert)
             {   
                 EditorGUILayout.BeginHorizontal();
-                    materialEditor.TexturePropertySingleLine(Styles.MSOD, _MSOD);
+                    materialEditor.TexturePropertySingleLine(Styles.MSOT, _MSOT);
                 if(GUILayout.Button(Styles.TexturePackerButton))
                 {
                     EditorGUILayout.EndHorizontal();
@@ -174,9 +174,9 @@ namespace Cibbi.ToonyStandard
                     EditorGUILayout.BeginVertical("box");
                     packer.DrawGUI();
                     EditorGUILayout.EndVertical();
-                    if(_MSOD.textureValue != (Texture)packer.resultTex && packer.resultTex != null)
+                    if(_MSOT.textureValue != (Texture)packer.resultTex && packer.resultTex != null)
                     {   
-                        _MSOD.textureValue = packer.resultTex;
+                        _MSOT.textureValue = packer.resultTex;
                         packer.resultTex = null;
                     }
                 }

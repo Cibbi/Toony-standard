@@ -2,7 +2,7 @@ UNITY_DECLARE_TEX2D(_MainTex);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_BumpMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailBumpMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_EmissionMap);
-UNITY_DECLARE_TEX2D_NOSAMPLER(_MSOD);
+UNITY_DECLARE_TEX2D_NOSAMPLER(_MSOT);
 //UNITY_DECLARE_TEX2D_NOSAMPLER(_OcclusionMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_MetallicMap);
 //UNITY_DECLARE_TEX2D_NOSAMPLER(_GlossinessMap);
@@ -10,7 +10,7 @@ UNITY_DECLARE_TEX2D_NOSAMPLER(_AnisotropyMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_TangentMap);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailTexture);
 UNITY_DECLARE_TEX2D_NOSAMPLER(_DetailMask);
-UNITY_DECLARE_TEX2D_NOSAMPLER(_ThicknessMap);
+//UNITY_DECLARE_TEX2D_NOSAMPLER(_ThicknessMap);
 
 float4 _MainTex_ST, _DetailTexture_ST, _HighlightPattern_ST;
 float4 _Color, _RampColor, _HighlightRampColor, _IndirectColor, _DetailColor, _RimColor, _EmissionColor, _SSColor;
@@ -99,20 +99,20 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
     float3 ViewDirection   = normalize(UnityWorldSpaceViewDir(i.worldPos));
 	float3 worldRefl       = reflect(-ViewDirection, NormalDirection);
 	
-	//sampling MSOD map
-	float4 msod = UNITY_SAMPLE_TEX2D_SAMPLER(_MSOD, _MainTex, i.uv);
+	//sampling MSOT map
+	float4 msot = UNITY_SAMPLE_TEX2D_SAMPLER(_MSOT, _MainTex, i.uv);
 
 	//sampling occlusion
-	float occlusion = lerp(1,msod.b,_Occlusion).r;
+	float occlusion = lerp(1,msot.b,_Occlusion).r;
 
 	//sampling specular related textures
 	#if !defined (_SPECULARHIGHLIGHTS_OFF)
 		#if defined(_SPECGLOSSMAP)
 			float3 specular = UNITY_SAMPLE_TEX2D_SAMPLER(_MetallicMap, _MainTex, i.uv).rgb;
 		#else
-			float metallic = msod.r * _Metallic;
+			float metallic = msot.r * _Metallic;
 		#endif
-		float roughness = 1-(msod.g * _Glossiness);
+		float roughness = 1-(msot.g * _Glossiness);
 
 		#if defined(_ANISOTROPIC_SPECULAR)
 			float3 tangentTS = UNITY_SAMPLE_TEX2D_SAMPLER(_TangentMap, _MainTex, i.uv);
@@ -156,7 +156,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 
 	if(_SSSOn > 0)
 	{
-		SSSthickness = UNITY_SAMPLE_TEX2D_SAMPLER(_ThicknessMap, _MainTex, i.uv).r;
+		SSSthickness = msot.a;
 	}
 	
 	//passing the required data to the brdf 

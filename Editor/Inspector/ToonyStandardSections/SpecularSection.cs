@@ -103,7 +103,7 @@ namespace Cibbi.ToonyStandard
 
         Texture PreviousRamp;
 
-        public SpecularSection(MaterialProperty[] properties,InspectorLevel level, ToonyStandardGUI gui, bool open, bool enabled) : base(Styles.title, open, enabled)
+        public SpecularSection(MaterialProperty[] properties, InspectorLevel level, ToonyStandardGUI gui, bool open, bool enabled) : base(Styles.title, open, enabled)
         {
             FindProperties(properties);
             this.inspector = gui;
@@ -169,7 +169,7 @@ namespace Cibbi.ToonyStandard
                     materialEditor.TexturePropertyMiniThumbnail(r,_MetallicMap, Styles.metallic.text,Styles.metallic.tooltip);
                     if(EditorGUI.EndChangeCheck())
                     {
-                        inspector.RegenerateMSOD();
+                        inspector.RegenerateMSOT();
                     }
                     TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Metallic);
 
@@ -192,7 +192,7 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertyMiniThumbnail(r,_GlossinessMap, Styles.smoothness.text, Styles.smoothness.tooltip);
                 if(EditorGUI.EndChangeCheck())
                 {
-                    inspector.RegenerateMSOD();
+                    inspector.RegenerateMSOT();
                 }
                 TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Glossiness);
             }

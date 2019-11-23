@@ -10,7 +10,7 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 		[HDR]_EmissionColor("Emission Color", Color) = (0,0,0,1)
 		_OcclusionMap("Occlusion Map", 2D) = "white" {}
 		_Occlusion("Occlusion", Range(0,1)) = 1.0
-		_MSOD("MSOD map", 2D) = "white" {}
+		_MSOT("MSOT map", 2D) = "white" {}
 
 		_Ramp("Ramp Texture", 2D) = "white" {}
 		_RampColor("Ramp Color", Color) = (1,1,1,1)

@@ -27,8 +27,13 @@ namespace Cibbi.ToonyStandard
         MaterialProperty _SSSBox;
         MaterialProperty _SSSOn;
 
-        public SubsurfaceSection(MaterialProperty[] properties, bool open, bool enabled) : base(Styles.title, open, enabled)
+        ToonyStandardGUI inspector;
+        InspectorLevel level;
+
+        public SubsurfaceSection(MaterialProperty[] properties, InspectorLevel level, ToonyStandardGUI gui, bool open, bool enabled) : base(Styles.title, open, enabled)
         {
+            this.inspector = gui;
+            this.level = level;
             FindProperties(properties);
         }
 
@@ -49,7 +54,16 @@ namespace Cibbi.ToonyStandard
             FindProperties(properties);
 
             EditorGUILayout.Space();
-            materialEditor.TexturePropertySingleLine(Styles.thickness, _ThicknessMap);
+            if(level==InspectorLevel.Normal)
+            {   
+                //Rect r = TSFunctions.GetControlRectForSingleLine(); 
+                EditorGUI.BeginChangeCheck();
+                materialEditor.TexturePropertySingleLine(Styles.thickness, _ThicknessMap);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    inspector.RegenerateMSOT();
+                }
+            }  
             TSFunctions.ProperColorBox(ref _SSColor, Styles.color);
             //materialEditor.ShaderProperty(_SSColor, Styles.color);
             materialEditor.ShaderProperty(_SSDistortion, Styles.distortion);
