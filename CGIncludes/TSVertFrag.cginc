@@ -20,7 +20,7 @@ float _Cutoff, _Occlusion, _RampOffset, _ShadowIntensity, _OcclusionOffsetIntens
 	  _FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity,
 	  _SSDistortion, _SSPower, _SSScale;
 float _BumpScale, _DetailBumpScale;
-float _RampOn, _RimLightOn, _SSSOn, _EmissiveRim, _IndirectSpecular, _ToonyHighlights;
+float _RampOn, _RimLightOn, _SSSOn, _EmissiveRim, _IndirectSpecular, _IndirectOverride, _ToonyHighlights;
 float4 _MainRampMin, _MainRampMax;
 
 sampler2D _Ramp, _HighlightRamp;
@@ -194,6 +194,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 
 		s.indirectSpecular = _IndirectSpecular;
 		s.customIndirect   = customIndirect;
+		s.indirectOverride = _IndirectOverride;
 
 		s.toonyHighlights      = _ToonyHighlights;
 		s.highlightRamp.ramp   = _HighlightRamp;

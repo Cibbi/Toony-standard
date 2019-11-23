@@ -53,6 +53,8 @@ namespace Cibbi.ToonyStandard
             FindProperty("_HighlightRamp", properties).textureValue = TSConstants.DefaultRamp; 
             FindProperty("_HighlightRampOffset", properties).floatValue = 0;  
             FindProperty("_DetailMapOn", properties).floatValue = 0;
+            FindProperty("_IndirectOverride", properties).floatValue = 0;
+            
 
             FindProperty("_SSSOn", properties).floatValue = 0;
 

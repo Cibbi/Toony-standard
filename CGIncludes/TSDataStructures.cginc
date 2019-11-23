@@ -96,6 +96,7 @@ struct BRDFData
         #endif
         float indirectSpecular;
         float3 customIndirect;
+        float indirectOverride;
 
         float toonyHighlights;    
         RampData highlightRamp;

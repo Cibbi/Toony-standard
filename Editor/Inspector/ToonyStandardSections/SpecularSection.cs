@@ -31,6 +31,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent title = new GUIContent("Specular Options", "Various options for specular calculations, can be disabled");
 
             public static GUIContent indirectSpecular = new GUIContent("Indirect fallback", "Defines the fallback of the indirect specular in case the probe is not baked \n\nNone: does not fallback \n\nMatcap: uses a matcap texture \n\nCubemap uses a cubemap \n\nColor: uses a single color");
+            public static GUIContent indirectOverride = new GUIContent("Always use fallback", "The fallback will always be used");
             public static GUIContent workflow = new GUIContent("Workflow", "Defines the workflow type \n\nMetallic: uses a texture that defines the metalness \n\nSpecular: uses a specular map");
             public static GUIContent spMode = new GUIContent("Specular mode", "Defines the type of specular used \n\nStandard: uses the model used in the standard shader \n\nAnisotropic: uses anisotropic reflections \n\nFake: uses a texture as highlights");
             public static GUIContent smoothness = new GUIContent("Smoothness", "Smoothness map and intensity, usually the slider is set to 1 when using a smoothness texture");
@@ -66,6 +67,7 @@ namespace Cibbi.ToonyStandard
         }
 
         MaterialProperty _indirectSpecular;
+        MaterialProperty _IndirectOverride;
         MaterialProperty _workflow;
         MaterialProperty _SpMode;
         MaterialProperty _GlossinessMap;
@@ -123,6 +125,7 @@ namespace Cibbi.ToonyStandard
         private void FindProperties(MaterialProperty[] properties)
         {
             _indirectSpecular = FindProperty("_IndirectSpecular", properties);
+            _IndirectOverride = FindProperty("_IndirectOverride", properties);
             _workflow = FindProperty("_Workflow", properties);
             _SpMode = FindProperty("_SpMode", properties);
             _GlossinessMap = FindProperty("_GlossinessMap", properties);
@@ -223,6 +226,14 @@ namespace Cibbi.ToonyStandard
             else if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Color)
             {
                 TSFunctions.ProperColorBox(ref _IndirectColor,Styles.indirectColor);
+            }
+            if((IndirectSpecular)_indirectSpecular.floatValue != IndirectSpecular.None)
+            {
+                TSFunctions.ProperToggle(ref _IndirectOverride, Styles.indirectOverride);
+            }
+            else
+            {
+                _IndirectOverride.floatValue = 0;
             }
 
             isToonyHighlightsEnabled=TSFunctions.ProperToggle(ref _ToonyHighlights,Styles.toonyHighlight);

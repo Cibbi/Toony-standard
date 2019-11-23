@@ -86,6 +86,7 @@ Shader "Hidden/Cibbis shaders/toony standard/CutoutOutlined"
 
 		[HideInInspector] _ToonyHighlights("__ToonyHighlights", Float) = 0.0
 		[HideInInspector] _OcclusionOffset("__OcclusionOffset", Float) = 0.0
+		[HideInInspector] _IndirectOverride("__IndirectOverride", Float) = 0.0
 		[HideInInspector] _EmissiveRim("__EmissiveRim", Float) = 0.0
 
 		[HideInInspector] _RampOn("__RampOn", Float) = 1.0

@@ -145,8 +145,7 @@ float4 TS_BRDF(BRDFData i)
 		envData.reflUVW = BoxProjectedCubemapDirection(i.dir.reflect, i.worldPos, unity_SpecCube0_ProbePosition, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
         float4 indirectSpecularRGBA = Unity_GlossyEnvironment(UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData);
 		indirectSpecular =  indirectSpecularRGBA.rgb;
-
-        if (i.indirectSpecular>0 && indirectSpecularRGBA.a == 0)
+        if ((i.indirectSpecular>0 && indirectSpecularRGBA.a == 0) || (i.indirectOverride > 0))
         {
             //using the fake specular probe toned down based on the average light, it's not phisically accurate
             //but having a probe that reflects arbitrary stuff isn't accurate to begin with
