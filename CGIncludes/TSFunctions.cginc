@@ -60,7 +60,7 @@ half perceptualRoughnessToMipmapLevel(half perceptualRoughness)
     return perceptualRoughness * UNITY_SPECCUBE_LOD_STEPS;
 }
 
-half3 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyEnvironmentData glossIn)
+half4 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyEnvironmentData glossIn)
 {
     half perceptualRoughness = glossIn.roughness /* perceptualRoughness */ ;
 
@@ -84,7 +84,7 @@ half3 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyE
     half3 R = glossIn.reflUVW;
     half4 rgbm = UNITY_SAMPLE_TEXCUBE_LOD(tex, R, mip);
 
-    return DecodeHDR(rgbm, hdr);
+    return float4(DecodeHDR(rgbm, hdr),rgbm.a);
 }
 //
 //end probe sampling functions

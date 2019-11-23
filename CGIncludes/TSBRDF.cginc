@@ -139,22 +139,21 @@ float4 TS_BRDF(BRDFData i)
     //
         //indirect specular is added only on the base pass
         #if defined(UNITY_PASS_FORWARDBASE)
-        UNITY_BRANCH
-        if (i.indirectSpecular>0)
+        //Sampling the probe
+        Unity_GlossyEnvironmentData envData;
+		envData.roughness = baseRoughness;
+		envData.reflUVW = BoxProjectedCubemapDirection(i.dir.reflect, i.worldPos, unity_SpecCube0_ProbePosition, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
+        float4 indirectSpecularRGBA = Unity_GlossyEnvironment(UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData);
+		indirectSpecular =  indirectSpecularRGBA.rgb;
+
+        if (i.indirectSpecular>0 && indirectSpecularRGBA.a == 0)
         {
             //using the fake specular probe toned down based on the average light, it's not phisically accurate
             //but having a probe that reflects arbitrary stuff isn't accurate to begin with
             half lightColGrey = max((lightCol.r + lightCol.g + lightCol.b) / 3, (indirectDiffuse.r + indirectDiffuse.g + indirectDiffuse.b) / 3);
             indirectSpecular=i.customIndirect*min(lightColGrey,1);
         }
-        else
-        {
-            //Sampling the probe
-            Unity_GlossyEnvironmentData envData;
-		    envData.roughness = baseRoughness;
-		    envData.reflUVW = BoxProjectedCubemapDirection(i.dir.reflect, i.worldPos, unity_SpecCube0_ProbePosition, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
-		    indirectSpecular = Unity_GlossyEnvironment(UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData);
-        }
+
         float grazingTerm = saturate(1-i.roughness + (1 - oneMinusReflectivity));
         indirectSpecular*=FresnelLerp(specColor, grazingTerm, dots.NdotV);
         #endif

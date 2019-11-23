@@ -9,7 +9,7 @@ namespace Cibbi.ToonyStandard
     {
         public enum IndirectSpecular
         {
-            Probe,
+            None,
             Matcap,
             Cubemap,
             Color
@@ -30,7 +30,7 @@ namespace Cibbi.ToonyStandard
         {
             public static GUIContent title = new GUIContent("Specular Options", "Various options for specular calculations, can be disabled");
 
-            public static GUIContent indirectSpecular = new GUIContent("Indirect source", "Defines the source of the indirect specular \n\nProbe: uses the reflection probe in the world \n\nMatcap: uses a matcap texture \n\nCubemap uses a cubemap \n\nColor: uses a single color");
+            public static GUIContent indirectSpecular = new GUIContent("Indirect fallback", "Defines the fallback of the indirect specular in case the probe is not baked \n\nNone: does not fallback \n\nMatcap: uses a matcap texture \n\nCubemap uses a cubemap \n\nColor: uses a single color");
             public static GUIContent workflow = new GUIContent("Workflow", "Defines the workflow type \n\nMetallic: uses a texture that defines the metalness \n\nSpecular: uses a specular map");
             public static GUIContent spMode = new GUIContent("Specular mode", "Defines the type of specular used \n\nStandard: uses the model used in the standard shader \n\nAnisotropic: uses anisotropic reflections \n\nFake: uses a texture as highlights");
             public static GUIContent smoothness = new GUIContent("Smoothness", "Smoothness map and intensity, usually the slider is set to 1 when using a smoothness texture");
@@ -112,7 +112,6 @@ namespace Cibbi.ToonyStandard
                 TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
                 SetupWorkflow(mat, (Workflow)_workflow.floatValue);
                 SetupSpMode(mat, (SpMode)_SpMode.floatValue);
-                SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
             }
 
             gradientEditor = new GradientEditor();
@@ -315,10 +314,6 @@ namespace Cibbi.ToonyStandard
             {
                 SetupSpMode(mat, (SpMode)_SpMode.floatValue);
             }
-            foreach (Material mat in _indirectSpecular.targets)
-            {
-                SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
-            }
         }
 
         public override void OnAdd()
@@ -328,7 +323,6 @@ namespace Cibbi.ToonyStandard
                 TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
                 SetupWorkflow(mat, (Workflow)_workflow.floatValue);
                 SetupSpMode(mat, (SpMode)_SpMode.floatValue);
-                SetupIndirectSource(mat, (IndirectSpecular)_indirectSpecular.floatValue);
             }
         }
 
@@ -340,23 +334,6 @@ namespace Cibbi.ToonyStandard
         protected override MaterialProperty GetBox()
         {
             return _SpecularBox;
-        }
-
-        public static void SetupIndirectSource(Material material, IndirectSpecular indirect)
-        {
-            switch (indirect)
-            {
-                case IndirectSpecular.Probe:
-
-                    material.DisableKeyword("_CUSTOM_INDIRECT");
-                    break;
-                case IndirectSpecular.Matcap:
-                    material.EnableKeyword("_CUSTOM_INDIRECT");
-                    break;
-                case IndirectSpecular.Cubemap:
-                    material.EnableKeyword("_CUSTOM_INDIRECT");
-                    break;
-            }
         }
 
         public static void SetupWorkflow(Material material, Workflow workflow)

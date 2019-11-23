@@ -123,19 +123,19 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 			worldRefl = reflect(-ViewDirection, bentNormal);
 		#endif
 
-		float3 customIndirect;
-		if(_IndirectSpecular==1)
+		float3 customIndirect = 0;
+		if(_IndirectSpecular == 1)
 		{
 			float3 matcap =lerp(tex2D(_Matcap,float2(.5,.5)),tex2Dlod(_Matcap , half4( remap(worldRefl.xy,-1,1,0.1,0.9),0, remap(roughness, 1, 0, 5, 0))).rgb,1-roughness);
 			customIndirect=matcap*occlusion; 
 		}
 
-		else if(_IndirectSpecular==2)
+		else if(_IndirectSpecular == 2)
 		{
 			float3 cubemap = texCUBElod(_Cubemap, half4(worldRefl.xyz, remap(roughness, 1, 0, 5, 0))).rgb;
 			customIndirect=cubemap*occlusion;
 		}
-		else if (_IndirectSpecular==3)
+		else if (_IndirectSpecular == 3)
 		{
 			customIndirect=_IndirectColor.rgb*occlusion;
 		}
