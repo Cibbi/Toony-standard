@@ -60,7 +60,7 @@ float4 FragmentOutlineFunction(FragmentData i) : COLOR
 		clip(albedo.a - _Cutoff);
 	#endif
 
-    float4 outlineColor = tex2D(_OutlineWidthMap, i.uv) * _OutlineColor;
+    float4 outlineColor = tex2D(_OutlineTexture, i.uv) * _OutlineColor;
 
 	return lerp(max(_LightColor0.a, indirectDiffuse) * outlineColor, outlineColor, _IsOutlineEmissive);
 }
