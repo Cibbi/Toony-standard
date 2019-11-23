@@ -29,6 +29,10 @@ samplerCUBE _Cubemap;
 sampler2D _HighlightPattern;
 sampler2D _FakeHighlights;
 
+#if defined(_DITHER_ON)
+sampler3D _DitherMaskLOD;
+#endif
+
 #include "TSBRDF.cginc"
 
 FragmentData VertexFunction (VertexData v)
@@ -37,7 +41,7 @@ FragmentData VertexFunction (VertexData v)
 	UNITY_INITIALIZE_OUTPUT(FragmentData, i);
 	i.pos        = UnityObjectToClipPos(v.vertex);
 	i.normal     = UnityObjectToWorldNormal(v.normal);
-	i.worldPos   = mul(unity_ObjectToWorld, v.vertex);			
+	i.worldPos   = mul(unity_ObjectToWorld, v.vertex);		
 	i.tangentDir = v.tangentDir;
 	i.uv         = TRANSFORM_TEX(v.uv, _MainTex);
 	i.detailUv   = TRANSFORM_TEX(v.uv, _DetailTexture);
@@ -70,7 +74,14 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	//clipping discarted fragments
 	#if defined(_ALPHATEST_ON)
 		clip(albedo.a - _Cutoff);
+	#else 
+		#if defined(_DITHER_ON)
+			float dither = tex3D(_DitherMaskLOD, float3(i.pos.xy * 0.25, albedo.a * 0.9375)).a;
+			//albedo = dither-0.01;
+			clip(dither-0.01);
+		#endif
 	#endif
+	
 	
 	float3 normalMap = UnpackScaleNormal (UNITY_SAMPLE_TEX2D_SAMPLER(_BumpMap, _MainTex, i.uv),_BumpScale);
 	#if defined (_DETAIL_MULX2)

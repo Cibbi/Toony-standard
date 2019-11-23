@@ -88,7 +88,7 @@ namespace Cibbi.ToonyStandard
         public override bool CanBeEnabled(MaterialProperty[] properties)
         {
             ToonyStandardGUI.BlendMode mode = (ToonyStandardGUI.BlendMode)FindProperty("_Mode", properties).floatValue;
-            return mode == ToonyStandardGUI.BlendMode.Opaque || mode == ToonyStandardGUI.BlendMode.Cutout;
+            return mode == ToonyStandardGUI.BlendMode.Opaque || mode == ToonyStandardGUI.BlendMode.Cutout || mode == ToonyStandardGUI.BlendMode.Dither;
         }
         protected override MaterialProperty GetIndex()
         {

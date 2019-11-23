@@ -30,6 +30,12 @@ float4 _MainTex_ST;
     float4 _Color;
     float _Cutoff;
     UNITY_DECLARE_TEX2D(_MainTex);
+#else
+    #if defined(_DITHER_ON)
+    float4 _Color;
+    UNITY_DECLARE_TEX2D(_MainTex);
+    sampler3D _DitherMaskLOD;
+    #endif
 #endif
 
 FragmentData VertexOutlineFunction(VertexData v) 
@@ -58,6 +64,13 @@ float4 FragmentOutlineFunction(FragmentData i) : COLOR
         float4 albedo;
         albedo = UNITY_SAMPLE_TEX2D (_MainTex, i.uv) * _Color;
 		clip(albedo.a - _Cutoff);
+	#else 
+		#if defined(_DITHER_ON)
+            float4 albedo;
+            albedo = UNITY_SAMPLE_TEX2D (_MainTex, i.uv) * _Color;
+			float dither = tex3D(_DitherMaskLOD, float3(i.pos.xy * 0.25, albedo.a * 0.9375)).a;
+			clip(dither-0.01);
+		#endif
 	#endif
 
     float4 outlineColor = tex2D(_OutlineTexture, i.uv) * _OutlineColor;

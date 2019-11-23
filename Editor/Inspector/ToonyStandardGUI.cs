@@ -13,7 +13,8 @@ namespace Cibbi.ToonyStandard
             Opaque,
             Cutout,
             Fade,   // Old school alpha-blending mode, fresnel does not affect amount of transparency
-            Transparent // Physically plausible transparency mode, implemented as alpha pre-multiply
+            Transparent, // Physically plausible transparency mode, implemented as alpha pre-multiply
+            Dither
         }
 
         /// <summary>
@@ -404,6 +405,9 @@ namespace Cibbi.ToonyStandard
                     break;
                 case BlendMode.Cutout:
                     shaderName = "Hidden/Cibbis shaders/toony standard/Cutout";
+                    break;
+                case BlendMode.Dither:
+                    shaderName = "Hidden/Cibbis shaders/toony standard/Dither";
                     break;
                 case BlendMode.Fade:
                     shaderName = "Hidden/Cibbis shaders/toony standard/Fade";

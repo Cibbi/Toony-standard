@@ -11,7 +11,8 @@ namespace Cibbi.ToonyStandard
         {
             public static GUIContent cullMode = new GUIContent("Cull mode", "Controls which face of the mesh is rendered \n\nOff: Double sided \n\nFront: Single sided (internal parts showing) \n\nBack: Single sided");
             public static GUIContent blendMode = new GUIContent("Blend mode", "Blend state \n\nOpaque: Opaque object \n\nCutout: Opaque object with cutout parts decided by the alpha channel of the main texture" +
-                                                                " \n\nFade: Transparent object that does completely fade out at 0 opacity \n\nTransparent: Transparent object that is still visible at 0 opacity due to the fresnel effect, more realistic than fade");
+                                                                " \n\nFade: Transparent object that does completely fade out at 0 opacity \n\nTransparent: Transparent object that is still visible at 0 opacity due"+
+                                                                " to the fresnel effect, more realistic than fade \n\nDither: uses a dithering pattern to simulate transparent objects");
             public static GUIContent mainTex = new GUIContent("Main texture", "Main texture (RGB channels) and transparency (A channel)");
             public static GUIContent cutOff = new GUIContent("Alpha cutoff", "Transparency threshold to cut out");
             public static GUIContent normal = new GUIContent("Normal", "Normal Map");
