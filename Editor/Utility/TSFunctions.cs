@@ -211,27 +211,32 @@ namespace Cibbi.ToonyStandard
 		{
 			GUILayout.FlexibleSpace();
 			GUILayout.BeginHorizontal();
-					GUILayout.BeginHorizontal();
-						if (GUILayout.Button(new GUIContent(TSConstants.GithubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(43)))
-						{
-							Application.OpenURL("https://github.com/Cibbi/Toony-standard");
-						}
-
-						EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-						if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patron!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
-						{
-							Application.OpenURL("https://www.patreon.com/Cibbi");
-						}
-						EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-					GUILayout.EndHorizontal();
-					GUILayout.FlexibleSpace();
-					GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);
-					aboutLabelStyle.alignment = TextAnchor.LowerRight;
-					aboutLabelStyle.fontStyle = FontStyle.Italic;
-					aboutLabelStyle.hover.textColor = Color.magenta;
-					GUILayout.Label(TSConstants.Version, aboutLabelStyle, GUILayout.Height(32));
-
+				GUILayout.BeginHorizontal();
+					if (GUILayout.Button(new GUIContent(TSConstants.GithubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+					{
+						Application.OpenURL("https://github.com/Cibbi/Toony-standard");
+					}
+					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+                    if (GUILayout.Button(new GUIContent(TSConstants.DiscordIcon, "Join out discord!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+					{
+						Application.OpenURL("https://discord.gg/THPSWpP");
+					}
+					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+                    if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patron!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+					{
+						Application.OpenURL("https://www.patreon.com/Cibbi");
+					}
+					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
 				GUILayout.EndHorizontal();
+				GUILayout.FlexibleSpace();
+				GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+				aboutLabelStyle.alignment = TextAnchor.LowerRight;
+				aboutLabelStyle.fontStyle = FontStyle.Italic;
+				aboutLabelStyle.hover.textColor = Color.magenta;
+				GUILayout.Label(TSConstants.Version, aboutLabelStyle, GUILayout.Height(26));
+			GUILayout.EndHorizontal();
+            GUILayout.Space(10);
+
 		}
         /// <summary>
         /// Get the currently open window in the Project window or the root if the former is not available

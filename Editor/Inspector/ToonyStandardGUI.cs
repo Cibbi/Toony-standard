@@ -93,6 +93,8 @@ namespace Cibbi.ToonyStandard
             }
             foreach (Material mat in FindProperty("_Mode", properties).targets)
             {
+                //remove keywords not used in Toony Standard
+                RemoveUnwantedKeywords(mat);
                 // Setup various keyword based settings
                 SetupMaterialWithBlendMode(mat, (BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn")>0);
 
@@ -429,5 +431,15 @@ namespace Cibbi.ToonyStandard
             }
              material.shader = Shader.Find(shaderName);
         }  
+    
+        public static void RemoveUnwantedKeywords(Material material)
+        {
+            foreach (string keyword in material.shaderKeywords)
+            {
+                if (!TSConstants.KeywordWhitelist.Contains(keyword)) {
+                    material.DisableKeyword(keyword);
+                }
+            }
+        }
     }
 }

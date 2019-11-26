@@ -2,12 +2,13 @@
 
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20191123";
+        public static string Version = "Toony Standard master build 20191126";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
 
@@ -26,6 +27,7 @@ namespace Cibbi.ToonyStandard
         private static Texture2D logo;
         private static Texture2D githubIcon;
         private static Texture2D patreonIcon;
+        private static Texture2D discordIcon;
         private static Texture2D defaultRamp;
         private static ComputeShader packerCompute;
 
@@ -227,6 +229,20 @@ namespace Cibbi.ToonyStandard
                 patreonIcon = value;
             }
         }
+        public static Texture2D DiscordIcon
+        {
+            get
+            {
+                if(discordIcon==null)
+                    InitializeFolderReferences();
+                return discordIcon;
+            }
+
+            set
+            {
+                discordIcon = value;
+            }
+        }
         public static Texture2D DefaultRamp
         {
             get
@@ -286,9 +302,21 @@ namespace Cibbi.ToonyStandard
             logo = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/ToonyStandardLogo.png");
             githubIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/GitHubIcon.png");
             patreonIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/PatreonIcon.png");
+            discordIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DiscordIcon.png");
             defaultRamp = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/RampDefault.png");
             packerCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>(assetsPath + "/Editor/Utility/PackChannels.compute");
         }
+
+        public static List<string> KeywordWhitelist = new List<string>(new string[] 
+        { 
+            //List of all used keywords in toony standard
+            "_SPECGLOSSMAP",
+            "_ANISOTROPIC_SPECULAR",
+            "_FAKE_SPECULAR",
+            "_SPECULARHIGHLIGHTS_OFF",
+            "_DETAIL_MULX2",
+            "_EMISSION"
+        });
 
         public static class TSWindowLabels
         {
