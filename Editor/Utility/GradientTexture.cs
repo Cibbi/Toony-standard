@@ -21,7 +21,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="width">with of the result gradient texture</param>
+        /// <param name="width">With of the result gradient texture</param>
         public GradientTexture(int width)
         {
             blendMode = BlendMode.Linear;
@@ -38,7 +38,7 @@ namespace Cibbi.ToonyStandard
         /// Returns a color at the specified time
         /// </summary>
         /// <param name="time">Time of the color to sample</param>
-        /// <returns></returns>
+        /// <returns>Color at selected time</returns>
         public Color Evaluate(float time)
         {
             ColorKey keyLeft = keys[0];
@@ -79,7 +79,7 @@ namespace Cibbi.ToonyStandard
         {
             return AddKey(color, time, true);
         }
-        //internal version that has an additional skippable check for deleting a key that is in the same time of the new one
+        // Internal version that has an additional skippable check for deleting a key that is in the same time of the new one
         private int AddKey(Color color, float time, bool shouldDelete)
         {
             for (int i = 0; i < keys.Count; i++)
@@ -111,8 +111,8 @@ namespace Cibbi.ToonyStandard
             RemoveKey(index, true);
         }
 
-        //private version with an additional check to decide if removing it with only one key left, is just for updating key time
-        //correctly when there's only one key in the list
+        // Private version with an additional check to decide if removing it with only one key left, is just for updating key time
+        // correctly when there's only one key in the list
         private void RemoveKey(int index, bool checkMin)
         {
             if(keys.Count > 1 && checkMin)
@@ -171,6 +171,10 @@ namespace Cibbi.ToonyStandard
             return texture;
         }
 
+        /// <summary>
+        /// Updates the width of the result texture
+        /// </summary>
+        /// <param name="width">Width</param>
         public void UpdateTextureWidth(int width)
         {
             texture = new Texture2D(width, 1,TextureFormat.RGB24, false);
@@ -193,7 +197,7 @@ namespace Cibbi.ToonyStandard
             texture.Apply(true);
         }
 
-        //key struct
+        // Key struct
         [System.Serializable]
         public struct ColorKey
         {

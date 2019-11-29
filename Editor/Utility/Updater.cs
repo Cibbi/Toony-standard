@@ -238,7 +238,7 @@ namespace Cibbi.ToonyStandard
                 local.lastCheck = DateTime.Now.AddDays(-2).ToString();
                 File.WriteAllText(TSConstants.LocalJSONPath, JsonUtility.ToJson(local));
             }
-            if(local.lastCheck=="")
+            if(local.lastCheck.Equals(""))
             {
                 local.lastCheck = DateTime.Now.AddDays(-2).ToString();
             }

@@ -156,11 +156,6 @@ namespace Cibbi.ToonyStandard
                 Start(materialEditor, properties);
                 isFirstCycle=false;
             }
-            //Fetching properties is needed only if the start function has not run since the start function already fetches them once
-            //else
-            //{
-            //    FindProperties(properties);
-            //}
             TSFunctions.DrawHeader(EditorGUIUtility.currentViewWidth,10);
             
             //Temporary code for converting back HDR colors
@@ -212,7 +207,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Fetches all the properties, must be done very OnGUI update to be sure property changes done by external code gets correctly updated
         /// </summary>
-         /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
+        /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
         public void FindProperties(MaterialProperty[] properties)
         {
             _RampOn = FindProperty("_RampOn", properties);
@@ -232,6 +227,10 @@ namespace Cibbi.ToonyStandard
             _OutlineBox = FindProperty("_OutlineBox", properties);
         }
 
+        /// <summary>
+        /// Sets the min and max values available in the ramp
+        /// </summary>
+        /// <param name="properties">MaterialProperty array</param>
         public void GenerateRampMinMax(MaterialProperty[] properties)
         {
             foreach(Material m in FindProperty("_MainRampMin", properties).targets)
@@ -306,6 +305,12 @@ namespace Cibbi.ToonyStandard
             }
         }
         
+        /// <summary>
+        /// Get a destination path
+        /// </summary>
+        /// <param name="mat">Material</param>
+        /// <param name="name">Name of the texture</param>
+        /// <returns></returns>
         public string GetTextureDestinationPath(Material mat, string name)
         {
             string path = AssetDatabase.GetAssetPath(mat);
@@ -325,6 +330,9 @@ namespace Cibbi.ToonyStandard
             return path;
         }
 
+        /// <summary>
+        /// Regenerated the MSOT texture
+        /// </summary>
         public void RegenerateMSOT()
         {
             foreach (Material mat in _RampOn.targets)
@@ -337,28 +345,28 @@ namespace Cibbi.ToonyStandard
                     if(packer.rTexture != null)
                         while(packer.rTexture.width>(float)packer.resolution||packer.rTexture.height>(float)packer.resolution)
                         {
-                            if(packer.RiseResolutionByOneLevel()==0)
+                            if(!packer.RiseResolutionByOneLevel())
                                 break;
                         }
                     packer.gTexture = (Texture2D)mat.GetTexture("_GlossinessMap");
                     if(packer.gTexture != null)
                         while(packer.gTexture.width>(float)packer.resolution||packer.gTexture.height>(float)packer.resolution)
                         {
-                            if(packer.RiseResolutionByOneLevel()==0)
+                            if(!packer.RiseResolutionByOneLevel())
                                 break;
                         }
                     packer.bTexture = (Texture2D)mat.GetTexture("_OcclusionMap");
                     if(packer.bTexture != null)
                         while(packer.bTexture.width>(float)packer.resolution||packer.bTexture.height>(float)packer.resolution)
                         {
-                            if(packer.RiseResolutionByOneLevel()==0)
+                            if(!packer.RiseResolutionByOneLevel())
                                 break;
                         }
                     packer.aTexture = (Texture2D)mat.GetTexture("_ThicknessMap");
                     if(packer.aTexture != null)
                         while(packer.aTexture.width>(float)packer.resolution||packer.aTexture.height>(float)packer.resolution)
                         {
-                            if(packer.RiseResolutionByOneLevel()==0)
+                            if(!packer.RiseResolutionByOneLevel())
                                 break;
                         }
 
@@ -372,6 +380,15 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Remap function of the color
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="oldMin">Old min value</param>
+        /// <param name="oldMax">Old max value</param>
+        /// <param name="newMin">New min value</param>
+        /// <param name="newMax">New max value</param>
+        /// <returns>The remapped color</returns>
         private static Color remap(Color value, Color oldMin, Color oldMax, Color newMin, Color newMax) 
         {
             float r =(value.r - oldMin.r) / (oldMax.r - oldMin.r) * (newMax.r - newMin.r) + newMin.r;
@@ -380,7 +397,12 @@ namespace Cibbi.ToonyStandard
 	        return new Color(r,g,b,1);
         }
 
-        public static void SetTextureImporterFormat( Texture2D texture, bool isReadable)
+        /// <summary>
+        /// Set the texture to readable
+        /// </summary>
+        /// <param name="texture">Texture</param>
+        /// <param name="isReadable">Does the texture need to be readable</param>
+        public static void SetTextureImporterFormat(Texture2D texture, bool isReadable)
         {
             if ( null == texture ) return;
 
@@ -397,6 +419,12 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Set the blend mode shader
+        /// </summary>
+        /// <param name="material">Material</param>
+        /// <param name="blendMode">Blend mode</param>
+        /// <param name="outlined">Has outline</param>
         public static void SetupMaterialWithBlendMode(Material material, BlendMode blendMode, bool outlined)
         {
             string shaderName="";
@@ -431,7 +459,11 @@ namespace Cibbi.ToonyStandard
             }
              material.shader = Shader.Find(shaderName);
         }  
-    
+
+        /// <summary>
+        /// Remove keywords not used by this shader
+        /// </summary>
+        /// <param name="material">Material</param>
         public static void RemoveUnwantedKeywords(Material material)
         {
             foreach (string keyword in material.shaderKeywords)

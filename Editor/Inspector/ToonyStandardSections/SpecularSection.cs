@@ -178,7 +178,6 @@ namespace Cibbi.ToonyStandard
                 {
                     materialEditor.ShaderProperty(_Metallic, Styles.metallic);
                 }
-                //materialEditor.TexturePropertySingleLine(Styles.metallic, _MetallicMap, _Metallic);
             }
             else if ((Workflow)_workflow.floatValue == Workflow.Specular)
             {
@@ -200,7 +199,6 @@ namespace Cibbi.ToonyStandard
             {
                 materialEditor.ShaderProperty(_Glossiness, Styles.smoothness);
             }
-            //materialEditor.TexturePropertySingleLine(Styles.smoothness, _GlossinessMap, _Glossiness);
 
             TSFunctions.DrawSelector(Enum.GetNames(typeof(SpMode)), _SpMode, Styles.spMode, materialEditor);
             if ((SpMode)_SpMode.floatValue == SpMode.Anisotropic)

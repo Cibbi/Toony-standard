@@ -22,8 +22,8 @@ float4 TS_BRDF(BRDFData i)
                 //indirectDiffuse += DecodeDirectionalToonLightmap(i.dynamicLightmap, i.dynamicLightmapDirection, i.normal, i.mainRamp, i.occlusion, i.occlusionOffsetIntensity);
                 indirectDiffuse += DecodeDirectionalLightmap(i.dynamicLightmap, i.dynamicLightmapDirection, i.normal);
 			#else
-                //indirectDiffuse += i.dynamicLightmap;
-                indirectDiffuse += StylizedLightmap(i.dynamicLightmap, i.mainRamp, i.occlusion, i.occlusionOffsetIntensity);
+                indirectDiffuse += i.dynamicLightmap;
+                //indirectDiffuse += StylizedLightmap(i.dynamicLightmap, i.mainRamp, i.occlusion, i.occlusionOffsetIntensity);
 			#endif
 		#endif
 
@@ -82,7 +82,7 @@ float4 TS_BRDF(BRDFData i)
     if(_RampOn!=0)
     {
         //toon version of the NdotL for the direct light
-        ramp = RampDotL(dots.NdotL, lightCol, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
+        ramp = RampDotL(dots.NdotL, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
         //The max operation is done after cause we needed the -1 to 0 values for correctly sampling the ramp
         dots.NdotL=max(dots.NdotL,0);
 

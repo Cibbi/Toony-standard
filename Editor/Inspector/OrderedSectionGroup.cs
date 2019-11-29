@@ -45,7 +45,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// adds a new Section to the list
         /// </summary>
-        /// <param name="section"></param>
+        /// <param name="section">Section to add</param>
         public void addSection(OrderedSection section)
         {
             sections.Add(section);

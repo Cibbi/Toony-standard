@@ -59,6 +59,12 @@ namespace Cibbi.ToonyStandard
 
         public bool drawInternalConfirmButton;
 
+        /// <summary>
+        /// Constructor of the texture packer
+        /// </summary>
+        /// <param name="res">Default resolution of the output texture</param>
+        /// <param name="textureNames">Names of the 4 textures</param>
+        /// <param name="defaultPath">Default output path (with texture name and extention)</param>
         public TexturePacker(Resolution res,string[] textureNames, string defaultPath)
         {
             resolution = res;
@@ -100,31 +106,39 @@ namespace Cibbi.ToonyStandard
             drawInternalConfirmButton = true;
         }
 
-        public int RiseResolutionByOneLevel()
+        /// <summary>
+        /// Increases the resolution of the output texture by one level in the ladder of supported resolutions
+        /// </summary>
+        /// <returns>True if success, false already on max resolution</returns>
+        public bool RiseResolutionByOneLevel()
         {
             switch (resolution)
             {
                 case Resolution.XS_128x128:
                     resolution = Resolution.S_256x256;
-                    return 1;
+                    return true;
                 case Resolution.S_256x256:
                     resolution = Resolution.M_512x512;
-                    return 1;
+                    return true;
                 case Resolution.M_512x512:
                     resolution = Resolution.L_1024x1024;
-                    return 1;
+                    return true;
                 case Resolution.L_1024x1024:
                     resolution = Resolution.XL_2048x2048;
-                    return 1;
+                    return true;
                 case Resolution.XL_2048x2048:
                     resolution = Resolution.XXL_4096x4096;
-                    return 1;
+                    return true;
                 case Resolution.XXL_4096x4096:
                     break;
             }
-            return 0;
+            return false;
         }
 
+        /// <summary>
+        /// Generates the texture using the current inputs and saves it into the given path
+        /// </summary>
+        /// <param name="path">Path of the saved texture (name and extension included</param>
         public void PackTexture(string path)
         {
             if(result.width!=(int)resolution||result.height!=(int)resolution)
@@ -180,6 +194,14 @@ namespace Cibbi.ToonyStandard
             resultTex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }
 
+        /// <summary>
+        /// Draws a leftside texture input
+        /// </summary>
+        /// <param name="name">Name of the texture</param>
+        /// <param name="channel">Channel used</param>
+        /// <param name="reverse">Reversed texture</param>
+        /// <param name="defaultTexture">Default used if there's no texture</param>
+        /// <param name="texture">Currently selected texture</param>
         private void DrawLeft(string name, ref int channel, ref bool reverse, ref DefaultTexture defaultTexture, ref Texture2D texture)
         {
             GUILayout.FlexibleSpace();
@@ -199,7 +221,14 @@ namespace Cibbi.ToonyStandard
                 texture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),texture,typeof(Texture2D),false);
             EditorGUILayout.EndHorizontal();
         }
-
+        /// <summary>
+        /// Draws a rightside texture input
+        /// </summary>
+        /// <param name="name">Name of the texture</param>
+        /// <param name="channel">Channel used</param>
+        /// <param name="reverse">Reversed texture</param>
+        /// <param name="defaultTexture">Default used if there's no texture</param>
+        /// <param name="texture">Currently selected texture</param>
         private void DrawRight(string name, ref int channel, ref bool reverse, ref DefaultTexture defaultTexture, ref Texture2D texture)
         {
             EditorGUILayout.BeginHorizontal("box");

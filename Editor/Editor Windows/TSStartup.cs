@@ -101,7 +101,11 @@ namespace Cibbi.ToonyStandard
                         if((m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/Opaque")||
                             m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/Cutout")||
                             m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/Fade")||
-                            m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/Transparent"))&&
+                            m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/Transparent")||
+                            m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/OpaqueOutlined")||
+                            m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/CutoutOutlined")||
+                            m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/Dither")||
+                            m.shader.name.Equals("Hidden/Cibbis shaders/toony standard/DitherOutlined"))&&
                             ( m.GetFloat("_NeedsFix")==1f))
                             {
                                 Debug.Log("Material \""+m.name+"\" with shader: "+m.shader.name+" will be converted"); 

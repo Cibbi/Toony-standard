@@ -6,20 +6,6 @@ using System.IO;
 
 namespace Cibbi.ToonyStandard
 {
-    /// <summary>
-    /// Parameters needed by an ordered section packed into a single structure
-    /// </summary>
-    public struct BoxParameters
-    {
-        public MaterialProperty box;
-        public MaterialProperty index;
-
-        public BoxParameters(MaterialProperty box, MaterialProperty index)
-        {
-            this.box=box;
-            this.index=index;
-        }
-    }
     public abstract class OrderedSection
     {
         protected bool isOpen;
@@ -177,6 +163,9 @@ namespace Cibbi.ToonyStandard
             return sectionTitle;
         }
 
+        /// <summary>
+        /// Draws the controls for moving around a section order
+        /// </summary>
         public void DrawUpDownButtons()
         {  
             isUp = EditorGUILayout.Toggle(isUp, TSConstants.Styles.upStyle, GUILayout.Width(15.0f),GUILayout.Height(15.0f));
@@ -191,23 +180,36 @@ namespace Cibbi.ToonyStandard
                 pushState=1;
                 isDown=false;
             }
-
-
         }
 
-
+        /// <summary>
+        /// Called when this section gets added from the stack of disabled sections. Ovveride it if you need to do something specific
+        /// </summary>
         public virtual void OnAdd()
         {
 
         }
         
+        /// <summary>
+        /// Overridable method that tells when a section can be enabled
+        /// </summary>
+        /// <param name="properties">Properties of the shader</param>
+        /// <returns>True if can be enabled, false otherwise</returns>
         public virtual bool CanBeEnabled(MaterialProperty[] properties)
         {
             return true;
         }
 
+        /// <summary>
+        /// Get the material property that contains the index of the section, you need to create an override of this when making a child class
+        /// </summary>
+        /// <returns>The material property of the index</returns>
         protected abstract MaterialProperty GetIndex();
 
+        /// <summary>
+        /// Get the material property that contains the Box value of the section, you need to create an override of this when making a child class
+        /// </summary>
+        /// <returns>The material property of the box value</returns>
         protected abstract MaterialProperty GetBox();
 
         /// <summary>
@@ -263,11 +265,13 @@ namespace Cibbi.ToonyStandard
             return GetBox().hasMixedValue;
         }
 
+        // Findproperty from shaderGUI
         protected static MaterialProperty FindProperty(string propertyName, MaterialProperty[] properties)
         {
             return FindProperty(propertyName, properties, true);
         }
-
+        
+        // Findproperty from shaderGUI
         protected static MaterialProperty FindProperty(string propertyName, MaterialProperty[] properties, bool propertyIsMandatory)
         {
             for (var i = 0; i < properties.Length; i++)

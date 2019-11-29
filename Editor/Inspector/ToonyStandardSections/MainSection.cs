@@ -64,11 +64,6 @@ namespace Cibbi.ToonyStandard
             this.gui=gui;
         }
 
-        private void InitializeInspectorLevel()
-        {
-
-        }
-
         public void FindProperties(MaterialProperty[] properties)
         {
             _blendMode = FindProperty("_Mode", properties);

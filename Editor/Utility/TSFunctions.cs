@@ -98,7 +98,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Draws a toggle property
         /// </summary>
-        /// <param name="boolProperty">boolean property</param>
+        /// <param name="boolProperty">Boolean property</param>
         /// <param name="label">Label of the property</param>
         public static bool ProperToggle(ref MaterialProperty boolProperty, GUIContent label)
         {
@@ -144,6 +144,12 @@ namespace Cibbi.ToonyStandard
             }
         }
 
+        /// <summary>
+        /// Draws a slider property given a specific Rect
+        /// </summary>
+        /// <param name="r">Rect of the area in which draw the slider property</param>
+        /// <param name="sliderProperty">Material property of the slider</param>
+        /// <param name="label">Label</param>
         public static void ProperSlider(Rect r, ref MaterialProperty sliderProperty, GUIContent label)
         {
             float value = sliderProperty.floatValue;
@@ -163,11 +169,21 @@ namespace Cibbi.ToonyStandard
                 sliderProperty.floatValue = value;
             }
         }
+
+        /// <summary>
+        /// Draws a slider property given a specific Rect
+        /// </summary>
+        /// <param name="r">Rect of the area in which draw the slider property</param>
+        /// <param name="sliderProperty">Material property of the slider</param>
         public static void ProperSlider(Rect r, ref MaterialProperty sliderProperty) 
         {
             ProperSlider(r, ref sliderProperty, null);
         }
 
+        /// <summary>
+        /// Get a rect corresponding to a single line of text to display
+        /// </summary>
+        /// <returns>A rect of the size of a single line</returns>
         public static Rect GetControlRectForSingleLine()
         {
             const float extraSpacing = 2f; // The shader properties needs a little more vertical spacing due to the mini texture field (looks cramped without)
@@ -177,7 +193,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Draws the default header of the various windows
         /// </summary>
-        /// <param name="windowWidth">the width of the current window</param>
+        /// <param name="windowWidth">The width of the current window</param>
         /// <param name="padding">Vertical padding</param>
         public static void DrawHeader(float windowWidth, int padding)
 		{
@@ -217,7 +233,7 @@ namespace Cibbi.ToonyStandard
 						Application.OpenURL("https://github.com/Cibbi/Toony-standard");
 					}
 					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-                    if (GUILayout.Button(new GUIContent(TSConstants.DiscordIcon, "Join out discord!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+                    if (GUILayout.Button(new GUIContent(TSConstants.DiscordIcon, "Join our discord!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
 					{
 						Application.OpenURL("https://discord.gg/THPSWpP");
 					}
@@ -241,7 +257,7 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Get the currently open window in the Project window or the root if the former is not available
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Path of the current window</returns>
         public static string GetSelectedPathOrFallback()
         {
             string path = "Assets";

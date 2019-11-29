@@ -100,7 +100,6 @@ float DisneyDiffuse(half NdotV, half NdotL, half LdotH, half perceptualRoughness
     return lightScatter * viewScatter;
 }
 
-
 //calculation for normal maps based on xiexe's one
 void CalculateNormals(inout float3 normal, inout float3 tangent, inout float3 bitangent, float3 normalmap)
 {
@@ -121,6 +120,7 @@ void CalculateNormals(inout float3 normal, inout float3 tangent, inout float3 bi
     tangent = bumpedTangent;
     bitangent = bumpedBitangent;
 }
+
 float FadeShadows (FragmentData i, float attenuation) 
 {
     #if HANDLE_SHADOWS_BLENDING_IN_GI && !defined (SHADOWS_SHADOWMASK)
@@ -185,12 +185,12 @@ float smithG_GGX_aniso(float NdotV, float VdotX, float VdotY, float ax, float ay
     return 1 / (NdotV + sqrt( sqr(VdotX*ax) + sqr(VdotY*ay) + sqr(NdotV) ));
 }
 
-
 half3 Unity_SafeNormalize(half3 inVec)
 {
     half dp3 = max(0.001f, dot(inVec, inVec));
     return inVec * rsqrt(dp3);
 }
+
 //modified version of Shade4PointLights
 float3 Shade4PointLights(float3 normal, float3 worldPos)
 {
@@ -245,19 +245,16 @@ float3 RampDotLVertLight(float3 normal, float3 worldPos, RampData rampData, floa
     //Calculating ramp uvs based on offset
 	float newMin = max(offset, 0);
 	float newMax = max(offset + 1, 0);
-    //rampMin = tex2D(rampData.ramp, float2(0, 0)).rgb;
-    //rampMax = tex2D(rampData.ramp, float2(1, 1)).rgb;
 	float4 rampUv = remap(min(NdotL,remap(atten,0,1,-1,1)), float4(-1,-1,-1,-1), float4(1,1,1,1), float4(newMin,newMin,newMin,newMin), float4(newMax,newMax,newMax,newMax));
     float3 ramp = remap(remap(tex2D(rampData.ramp, float2(rampUv.x, rampUv.x)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[0].rgb;
     ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.y, rampUv.y)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[1].rgb;
     ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.z, rampUv.z)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[2].rgb;
     ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.w, rampUv.w)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[3].rgb;
-    //ramp = remap(ramp, float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1));
     
     return ramp;
 }
 //TODO: remove the fucking lightColor parameter or fucking use it
-float4 RampDotL(float NdotL, float4 lightColor, RampData rampData, float rampMin, float rampMax, float occlusion, float occlusionOffsetIntensity)
+float4 RampDotL(float NdotL, RampData rampData, float rampMin, float rampMax, float occlusion, float occlusionOffsetIntensity)
 {
     //Adding the occlusion into the offset of the ramp
     float offset=rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
@@ -280,6 +277,7 @@ float4 RampDotL(float NdotL, float4 lightColor, RampData rampData, float rampMin
     #endif
     
 }
+
 float3 RampDotLSimple(float NdotL, RampData rampData, float occlusion, float occlusionOffsetIntensity)
 {
     //Adding the occlusion into the offset of the ramp
@@ -337,6 +335,7 @@ float3 PbrToToonHighlights(float toonyHighlights, RampData highlightRamp, float 
     }
 }
 
+// Standard specular calculation
 float3 DirectSpecular(BaseDots dots, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
     float3 D = GTR2(dots.NdotH, roughness);
@@ -356,6 +355,8 @@ float3 DirectSpecular(BaseDots dots, float toonyHighlights, RampData highlightRa
     return specularTerm;
 
 }
+
+// Fake specular calculation
 float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
     half V = 1;
@@ -374,6 +375,7 @@ float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighligh
     return specularTerm;
 }
 
+// Anisotropic specular calculation
 float3 DirectAnisotropicSpecular(DirectionData dir, BaseDots dots, float anisotropy, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
     #if defined(_ANISOTROPIC_SPECULAR) && !defined (_SPECULARHIGHLIGHTS_OFF)
@@ -420,7 +422,6 @@ float3 calcSubsurfaceScattering(SSSData sss, BaseDots dots, DirectionData dir, f
     UNITY_BRANCH
     if(any(sss.color.rgb)) // Skip all the SSS stuff if the color is 0.
     {
-        //d.ndl = smoothstep(_SSSRange - _SSSSharpness, _SSSRange + _SSSSharpness, d.ndl);
         float attenuation = saturate(atten * (dots.NdotL * 0.5 + 0.5));
         float3 H = normalize(dir.light + normal * sss.distortion);
         float VdotH = pow(saturate(dot(dir.view, -H)), sss.power);

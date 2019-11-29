@@ -36,6 +36,7 @@ float aReverse;
 float width;
 float height;
 
+// Converts gamma space to linear space
 inline float GammaToLinearSpaceExact (float value)
 {
     if (value <= 0.04045F)
@@ -45,6 +46,8 @@ inline float GammaToLinearSpaceExact (float value)
     else
         return pow(abs(value), 2.2F);
 }
+
+// Converts linear space to gamma space
 inline float LinearToGammaSpaceExact (float value)
 {
     if (value <= 0.0F)
@@ -57,6 +60,7 @@ inline float LinearToGammaSpaceExact (float value)
         return pow(abs(value), 0.45454545F);
 }
 
+// Select the right channel from the float4
 float SelectChannel(float4 tex, float channel)
 {
     if(channel==0)
@@ -78,6 +82,7 @@ float SelectChannel(float4 tex, float channel)
 
 }
 
+// If is needed, do the color space correction
 float DoColorCorrectionIfNeeded(float gamma, float value)
 {
     if(gamma == 1)
@@ -90,6 +95,7 @@ float DoColorCorrectionIfNeeded(float gamma, float value)
     }
 }
 
+// Reverse the value if needed
 float DoReverseIfNeeded(float reverse, float value)
 {
     if(reverse == 1)
@@ -105,29 +111,31 @@ float DoReverseIfNeeded(float reverse, float value)
 [numthreads(16,16,1)]
 void PackTexture (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
+    // Get the right uv coordinates based on texture size
     float4 pixel = 0;
     float2 uv1=float2(id.x*rWidth/width,id.y*rHeight/height);
     float2 uv2=float2(id.x*gWidth/width,id.y*gHeight/height);
     float2 uv3=float2(id.x*bWidth/width,id.y*bHeight/height);
     float2 uv4=float2(id.x*aWidth/width,id.y*aHeight/height);
 
+    // Select the right channel of each texture
     float selected1 = SelectChannel(RChannel[uv1.xy], rSelectedChannel);
     float selected2 = SelectChannel(GChannel[uv2.xy], gSelectedChannel);
     float selected3 = SelectChannel(BChannel[uv3.xy], bSelectedChannel);
     float selected4 = SelectChannel(AChannel[uv4.xy], aSelectedChannel);
 
+    // Check for color space correction
     selected1 = DoColorCorrectionIfNeeded(rGamma, selected1);
     selected2 = DoColorCorrectionIfNeeded(gGamma, selected2);
     selected3 = DoColorCorrectionIfNeeded(bGamma, selected3);
     selected4 = DoColorCorrectionIfNeeded(aGamma, selected4);
 
+    // Reverse values where needed
     pixel.r = DoReverseIfNeeded(rReverse, selected1);
     pixel.g = DoReverseIfNeeded(gReverse, selected2);
     pixel.b = DoReverseIfNeeded(bReverse, selected3);
     pixel.a = DoReverseIfNeeded(aReverse, selected4);
 
-    
-    
+    // Return pixel
     Result[id.xy] = pixel;
 }
