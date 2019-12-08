@@ -54,16 +54,16 @@ namespace Cibbi.ToonyStandard
             FindProperties(properties);
 
             EditorGUILayout.Space();
-            if(level==InspectorLevel.Normal)
-            {   
+            if (level == InspectorLevel.Normal)
+            {
                 //Rect r = TSFunctions.GetControlRectForSingleLine(); 
                 EditorGUI.BeginChangeCheck();
                 materialEditor.TexturePropertySingleLine(Styles.thickness, _ThicknessMap);
-                if(EditorGUI.EndChangeCheck())
+                if (EditorGUI.EndChangeCheck())
                 {
                     inspector.RegenerateMSOT();
                 }
-            }  
+            }
             TSFunctions.ProperColorBox(ref _SSColor, Styles.color);
             //materialEditor.ShaderProperty(_SSColor, Styles.color);
             materialEditor.ShaderProperty(_SSDistortion, Styles.distortion);
@@ -77,7 +77,7 @@ namespace Cibbi.ToonyStandard
             _SSSBox.floatValue = TSFunctions.floatBoolean(isOpen);
             if (!isEnabled)
             {
-                if(!_SSSOn.hasMixedValue)
+                if (!_SSSOn.hasMixedValue)
                 {
                     _SSSOn.floatValue = 0;
                 }

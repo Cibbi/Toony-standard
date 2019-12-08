@@ -3,7 +3,8 @@ using UnityEditor;
 using System.Collections.Generic;
 namespace Cibbi.ToonyStandard
 {
-    public class GradientTexture {
+    public class GradientTexture
+    {
 
         public enum BlendMode
         {
@@ -17,7 +18,7 @@ namespace Cibbi.ToonyStandard
         private Texture2D texture;
 
         public BlendMode blendMode;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -25,13 +26,13 @@ namespace Cibbi.ToonyStandard
         public GradientTexture(int width)
         {
             blendMode = BlendMode.Linear;
-            keys.Add(new ColorKey(Color.black,0));
-            keys.Add(new ColorKey(Color.white,1));
+            keys.Add(new ColorKey(Color.black, 0));
+            keys.Add(new ColorKey(Color.white, 1));
 
-            texture = new Texture2D(width, 1,TextureFormat.RGB24, false);
+            texture = new Texture2D(width, 1, TextureFormat.RGB24, false);
             texture.wrapMode = TextureWrapMode.Clamp;
             UpdateTexture();
-            
+
         }
 
         /// <summary>
@@ -46,26 +47,26 @@ namespace Cibbi.ToonyStandard
 
             for (int i = 0; i < keys.Count; i++)
             {
-                if(keys[i].Time <= time)
+                if (keys[i].Time <= time)
                 {
                     keyLeft = keys[i];
-                    
+
                 }
-                if(keys[i].Time >= time)
+                if (keys[i].Time >= time)
                 {
                     keyRight = keys[i];
                     break;
                 }
             }
-            
-            if(blendMode == BlendMode.Linear)
+
+            if (blendMode == BlendMode.Linear)
             {
                 float blendTime = Mathf.InverseLerp(keyLeft.Time, keyRight.Time, time);
                 return Color.Lerp(keyLeft.Color, keyRight.Color, blendTime);
             }
             else
             {
-                return  keyRight.Color;
+                return keyRight.Color;
             }
         }
 
@@ -84,7 +85,7 @@ namespace Cibbi.ToonyStandard
         {
             for (int i = 0; i < keys.Count; i++)
             {
-                if (time<keys[i].Time)
+                if (time < keys[i].Time)
                 {
                     keys.Insert(i, new ColorKey(color, time));
                     UpdateTexture();
@@ -99,7 +100,7 @@ namespace Cibbi.ToonyStandard
             }
             keys.Add(new ColorKey(color, time));
             UpdateTexture();
-            return keys.Count-1;
+            return keys.Count - 1;
         }
 
         /// <summary>
@@ -115,11 +116,11 @@ namespace Cibbi.ToonyStandard
         // correctly when there's only one key in the list
         private void RemoveKey(int index, bool checkMin)
         {
-            if(keys.Count > 1 && checkMin)
+            if (keys.Count > 1 && checkMin)
             {
                 keys.RemoveAt(index);
             }
-            else if(!checkMin)
+            else if (!checkMin)
             {
                 keys.RemoveAt(index);
             }
@@ -134,7 +135,7 @@ namespace Cibbi.ToonyStandard
         /// <returns>The new index of the key</returns>
         public int UpdateKeyTime(int index, float time)
         {
-            if(time < 0)
+            if (time < 0)
             {
                 time = 0;
             }
@@ -143,7 +144,7 @@ namespace Cibbi.ToonyStandard
                 time = 1;
             }
 
-            if(index<0) index = 0;
+            if (index < 0) index = 0;
 
             Color col = keys[index].Color;
             RemoveKey(index, false);
@@ -158,7 +159,7 @@ namespace Cibbi.ToonyStandard
         /// <param name="col">Color of the key</param>
         public void UpdateKeyColor(int index, Color col)
         {
-            keys[index] = new ColorKey(col, keys[index].Time); 
+            keys[index] = new ColorKey(col, keys[index].Time);
             UpdateTexture();
         }
 
@@ -177,7 +178,7 @@ namespace Cibbi.ToonyStandard
         /// <param name="width">Width</param>
         public void UpdateTextureWidth(int width)
         {
-            texture = new Texture2D(width, 1,TextureFormat.RGB24, false);
+            texture = new Texture2D(width, 1, TextureFormat.RGB24, false);
             texture.wrapMode = TextureWrapMode.Clamp;
             UpdateTexture();
         }
@@ -187,10 +188,10 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         public void UpdateTexture()
         {
-            Color [] colors = new Color[texture.width];
-            for(int i = 0; i<texture.width; i++)
+            Color[] colors = new Color[texture.width];
+            for (int i = 0; i < texture.width; i++)
             {
-                colors[i] = Evaluate((float)i / (texture.width-1));
+                colors[i] = Evaluate((float)i / (texture.width - 1));
             }
             texture.SetPixels(colors);
             //texture.Apply();

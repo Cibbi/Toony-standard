@@ -8,7 +8,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20191126";
+        public static string Version = "Toony Standard master build 20191208";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
 
@@ -35,7 +35,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(localShaderFolder==null)
+                if (localShaderFolder == null)
                     InitializeFolderReferences();
                 return localShaderFolder;
             }
@@ -49,7 +49,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(localShaderAssetsFolder==null)
+                if (localShaderAssetsFolder == null)
                     InitializeFolderReferences();
                 return localShaderAssetsFolder;
             }
@@ -63,7 +63,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(localJSONPath==null)
+                if (localJSONPath == null)
                     InitializeFolderReferences();
                 return localJSONPath;
             }
@@ -77,7 +77,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(settingsJSONPath==null)
+                if (settingsJSONPath == null)
                     InitializeFolderReferences();
                 return settingsJSONPath;
             }
@@ -91,7 +91,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(oldSettingsJSONPath==null)
+                if (oldSettingsJSONPath == null)
                     InitializeFolderReferences();
                 return oldSettingsJSONPath;
             }
@@ -107,7 +107,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(deleteIcon==null)
+                if (deleteIcon == null)
                     InitializeFolderReferences();
                 return deleteIcon;
             }
@@ -121,7 +121,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(upIcon==null)
+                if (upIcon == null)
                     InitializeFolderReferences();
                 return upIcon;
             }
@@ -135,7 +135,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(downIcon==null)
+                if (downIcon == null)
                     InitializeFolderReferences();
                 return downIcon;
             }
@@ -149,7 +149,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(upColor==null)
+                if (upColor == null)
                     InitializeFolderReferences();
                 return upColor;
             }
@@ -163,7 +163,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(upColorSelected==null)
+                if (upColorSelected == null)
                     InitializeFolderReferences();
                 return upColorSelected;
             }
@@ -177,7 +177,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(upColorInternal==null)
+                if (upColorInternal == null)
                     InitializeFolderReferences();
                 return upColorInternal;
             }
@@ -191,7 +191,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(logo==null)
+                if (logo == null)
                     InitializeFolderReferences();
                 return logo;
             }
@@ -205,7 +205,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(githubIcon==null)
+                if (githubIcon == null)
                     InitializeFolderReferences();
                 return githubIcon;
             }
@@ -219,7 +219,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(patreonIcon==null)
+                if (patreonIcon == null)
                     InitializeFolderReferences();
                 return patreonIcon;
             }
@@ -233,7 +233,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(discordIcon==null)
+                if (discordIcon == null)
                     InitializeFolderReferences();
                 return discordIcon;
             }
@@ -247,7 +247,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(defaultRamp==null)
+                if (defaultRamp == null)
                     InitializeFolderReferences();
                 return defaultRamp;
             }
@@ -261,7 +261,7 @@ namespace Cibbi.ToonyStandard
         {
             get
             {
-                if(packerCompute==null)
+                if (packerCompute == null)
                     InitializeFolderReferences();
                 return packerCompute;
             }
@@ -274,7 +274,7 @@ namespace Cibbi.ToonyStandard
 
         public static void InitializeFolderReferences()
         {
-            string assetsPath="";
+            string assetsPath = "";
             string[] logopath = AssetDatabase.FindAssets("ToonyStandardLogo t:Texture2D", null);
             if (logopath.Length > 0)
             {
@@ -285,14 +285,14 @@ namespace Cibbi.ToonyStandard
                 assetsPath = string.Join("/", pieces);
             }
 
-            string path=Application.dataPath+assetsPath.Substring(assetsPath.IndexOf("/"));
+            string path = Application.dataPath + assetsPath.Substring(assetsPath.IndexOf("/"));
 
-            localShaderFolder=path;
+            localShaderFolder = path;
             localShaderAssetsFolder = assetsPath;
             localJSONPath = path + "/version.json";
             settingsJSONPath = path + "/Editor/settings.json";
-            oldSettingsJSONPath =path + "/Editor/oldSettings.json";
-        
+            oldSettingsJSONPath = path + "/Editor/oldSettings.json";
+
             deleteIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DeleteIcon.png");
             upIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/UpIcon.png");
             downIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(assetsPath + "/Editor/Resources/DownIcon.png");
@@ -307,7 +307,7 @@ namespace Cibbi.ToonyStandard
             packerCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>(assetsPath + "/Editor/Utility/PackChannels.compute");
         }
 
-        public static List<string> KeywordWhitelist = new List<string>(new string[] 
+        public static List<string> KeywordWhitelist = new List<string>(new string[]
         { 
             //List of all used keywords in toony standard
             "_SPECGLOSSMAP",
@@ -324,7 +324,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent UpdateStream = new GUIContent("Update stream", "Selects which stream of updates the updater has to look for \n\nRelease: will check the official releases \n\nBeta: will check beta releases");
             public static GUIContent SectionStyle = new GUIContent("Section style", "Selects the appearance of the inspector \n\nBubbles: bubble looking sections \n\nBox: Sections will have A boxed header \n\nFoldoud: simplistic unity-like look");
             public static GUIContent Color = new GUIContent("Color", "Color of the section (may affects different things based on the style)");
-            public static GUIContent DisableAutoUpdates = new GUIContent("Disable auto updates", "Disables auto update checks on startup, you can still update manually with the updater");	
+            public static GUIContent DisableAutoUpdates = new GUIContent("Disable auto updates", "Disables auto update checks on startup, you can still update manually with the updater");
         }
 
 
@@ -335,10 +335,10 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(deleteStyleLocal==null)
+                    if (deleteStyleLocal == null)
                     {
-                        deleteStyleLocal=new GUIStyle();
-                        deleteStyleLocal.normal.background=TSConstants.DeleteIcon;
+                        deleteStyleLocal = new GUIStyle();
+                        deleteStyleLocal.normal.background = TSConstants.DeleteIcon;
                     }
                     return deleteStyleLocal;
                 }
@@ -349,10 +349,10 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(upStyleLocal==null)
+                    if (upStyleLocal == null)
                     {
-                        upStyleLocal=new GUIStyle();
-                        upStyleLocal.normal.background=TSConstants.UpIcon;
+                        upStyleLocal = new GUIStyle();
+                        upStyleLocal.normal.background = TSConstants.UpIcon;
                     }
                     return upStyleLocal;
                 }
@@ -363,10 +363,10 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(downStyleLocal==null)
+                    if (downStyleLocal == null)
                     {
-                        downStyleLocal=new GUIStyle();
-                        downStyleLocal.normal.background=TSConstants.DownIcon;
+                        downStyleLocal = new GUIStyle();
+                        downStyleLocal.normal.background = TSConstants.DownIcon;
                     }
                     return downStyleLocal;
                 }
@@ -377,9 +377,9 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(sectionTitleCenterLocal==null)
+                    if (sectionTitleCenterLocal == null)
                     {
-                        sectionTitleCenterLocal=new GUIStyle(EditorStyles.boldLabel);
+                        sectionTitleCenterLocal = new GUIStyle(EditorStyles.boldLabel);
                         sectionTitleCenterLocal.alignment = TextAnchor.MiddleCenter;
                     }
                     return sectionTitleCenterLocal;
@@ -388,12 +388,12 @@ namespace Cibbi.ToonyStandard
 
             private static GUIStyle sectionTitleLocal;
             public static GUIStyle sectionTitle
-            { 
+            {
                 get
                 {
-                    if(sectionTitleLocal==null)
+                    if (sectionTitleLocal == null)
                     {
-                        sectionTitleLocal=new GUIStyle(EditorStyles.boldLabel);
+                        sectionTitleLocal = new GUIStyle(EditorStyles.boldLabel);
                         sectionTitleLocal.alignment = TextAnchor.MiddleLeft;
                     }
                     return sectionTitleLocal;
@@ -405,9 +405,9 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(centerLabelLocal==null)
+                    if (centerLabelLocal == null)
                     {
-                        centerLabelLocal=new GUIStyle(EditorStyles.label);
+                        centerLabelLocal = new GUIStyle(EditorStyles.label);
                         centerLabelLocal.alignment = TextAnchor.MiddleCenter;
                     }
                     return centerLabelLocal;
@@ -419,9 +419,9 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(rightLabelLocal==null)
+                    if (rightLabelLocal == null)
                     {
-                        rightLabelLocal=new GUIStyle(EditorStyles.label);
+                        rightLabelLocal = new GUIStyle(EditorStyles.label);
                         rightLabelLocal.alignment = TextAnchor.MiddleRight;
                     }
                     return rightLabelLocal;
@@ -433,11 +433,11 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(multilineLabelCenterLocal==null)
+                    if (multilineLabelCenterLocal == null)
                     {
-                        multilineLabelCenterLocal=new GUIStyle(EditorStyles.label);
+                        multilineLabelCenterLocal = new GUIStyle(EditorStyles.label);
                         multilineLabelCenterLocal.alignment = TextAnchor.MiddleCenter;
-                        multilineLabelCenterLocal.wordWrap=true;
+                        multilineLabelCenterLocal.wordWrap = true;
                     }
                     return multilineLabelCenterLocal;
                 }
@@ -448,16 +448,16 @@ namespace Cibbi.ToonyStandard
             {
                 get
                 {
-                    if(multilineLabelLocal==null)
+                    if (multilineLabelLocal == null)
                     {
-                        multilineLabelLocal=new GUIStyle(EditorStyles.label);
-                        multilineLabelLocal.wordWrap=true;
+                        multilineLabelLocal = new GUIStyle(EditorStyles.label);
+                        multilineLabelLocal.wordWrap = true;
                     }
                     return multilineLabelLocal;
                 }
             }
         }
 
-       
+
     }
 }

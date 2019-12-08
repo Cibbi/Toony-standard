@@ -12,7 +12,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent title = new GUIContent("Outline Options", "Options for outlines");
 
             public static GUIContent outlineWidth = new GUIContent("Outline width (px)", "Width of the outline, the value is in pixel");
-            public static GUIContent outlineOffsetX = new GUIContent("Horizzontal offset (px)", "Horizzontal offset of the outline, the value is in pixel");
+            public static GUIContent outlineOffsetX = new GUIContent("Horizontal offset (px)", "Horizzontal offset of the outline, the value is in pixel");
             public static GUIContent outlineOffsetY = new GUIContent("Vertical offset (px)", "Vertical offset of the outline, the value is in pixel");
             public static GUIContent outlineTexture = new GUIContent("Outline texture", "Texture of the outline");
             public static GUIContent isOutlineEmissive = new GUIContent("Emissive outline", "When enabled the outline will ignore the average light");
@@ -55,7 +55,7 @@ namespace Cibbi.ToonyStandard
             materialEditor.TexturePropertySingleLine(Styles.outlineTexture, _OutlineTexture, _OutlineColor);
             materialEditor.TexturePropertySingleLine(Styles.outlineWidth, _OutlineWidthMap, _OutlineWidth);
             materialEditor.ShaderProperty(_OutlineOffsetX, Styles.outlineOffsetX);
-            materialEditor.ShaderProperty(_OutlineOffsetY, Styles.outlineOffsetY);           
+            materialEditor.ShaderProperty(_OutlineOffsetY, Styles.outlineOffsetY);
             TSFunctions.ProperToggle(ref _IsOutlineEmissive, Styles.isOutlineEmissive);
 
             EditorGUILayout.Space();
@@ -66,12 +66,12 @@ namespace Cibbi.ToonyStandard
             _OutlineBox.floatValue = TSFunctions.floatBoolean(isOpen);
             if (!isEnabled)
             {
-                if(!_OutlineOn.hasMixedValue)
+                if (!_OutlineOn.hasMixedValue)
                 {
                     _OutlineOn.floatValue = 0;
                     foreach (Material mat in _OutlineOn.targets)
                     {
-                        ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn")>0);
+                        ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn") > 0);
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace Cibbi.ToonyStandard
         {
             foreach (Material mat in _OutlineOn.targets)
             {
-                ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn")>0);
+                ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn") > 0);
             }
         }
 

@@ -25,19 +25,19 @@ namespace Cibbi.ToonyStandard
         /// <param name="open">Is the section expanded?</param>
         /// <param name="enabled">IS the section enabled?</param>
         /// <returns></returns>
-        public OrderedSection(GUIContent sectionTitle, bool open, bool enabled) 
+        public OrderedSection(GUIContent sectionTitle, bool open, bool enabled)
         {
             this.sectionTitle = sectionTitle;
             this.isOpen = open;
             this.isEnabled = enabled;
-            pushState=0;
+            pushState = 0;
 
-            isUp=false;
-            isDown=false;
+            isUp = false;
+            isDown = false;
 
-            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
-			sectionStyle=(SectionStyle)settings.sectionStyle;
-			this.sectionBgColor=settings.sectionColor;
+            TSSettings settings = JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
+            sectionStyle = (SectionStyle)settings.sectionStyle;
+            this.sectionBgColor = settings.sectionColor;
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace Cibbi.ToonyStandard
         /// <param name="properties">Material properties provided by the custom inspector window</param>
         public void DrawSection(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
-            isEnabled=true;
+            isEnabled = true;
             EditorGUI.BeginChangeCheck();
             Color bCol = GUI.backgroundColor;
             GUI.backgroundColor = sectionBgColor;
-            switch(sectionStyle)
+            switch (sectionStyle)
             {
                 case SectionStyle.Bubbles:
                     drawBubblesSection(bCol);
@@ -69,15 +69,15 @@ namespace Cibbi.ToonyStandard
                 {
                     SectionContent(materialEditor, properties);
                 }
-                catch(ArgumentException)
+                catch (ArgumentException)
                 {
                     //do nothing since the argumentException thrown is not going to cause problems
                     //since the only time it gets thrown is when an undo operation is done
                     //and that is only a visualization error of the editor on a single cycle
                 }
-               
+
             }
-            if(sectionStyle==SectionStyle.Bubbles)
+            if (sectionStyle == SectionStyle.Bubbles)
             {
                 EditorGUILayout.EndVertical();
             }
@@ -86,7 +86,7 @@ namespace Cibbi.ToonyStandard
 
             if (EditorGUI.EndChangeCheck())
             {
-                EndBoxCheck(this.isOpen,this.isEnabled);
+                EndBoxCheck(this.isOpen, this.isEnabled);
             }
         }
 
@@ -108,13 +108,13 @@ namespace Cibbi.ToonyStandard
             EditorGUILayout.BeginVertical("Button");
             GUI.backgroundColor = bCol;
             Rect r = EditorGUILayout.BeginHorizontal();
-            isOpen=EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+            isOpen = EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
             GUILayout.Space(38.0f);
-            EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitleCenter); 
+            EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitleCenter);
             DrawUpDownButtons();
-            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
-            
-            isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());  
+            isEnabled = EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
+
+            isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());
             EditorGUILayout.EndHorizontal();
         }
 
@@ -124,14 +124,14 @@ namespace Cibbi.ToonyStandard
         /// <param name="bCol">original background color</param>
         private void drawFoldoutSection(Color bCol)
         {
-            TSFunctions.DrawLine(new Color(0.35f,0.35f,0.35f,1),1,0);
+            TSFunctions.DrawLine(new Color(0.35f, 0.35f, 0.35f, 1), 1, 0);
             GUI.backgroundColor = bCol;
             Rect r = EditorGUILayout.BeginHorizontal();
-            isOpen=EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+            isOpen = EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
             EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitle);
-            DrawUpDownButtons();    
-            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
-            isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());  
+            DrawUpDownButtons();
+            isEnabled = EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
+            isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());
             EditorGUILayout.EndHorizontal();
         }
 
@@ -143,13 +143,13 @@ namespace Cibbi.ToonyStandard
         {
             EditorGUILayout.BeginVertical("box");
             GUI.backgroundColor = bCol;
-            
+
             Rect r = EditorGUILayout.BeginHorizontal();
-            isOpen=EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
+            isOpen = EditorGUILayout.Toggle(isOpen, EditorStyles.foldout, GUILayout.MaxWidth(15.0f));
             EditorGUILayout.LabelField(sectionTitle, TSConstants.Styles.sectionTitle);
-            DrawUpDownButtons();     
-            isEnabled=EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
-            isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());  
+            DrawUpDownButtons();
+            isEnabled = EditorGUILayout.Toggle(isEnabled, TSConstants.Styles.deleteStyle, GUILayout.MaxWidth(15.0f));
+            isOpen = GUI.Toggle(r, isOpen, GUIContent.none, new GUIStyle());
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
         }
@@ -167,18 +167,18 @@ namespace Cibbi.ToonyStandard
         /// Draws the controls for moving around a section order
         /// </summary>
         public void DrawUpDownButtons()
-        {  
-            isUp = EditorGUILayout.Toggle(isUp, TSConstants.Styles.upStyle, GUILayout.Width(15.0f),GUILayout.Height(15.0f));
-            isDown = EditorGUILayout.Toggle(isDown,TSConstants.Styles.downStyle, GUILayout.Width(15.0f));
-            if(isUp)
+        {
+            isUp = EditorGUILayout.Toggle(isUp, TSConstants.Styles.upStyle, GUILayout.Width(15.0f), GUILayout.Height(15.0f));
+            isDown = EditorGUILayout.Toggle(isDown, TSConstants.Styles.downStyle, GUILayout.Width(15.0f));
+            if (isUp)
             {
-                pushState=-1;
-                isUp=false;
+                pushState = -1;
+                isUp = false;
             }
-            else if(isDown)
+            else if (isDown)
             {
-                pushState=1;
-                isDown=false;
+                pushState = 1;
+                isDown = false;
             }
         }
 
@@ -189,7 +189,7 @@ namespace Cibbi.ToonyStandard
         {
 
         }
-        
+
         /// <summary>
         /// Overridable method that tells when a section can be enabled
         /// </summary>
@@ -245,7 +245,7 @@ namespace Cibbi.ToonyStandard
         /// <param name="index">Value to set</param>
         public void SetIndexNumber(int index)
         {
-           GetIndex().floatValue = index;
+            GetIndex().floatValue = index;
         }
         /// <summary>
         /// Checks if the index value has mixed values
@@ -270,7 +270,7 @@ namespace Cibbi.ToonyStandard
         {
             return FindProperty(propertyName, properties, true);
         }
-        
+
         // Findproperty from shaderGUI
         protected static MaterialProperty FindProperty(string propertyName, MaterialProperty[] properties, bool propertyIsMandatory)
         {

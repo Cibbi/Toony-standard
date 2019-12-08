@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Cibbi.ToonyStandard
 {
-    public class MainSection 
+    public class MainSection
     {
 
         private static class Styles
         {
             public static GUIContent cullMode = new GUIContent("Cull mode", "Controls which face of the mesh is rendered \n\nOff: Double sided \n\nFront: Single sided (internal parts showing) \n\nBack: Single sided");
             public static GUIContent blendMode = new GUIContent("Blend mode", "Blend state \n\nOpaque: Opaque object \n\nCutout: Opaque object with cutout parts decided by the alpha channel of the main texture" +
-                                                                " \n\nFade: Transparent object that does completely fade out at 0 opacity \n\nTransparent: Transparent object that is still visible at 0 opacity due"+
+                                                                " \n\nFade: Transparent object that does completely fade out at 0 opacity \n\nTransparent: Transparent object that is still visible at 0 opacity due" +
                                                                 " to the fresnel effect, more realistic than fade \n\nDither: uses a dithering pattern to simulate transparent objects");
             public static GUIContent mainTex = new GUIContent("Main texture", "Main texture (RGB channels) and transparency (A channel)");
             public static GUIContent cutOff = new GUIContent("Alpha cutoff", "Transparency threshold to cut out");
@@ -22,7 +22,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent TexturePackerButton = new GUIContent("Open texture packer", "Open the texture packer for generating the MSOT texture");
             public static void ToggleTexturePackerContent(bool isOpen)
             {
-                if(isOpen)
+                if (isOpen)
                 {
                     Styles.TexturePackerButton.text = "Close texture packer";
                     Styles.TexturePackerButton.tooltip = "Close the texture packer for generating the MSOT texture";
@@ -54,14 +54,14 @@ namespace Cibbi.ToonyStandard
         TexturePacker packer;
         ToonyStandardGUI gui;
 
-        public MainSection(MaterialProperty[] properties,InspectorLevel level, TexturePacker packer, ToonyStandardGUI gui)
+        public MainSection(MaterialProperty[] properties, InspectorLevel level, TexturePacker packer, ToonyStandardGUI gui)
         {
             FindProperties(properties);
-            this.level=level;
+            this.level = level;
             isTexturePackerOpen = false;
             Styles.ToggleTexturePackerContent(isTexturePackerOpen);
             this.packer = packer;
-            this.gui=gui;
+            this.gui = gui;
         }
 
         public void FindProperties(MaterialProperty[] properties)
@@ -84,12 +84,12 @@ namespace Cibbi.ToonyStandard
         public void DrawSection(MaterialEditor materialEditor)
         {
             EditorGUI.BeginChangeCheck();
-                TSFunctions.DrawSelector(Enum.GetNames(typeof(ToonyStandardGUI.BlendMode)), _blendMode, Styles.blendMode, materialEditor);
+            TSFunctions.DrawSelector(Enum.GetNames(typeof(ToonyStandardGUI.BlendMode)), _blendMode, Styles.blendMode, materialEditor);
             if (EditorGUI.EndChangeCheck())
             {
                 foreach (Material mat in _blendMode.targets)
                 {
-                    ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)_blendMode.floatValue, mat.GetFloat("_OutlineOn")>0);
+                    ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)_blendMode.floatValue, mat.GetFloat("_OutlineOn") > 0);
                 }
             }
 
@@ -106,13 +106,13 @@ namespace Cibbi.ToonyStandard
                 EditorGUI.indentLevel -= MaterialEditor.kMiniTextureFieldLabelIndentLevel + 1;
             }
             materialEditor.TexturePropertySingleLine(Styles.normal, _BumpMap, _BumpScale);
-            
-            if(level==InspectorLevel.Normal)
-            {   
-                Rect r = TSFunctions.GetControlRectForSingleLine(); 
+
+            if (level == InspectorLevel.Normal)
+            {
+                Rect r = TSFunctions.GetControlRectForSingleLine();
                 EditorGUI.BeginChangeCheck();
-                materialEditor.TexturePropertyMiniThumbnail(r,_OcclusionMap, Styles.occlusion.text,Styles.occlusion.tooltip);
-                if(EditorGUI.EndChangeCheck())
+                materialEditor.TexturePropertyMiniThumbnail(r, _OcclusionMap, Styles.occlusion.text, Styles.occlusion.tooltip);
+                if (EditorGUI.EndChangeCheck())
                 {
                     gui.RegenerateMSOT();
                 }
@@ -126,11 +126,11 @@ namespace Cibbi.ToonyStandard
 
             //emission
             EditorGUI.BeginChangeCheck();
-                if (materialEditor.EmissionEnabledProperty())
-                {
-                    materialEditor.TexturePropertySingleLine(Styles.emission, _Emission, _EmissionColor);
-                    materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
-                }
+            if (materialEditor.EmissionEnabledProperty())
+            {
+                materialEditor.TexturePropertySingleLine(Styles.emission, _Emission, _EmissionColor);
+                materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
+            }
             if (EditorGUI.EndChangeCheck())
             {
                 foreach (Material mat in _Emission.targets)
@@ -149,14 +149,14 @@ namespace Cibbi.ToonyStandard
                 }
             }
             //if in expert mode show the MSOT map and a button for the texture packer
-            if(level==InspectorLevel.Expert)
-            {   
+            if (level == InspectorLevel.Expert)
+            {
                 EditorGUILayout.BeginHorizontal();
-                    materialEditor.TexturePropertySingleLine(Styles.MSOT, _MSOT);
-                if(GUILayout.Button(Styles.TexturePackerButton))
+                materialEditor.TexturePropertySingleLine(Styles.MSOT, _MSOT);
+                if (GUILayout.Button(Styles.TexturePackerButton))
                 {
                     EditorGUILayout.EndHorizontal();
-                    isTexturePackerOpen=!isTexturePackerOpen;
+                    isTexturePackerOpen = !isTexturePackerOpen;
                     Styles.ToggleTexturePackerContent(isTexturePackerOpen);
                 }
                 else
@@ -164,13 +164,13 @@ namespace Cibbi.ToonyStandard
                     EditorGUILayout.EndHorizontal();
                 }
 
-                if(isTexturePackerOpen)
+                if (isTexturePackerOpen)
                 {
                     EditorGUILayout.BeginVertical("box");
                     packer.DrawGUI();
                     EditorGUILayout.EndVertical();
-                    if(_MSOT.textureValue != (Texture)packer.resultTex && packer.resultTex != null)
-                    {   
+                    if (_MSOT.textureValue != (Texture)packer.resultTex && packer.resultTex != null)
+                    {
                         _MSOT.textureValue = packer.resultTex;
                         packer.resultTex = null;
                     }

@@ -74,7 +74,7 @@ namespace Cibbi.ToonyStandard
             materialEditor.ShaderProperty(_Metallic, Styles.metallic);
             materialEditor.ShaderProperty(_Glossiness, Styles.smoothness);
 
-            isToonyHighlightsEnabled=TSFunctions.ProperToggle(ref _ToonyHighlights,Styles.toonyHighlight);
+            isToonyHighlightsEnabled = TSFunctions.ProperToggle(ref _ToonyHighlights, Styles.toonyHighlight);
 
             if (isToonyHighlightsEnabled)
             {
@@ -90,8 +90,8 @@ namespace Cibbi.ToonyStandard
             foreach (Material mat in _SpecularOn.targets)
             {
                 if (!isEnabled)
-                {   
-                    if(!_SpecularOn.hasMixedValue)
+                {
+                    if (!_SpecularOn.hasMixedValue)
                     {
                         TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !isEnabled);
                         _SpecularOn.floatValue = TSFunctions.floatBoolean(!mat.IsKeywordEnabled("_SPECULARHIGHLIGHTS_OFF"));

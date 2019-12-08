@@ -251,7 +251,6 @@ namespace Cibbi.ToonyStandard
 				aboutLabelStyle.hover.textColor = Color.magenta;
 				GUILayout.Label(TSConstants.Version, aboutLabelStyle, GUILayout.Height(26));
 			GUILayout.EndHorizontal();
-            GUILayout.Space(10);
 
 		}
         /// <summary>

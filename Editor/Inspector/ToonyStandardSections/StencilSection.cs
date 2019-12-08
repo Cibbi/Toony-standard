@@ -57,7 +57,7 @@ namespace Cibbi.ToonyStandard
             materialEditor.ShaderProperty(_StencilComp, Styles.stencilComp);
             materialEditor.ShaderProperty(_StencilOp, Styles.stencilOperation);
 
-            if(_OutlineOn.floatValue>0)
+            if (_OutlineOn.floatValue > 0)
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Outline Stencil Options", EditorStyles.boldLabel);
@@ -75,7 +75,7 @@ namespace Cibbi.ToonyStandard
             _StencilBox.floatValue = TSFunctions.floatBoolean(isOpen);
             if (!isEnabled)
             {
-                if(!_StencilOn.hasMixedValue)
+                if (!_StencilOn.hasMixedValue)
                 {
                     _StencilOn.floatValue = 0;
 

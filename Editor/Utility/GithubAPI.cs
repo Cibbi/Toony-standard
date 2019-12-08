@@ -6,7 +6,8 @@ namespace Cibbi.ToonyStandard.GithubAPI
 {
 
     [Serializable]
-    public class GithubReleaseJSON{
+    public class GithubReleaseJSON
+    {
         public string url;
         public string assets_url;
         public string upload_url;
@@ -28,7 +29,8 @@ namespace Cibbi.ToonyStandard.GithubAPI
     }
 
     [Serializable]
-    public class GithubCommitJSON{
+    public class GithubCommitJSON
+    {
         public string sha;
         public string node_id;
         public GithubCommitLiteJSON commit;
@@ -41,7 +43,8 @@ namespace Cibbi.ToonyStandard.GithubAPI
     }
 
     [Serializable]
-    public class GithubUserJSON{
+    public class GithubUserJSON
+    {
         public string login;
         public int id;
         public string node_id;
@@ -63,7 +66,8 @@ namespace Cibbi.ToonyStandard.GithubAPI
     }
 
     [Serializable]
-    public class GithubAssetJSON{
+    public class GithubAssetJSON
+    {
         public string url;
         public int id;
         public string node_id;
@@ -80,7 +84,8 @@ namespace Cibbi.ToonyStandard.GithubAPI
     }
 
     [Serializable]
-    public class GithubCommitLiteJSON{
+    public class GithubCommitLiteJSON
+    {
         public GithubCommitUserJSON author;
         public GithubCommitUserJSON committer;
         public GithubCommitTreeJSON tree;
@@ -91,26 +96,30 @@ namespace Cibbi.ToonyStandard.GithubAPI
     }
 
     [Serializable]
-    public class GithubCommitUserJSON{
+    public class GithubCommitUserJSON
+    {
         public string name;
         public string email;
         public string date;
     }
 
     [Serializable]
-    public class GithubCommitTreeJSON{
+    public class GithubCommitTreeJSON
+    {
         public string sha;
         public string url;
     }
 
     [Serializable]
-    public class GithubCommitParentJSON{
+    public class GithubCommitParentJSON
+    {
         public string sha;
         public string url;
         public string html_url;
     }
     [Serializable]
-    public class GithubVerificationJSON{
+    public class GithubVerificationJSON
+    {
         public bool verified;
         public string reason;
         public string signature;

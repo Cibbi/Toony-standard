@@ -20,33 +20,33 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Contains all the GUIContents used by this inspector
         /// </summary>
-        
+
         #region Properties
 
-            MaterialProperty _RampOn;
-            MaterialProperty _RimLightOn;
-            MaterialProperty _SpecularOn;
-            MaterialProperty _DetailMapOn;
-            MaterialProperty _SSSOn;
-            MaterialProperty _StencilOn;
-            MaterialProperty _OutlineOn;
+        MaterialProperty _RampOn;
+        MaterialProperty _RimLightOn;
+        MaterialProperty _SpecularOn;
+        MaterialProperty _DetailMapOn;
+        MaterialProperty _SSSOn;
+        MaterialProperty _StencilOn;
+        MaterialProperty _OutlineOn;
 
-            MaterialProperty _ToonRampBox;
-            MaterialProperty _RimLightBox;
-            MaterialProperty _SpecularBox;
-            MaterialProperty _DetailBox;
-            MaterialProperty _SSSBox;
-            MaterialProperty _StencilBox;
-            MaterialProperty _OutlineBox;
+        MaterialProperty _ToonRampBox;
+        MaterialProperty _RimLightBox;
+        MaterialProperty _SpecularBox;
+        MaterialProperty _DetailBox;
+        MaterialProperty _SSSBox;
+        MaterialProperty _StencilBox;
+        MaterialProperty _OutlineBox;
 
-            MainSection main;
-            BasicMainSection basicMain;
-            OrderedSectionGroup group;
+        MainSection main;
+        BasicMainSection basicMain;
+        OrderedSectionGroup group;
 
-            bool isFirstCycle=true;
+        bool isFirstCycle = true;
 
-            InspectorLevel inspectorLevel;
-            public TexturePacker packer;
+        InspectorLevel inspectorLevel;
+        public TexturePacker packer;
 
         #endregion
 
@@ -58,13 +58,13 @@ namespace Cibbi.ToonyStandard
         public void Start(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
             //Temporary code for transitioning between 2017 to 2018
-            if(FindProperty("_NeedsFix", properties).floatValue==0.5)
+            if (FindProperty("_NeedsFix", properties).floatValue == 0.5)
             {
-                #if UNITY_2018_1_OR_NEWER
-                    FindProperty("_NeedsFix", properties).floatValue=0;
-                #else
+#if UNITY_2018_1_OR_NEWER
+                FindProperty("_NeedsFix", properties).floatValue = 0;
+#else
                     FindProperty("_NeedsFix", properties).floatValue=1;
-                #endif
+#endif
             }
 
 
@@ -75,19 +75,19 @@ namespace Cibbi.ToonyStandard
             FindProperties(properties);
 
             //Initializes the ramp section based on the inspector level
-            inspectorLevel=(InspectorLevel)EditorPrefs.GetInt("TSInspectorLevel");
+            inspectorLevel = (InspectorLevel)EditorPrefs.GetInt("TSInspectorLevel");
 
-            switch(inspectorLevel)
+            switch (inspectorLevel)
             {
                 case InspectorLevel.Basic:
                     basicMain = new BasicMainSection(properties);
                     break;
                 case InspectorLevel.Normal:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Thickness map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOT.png"));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[] { "Metallic", "Smoothness", "Ambient occlusion", "Thickness map" }, GetTextureDestinationPath((Material)_RampOn.targets[0], "MSOT.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
                 case InspectorLevel.Expert:
-                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[]{"Metallic", "Smoothness","Ambient occlusion", "Thickness map"}, GetTextureDestinationPath((Material)_RampOn.targets[0],"MSOT.png"));
+                    packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[] { "Metallic", "Smoothness", "Ambient occlusion", "Thickness map" }, GetTextureDestinationPath((Material)_RampOn.targets[0], "MSOT.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
             }
@@ -96,7 +96,7 @@ namespace Cibbi.ToonyStandard
                 //remove keywords not used in Toony Standard
                 RemoveUnwantedKeywords(mat);
                 // Setup various keyword based settings
-                SetupMaterialWithBlendMode(mat, (BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn")>0);
+                SetupMaterialWithBlendMode(mat, (BlendMode)mat.GetFloat("_Mode"), mat.GetFloat("_OutlineOn") > 0);
 
                 // Setup emission
                 MaterialEditor.FixupEmissiveFlag(mat);
@@ -116,7 +116,7 @@ namespace Cibbi.ToonyStandard
 
             // Add sections based on the inspector level
             group = new OrderedSectionGroup();
-            if(inspectorLevel==InspectorLevel.Basic)
+            if (inspectorLevel == InspectorLevel.Basic)
             {
                 group.addSection(new BasicSpecularSection(properties, TSFunctions.BooleanFloat(_SpecularBox.floatValue), TSFunctions.BooleanFloat(_SpecularOn.floatValue)));
                 group.addSection(new OutlineSection(properties, TSFunctions.BooleanFloat(_OutlineBox.floatValue), TSFunctions.BooleanFloat(_OutlineOn.floatValue)));
@@ -129,18 +129,18 @@ namespace Cibbi.ToonyStandard
                 group.addSection(new DetailSection(properties, TSFunctions.BooleanFloat(_DetailBox.floatValue), TSFunctions.BooleanFloat(_DetailMapOn.floatValue)));
                 group.addSection(new SubsurfaceSection(properties, inspectorLevel, this, TSFunctions.BooleanFloat(_SSSBox.floatValue), TSFunctions.BooleanFloat(_SSSOn.floatValue)));
                 group.addSection(new OutlineSection(properties, TSFunctions.BooleanFloat(_OutlineBox.floatValue), TSFunctions.BooleanFloat(_OutlineOn.floatValue)));
-            }   
+            }
 
-            if(inspectorLevel == InspectorLevel.Expert)
+            if (inspectorLevel == InspectorLevel.Expert)
             {
-                 group.addSection(new StencilSection(properties, TSFunctions.BooleanFloat(_StencilBox.floatValue), TSFunctions.BooleanFloat(_StencilOn.floatValue)));
+                group.addSection(new StencilSection(properties, TSFunctions.BooleanFloat(_StencilBox.floatValue), TSFunctions.BooleanFloat(_StencilOn.floatValue)));
             }
             else
             {
                 FindProperty("_StencilID", properties).floatValue = 0;
                 FindProperty("_StencilComp", properties).floatValue = 0;
                 FindProperty("_StencilOp", properties).floatValue = 0;
-            }  
+            }
         }
 
         /// <summary>
@@ -149,38 +149,38 @@ namespace Cibbi.ToonyStandard
         /// <param name="materialEditor">Material editor provided by the custom inspector</param>
         /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
-        {   
+        {
             //if is the first cycle it runs, do the initializzations needed on the start function
             if (isFirstCycle)
             {
                 Start(materialEditor, properties);
-                isFirstCycle=false;
+                isFirstCycle = false;
             }
-            TSFunctions.DrawHeader(EditorGUIUtility.currentViewWidth,10);
-            
+            TSFunctions.DrawHeader(EditorGUIUtility.currentViewWidth, 10);
+
             //Temporary code for converting back HDR colors
-            #if UNITY_2018_1_OR_NEWER
-            if(FindProperty("_NeedsFix", properties).floatValue==1)
+#if UNITY_2018_1_OR_NEWER
+            if (FindProperty("_NeedsFix", properties).floatValue == 1)
             {
                 EditorGUILayout.BeginHorizontal();
-                if(GUILayout.Button("Convert HDR colors back to 2017 look"))
+                if (GUILayout.Button("Convert HDR colors back to 2017 look"))
                 {
-                    foreach(MaterialProperty m in properties)
+                    foreach (MaterialProperty m in properties)
                     {
-                        if(m.flags==MaterialProperty.PropFlags.HDR)
+                        if (m.flags == MaterialProperty.PropFlags.HDR)
                         {
-                            m.colorValue=m.colorValue.linear;
+                            m.colorValue = m.colorValue.linear;
                         }
                     }
-                    FindProperty("_NeedsFix", properties).floatValue=0;
+                    FindProperty("_NeedsFix", properties).floatValue = 0;
                 }
-                if(GUILayout.Button("Keep current colors"))
+                if (GUILayout.Button("Keep current colors"))
                 {
-                    FindProperty("_NeedsFix", properties).floatValue=0;
+                    FindProperty("_NeedsFix", properties).floatValue = 0;
                 }
                 EditorGUILayout.EndHorizontal();
-            }                
-            #endif
+            }
+#endif
 
             //if a keyword is used to apply the effects on the shader caused by enabling/disabling a section, it needs to be set every update
             foreach (Material mat in _SpecularOn.targets)
@@ -190,15 +190,15 @@ namespace Cibbi.ToonyStandard
             }
 
             //draw main section
-            if(inspectorLevel==InspectorLevel.Basic)
+            if (inspectorLevel == InspectorLevel.Basic)
             {
                 basicMain.DrawSection(materialEditor);
             }
             else
             {
                 main.DrawSection(materialEditor);
-            }     
-            group.DrawSectionsList(materialEditor,properties);
+            }
+            group.DrawSectionsList(materialEditor, properties);
             group.DrawAddButton(properties);
 
             TSFunctions.DrawFooter();
@@ -211,7 +211,7 @@ namespace Cibbi.ToonyStandard
         public void FindProperties(MaterialProperty[] properties)
         {
             _RampOn = FindProperty("_RampOn", properties);
-            _RimLightOn = FindProperty("_RimLightOn", properties);          
+            _RimLightOn = FindProperty("_RimLightOn", properties);
             _SpecularOn = FindProperty("_SpecularOn", properties);
             _DetailMapOn = FindProperty("_DetailMapOn", properties);
             _SSSOn = FindProperty("_SSSOn", properties);
@@ -233,28 +233,28 @@ namespace Cibbi.ToonyStandard
         /// <param name="properties">MaterialProperty array</param>
         public void GenerateRampMinMax(MaterialProperty[] properties)
         {
-            foreach(Material m in FindProperty("_MainRampMin", properties).targets)
-            { 
+            foreach (Material m in FindProperty("_MainRampMin", properties).targets)
+            {
                 Texture2D ramp = (Texture2D)m.GetTexture("_Ramp");
-                Color min= new Color(100,100,100,0);
-                Color max= new Color(0,0,0,1);
-                if(ramp != null)
+                Color min = new Color(100, 100, 100, 0);
+                Color max = new Color(0, 0, 0, 1);
+                if (ramp != null)
                 {
-                    #if UNITY_2018_1_OR_NEWER
-                    if(!ramp.isReadable)
+#if UNITY_2018_1_OR_NEWER
+                    if (!ramp.isReadable)
                     {
                         SetTextureImporterFormat(ramp, true);
                     }
                     foreach (Color c in ramp.GetPixels())
                     {
-                        if(min.r > c.r) {min.r = c.r;}
-                        if(min.g > c.g) {min.g = c.g;}
-                        if(min.b > c.b) {min.b = c.b;}
-                        if(max.r < c.r) {max.r = c.r;}
-                        if(max.g < c.g) {max.g = c.g;}
-                        if(max.b < c.b) {max.b = c.b;}                       
+                        if (min.r > c.r) { min.r = c.r; }
+                        if (min.g > c.g) { min.g = c.g; }
+                        if (min.b > c.b) { min.b = c.b; }
+                        if (max.r < c.r) { max.r = c.r; }
+                        if (max.g < c.g) { max.g = c.g; }
+                        if (max.b < c.b) { max.b = c.b; }
                     }
-                    #else          
+#else
                     try
                     {
                         foreach (Color c in ramp.GetPixels())
@@ -280,31 +280,31 @@ namespace Cibbi.ToonyStandard
                             if(max.b < c.b) {max.b = c.b;}                         
                         }
                     }
-                    #endif
+#endif
                 }
                 else
                 {
-                    min = new Color(0.9f,0.9f,0.9f,1);
+                    min = new Color(0.9f, 0.9f, 0.9f, 1);
                     max = Color.white;
                 }
                 float intensity = m.GetFloat("_ShadowIntensity");
-                if(intensity == 0)
+                if (intensity == 0)
                 {
                     intensity = 0.001f;
                 }
-                Color remapMin = new Color (1-intensity, 1-intensity, 1-intensity, 1).gamma;
+                Color remapMin = new Color(1 - intensity, 1 - intensity, 1 - intensity, 1).gamma;
 
                 min *= m.GetColor("_RampColor");
                 max *= m.GetColor("_RampColor");
 
-                min = remap(min, Color.black ,Color.white, remapMin, Color.white);
-                max = remap(max, Color.black ,Color.white, remapMin, Color.white);
+                min = remap(min, Color.black, Color.white, remapMin, Color.white);
+                max = remap(max, Color.black, Color.white, remapMin, Color.white);
 
-                m.SetColor("_MainRampMin", min); 
-                m.SetColor("_MainRampMax", max); 
+                m.SetColor("_MainRampMin", min);
+                m.SetColor("_MainRampMax", max);
             }
         }
-        
+
         /// <summary>
         /// Get a destination path
         /// </summary>
@@ -319,7 +319,7 @@ namespace Cibbi.ToonyStandard
             path = string.Join("/", pieces);
             ArrayUtility.RemoveAt(ref pieces, pieces.Length - 1);
             string pathTexture = string.Join("/", pieces);
-            if(Directory.Exists(Application.dataPath + pathTexture.Substring(-1==pathTexture.IndexOf("/")?0:pathTexture.IndexOf("/")) + "/Textures"))
+            if (Directory.Exists(Application.dataPath + pathTexture.Substring(-1 == pathTexture.IndexOf("/") ? 0 : pathTexture.IndexOf("/")) + "/Textures"))
             {
                 path = pathTexture + "/Textures/" + mat.name + name;
             }
@@ -338,35 +338,35 @@ namespace Cibbi.ToonyStandard
             foreach (Material mat in _RampOn.targets)
             {
                 string path = GetTextureDestinationPath(mat, "MSOT.png");
-                if(mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_ThicknessMap") != null)
-                {   
+                if (mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_ThicknessMap") != null)
+                {
                     packer.resolution = TexturePacker.Resolution.XS_128x128;
                     packer.rTexture = (Texture2D)mat.GetTexture("_MetallicMap");
-                    if(packer.rTexture != null)
-                        while(packer.rTexture.width>(float)packer.resolution||packer.rTexture.height>(float)packer.resolution)
+                    if (packer.rTexture != null)
+                        while (packer.rTexture.width > (float)packer.resolution || packer.rTexture.height > (float)packer.resolution)
                         {
-                            if(!packer.RiseResolutionByOneLevel())
+                            if (!packer.RiseResolutionByOneLevel())
                                 break;
                         }
                     packer.gTexture = (Texture2D)mat.GetTexture("_GlossinessMap");
-                    if(packer.gTexture != null)
-                        while(packer.gTexture.width>(float)packer.resolution||packer.gTexture.height>(float)packer.resolution)
+                    if (packer.gTexture != null)
+                        while (packer.gTexture.width > (float)packer.resolution || packer.gTexture.height > (float)packer.resolution)
                         {
-                            if(!packer.RiseResolutionByOneLevel())
+                            if (!packer.RiseResolutionByOneLevel())
                                 break;
                         }
                     packer.bTexture = (Texture2D)mat.GetTexture("_OcclusionMap");
-                    if(packer.bTexture != null)
-                        while(packer.bTexture.width>(float)packer.resolution||packer.bTexture.height>(float)packer.resolution)
+                    if (packer.bTexture != null)
+                        while (packer.bTexture.width > (float)packer.resolution || packer.bTexture.height > (float)packer.resolution)
                         {
-                            if(!packer.RiseResolutionByOneLevel())
+                            if (!packer.RiseResolutionByOneLevel())
                                 break;
                         }
                     packer.aTexture = (Texture2D)mat.GetTexture("_ThicknessMap");
-                    if(packer.aTexture != null)
-                        while(packer.aTexture.width>(float)packer.resolution||packer.aTexture.height>(float)packer.resolution)
+                    if (packer.aTexture != null)
+                        while (packer.aTexture.width > (float)packer.resolution || packer.aTexture.height > (float)packer.resolution)
                         {
-                            if(!packer.RiseResolutionByOneLevel())
+                            if (!packer.RiseResolutionByOneLevel())
                                 break;
                         }
 
@@ -389,12 +389,12 @@ namespace Cibbi.ToonyStandard
         /// <param name="newMin">New min value</param>
         /// <param name="newMax">New max value</param>
         /// <returns>The remapped color</returns>
-        private static Color remap(Color value, Color oldMin, Color oldMax, Color newMin, Color newMax) 
+        private static Color remap(Color value, Color oldMin, Color oldMax, Color newMin, Color newMax)
         {
-            float r =(value.r - oldMin.r) / (oldMax.r - oldMin.r) * (newMax.r - newMin.r) + newMin.r;
-            float g =(value.g - oldMin.g) / (oldMax.g - oldMin.g) * (newMax.g - newMin.g) + newMin.g;
-            float b =(value.b - oldMin.b) / (oldMax.b - oldMin.b) * (newMax.b - newMin.b) + newMin.b;
-	        return new Color(r,g,b,1);
+            float r = (value.r - oldMin.r) / (oldMax.r - oldMin.r) * (newMax.r - newMin.r) + newMin.r;
+            float g = (value.g - oldMin.g) / (oldMax.g - oldMin.g) * (newMax.g - newMin.g) + newMin.g;
+            float b = (value.b - oldMin.b) / (oldMax.b - oldMin.b) * (newMax.b - newMin.b) + newMin.b;
+            return new Color(r, g, b, 1);
         }
 
         /// <summary>
@@ -404,17 +404,17 @@ namespace Cibbi.ToonyStandard
         /// <param name="isReadable">Does the texture need to be readable</param>
         public static void SetTextureImporterFormat(Texture2D texture, bool isReadable)
         {
-            if ( null == texture ) return;
+            if (null == texture) return;
 
-            string assetPath = AssetDatabase.GetAssetPath( texture );
-            var tImporter = AssetImporter.GetAtPath( assetPath ) as TextureImporter;
-            if ( tImporter != null )
+            string assetPath = AssetDatabase.GetAssetPath(texture);
+            var tImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (tImporter != null)
             {
                 tImporter.textureType = TextureImporterType.Default;
 
                 tImporter.isReadable = isReadable;
 
-                AssetDatabase.ImportAsset( assetPath );
+                AssetDatabase.ImportAsset(assetPath);
                 AssetDatabase.Refresh();
             }
         }
@@ -427,7 +427,7 @@ namespace Cibbi.ToonyStandard
         /// <param name="outlined">Has outline</param>
         public static void SetupMaterialWithBlendMode(Material material, BlendMode blendMode, bool outlined)
         {
-            string shaderName="";
+            string shaderName = "";
             switch (blendMode)
             {
                 case BlendMode.Opaque:
@@ -448,17 +448,17 @@ namespace Cibbi.ToonyStandard
                     outlined = false;
                     break;
             }
-            if(outlined)
+            if (outlined)
             {
                 shaderName += "Outlined";
-                
+
             }
             else
             {
                 material.SetFloat("_OutlineOn", 0);
             }
-             material.shader = Shader.Find(shaderName);
-        }  
+            material.shader = Shader.Find(shaderName);
+        }
 
         /// <summary>
         /// Remove keywords not used by this shader
@@ -468,7 +468,8 @@ namespace Cibbi.ToonyStandard
         {
             foreach (string keyword in material.shaderKeywords)
             {
-                if (!TSConstants.KeywordWhitelist.Contains(keyword)) {
+                if (!TSConstants.KeywordWhitelist.Contains(keyword))
+                {
                     material.DisableKeyword(keyword);
                 }
             }

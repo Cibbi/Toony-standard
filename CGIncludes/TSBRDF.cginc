@@ -18,14 +18,14 @@ float4 TS_BRDF(BRDFData i)
 
         #if defined(DYNAMICLIGHTMAP_ON)
             
-			#if defined(DIRLIGHTMAP_COMBINED)
+            #if defined(DIRLIGHTMAP_COMBINED)
                 //indirectDiffuse += DecodeDirectionalToonLightmap(i.dynamicLightmap, i.dynamicLightmapDirection, i.normal, i.mainRamp, i.occlusion, i.occlusionOffsetIntensity);
                 indirectDiffuse += DecodeDirectionalLightmap(i.dynamicLightmap, i.dynamicLightmapDirection, i.normal);
-			#else
+            #else
                 indirectDiffuse += i.dynamicLightmap;
                 //indirectDiffuse += StylizedLightmap(i.dynamicLightmap, i.mainRamp, i.occlusion, i.occlusionOffsetIntensity);
-			#endif
-		#endif
+            #endif
+        #endif
 
         #if !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON)
             //if there's no direct light, we get the probe light direction to use as direct light direction and
@@ -108,7 +108,7 @@ float4 TS_BRDF(BRDFData i)
         dots.NdotL=max(dots.NdotL,0);
         ramp = DisneyDiffuse(dots.NdotV, dots.NdotL, dots.LdotH, diffuseRoughness) * dots.NdotL;
         DiffuseColor = i.albedo * (lightCol.rgb * lightCol.a * ramp + indirectDiffuse);
-         #if defined(VERTEXLIGHT_ON)
+        #if defined(VERTEXLIGHT_ON)
             vertexDiffuse = Shade4PointLights(i.normal, i.worldPos);
             vertexDiffuse*=i.albedo;
         #endif
@@ -117,10 +117,10 @@ float4 TS_BRDF(BRDFData i)
     float3 specularTerm=0;
     float3 indirectSpecular=0;
     #if !defined (_SPECULARHIGHLIGHTS_OFF)
-    //the original roughness value is saved cause it is needed on the indirect specular for sampling the specular probe
-    float3 baseRoughness=i.roughness;
-    //Direct specular calculation
-    //
+        //the original roughness value is saved cause it is needed on the indirect specular for sampling the specular probe
+        float3 baseRoughness=i.roughness;
+        //Direct specular calculation
+        //
         i.roughness *= i.roughness;
         i.roughness = ClampRoughness(i.roughness);
         #if defined(_ANISOTROPIC_SPECULAR)
@@ -132,35 +132,35 @@ float4 TS_BRDF(BRDFData i)
                 specularTerm = DirectSpecular(dots, i.toonyHighlights, i.highlightRamp, i.metallic, i.highlightPattern, ramp, specColor,  i.roughness);
             #endif
         #endif
-    //
-    //End direct specular calculation
+        //
+        //End direct specular calculation
 
-    //Indirect specular calculation
-    //
+        //Indirect specular calculation
+        //
         //indirect specular is added only on the base pass
         #if defined(UNITY_PASS_FORWARDBASE)
-        //Sampling the probe
-        Unity_GlossyEnvironmentData envData;
-		envData.roughness = baseRoughness;
-		envData.reflUVW = BoxProjectedCubemapDirection(i.dir.reflect, i.worldPos, unity_SpecCube0_ProbePosition, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
-        float4 indirectSpecularRGBA = Unity_GlossyEnvironment(UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData);
-		indirectSpecular =  indirectSpecularRGBA.rgb;
-        if ((i.indirectSpecular>0 && indirectSpecularRGBA.a == 0) || (i.indirectOverride > 0))
-        {
-            //using the fake specular probe toned down based on the average light, it's not phisically accurate
-            //but having a probe that reflects arbitrary stuff isn't accurate to begin with
-            half lightColGrey = max((lightCol.r + lightCol.g + lightCol.b) / 3, (indirectDiffuse.r + indirectDiffuse.g + indirectDiffuse.b) / 3);
-            indirectSpecular=i.customIndirect*min(lightColGrey,1);
-        }
+            //Sampling the probe
+            Unity_GlossyEnvironmentData envData;
+            envData.roughness = baseRoughness;
+            envData.reflUVW = BoxProjectedCubemapDirection(i.dir.reflect, i.worldPos, unity_SpecCube0_ProbePosition, unity_SpecCube0_BoxMin, unity_SpecCube0_BoxMax);
+            float4 indirectSpecularRGBA = Unity_GlossyEnvironment(UNITY_PASS_TEXCUBE(unity_SpecCube0), unity_SpecCube0_HDR, envData);
+            indirectSpecular =  indirectSpecularRGBA.rgb;
+            if ((i.indirectSpecular>0 && indirectSpecularRGBA.a == 0) || (i.indirectOverride > 0))
+            {
+                //using the fake specular probe toned down based on the average light, it's not phisically accurate
+                //but having a probe that reflects arbitrary stuff isn't accurate to begin with
+                half lightColGrey = max((lightCol.r + lightCol.g + lightCol.b) / 3, (indirectDiffuse.r + indirectDiffuse.g + indirectDiffuse.b) / 3);
+                indirectSpecular=i.customIndirect*min(lightColGrey,1);
+            }
 
-        float grazingTerm = saturate(1-i.roughness + (1 - oneMinusReflectivity));
-        indirectSpecular*=FresnelLerp(specColor, grazingTerm, dots.NdotV);
+            float grazingTerm = saturate(1-i.roughness + (1 - oneMinusReflectivity));
+            indirectSpecular*=FresnelLerp(specColor, grazingTerm, dots.NdotV);
         #endif
-    //
-    //End indirect specular calculation
+        //
+        //End indirect specular calculation
     #endif
 
-    float3 sssColor = calcSubsurfaceScattering(i.sss, dots, i.dir,ramp.a, i.normal, lightCol, indirectDiffuse, i.albedo);
+    float3 sssColor = calcSubsurfaceScattering(i.sss, dots, i.dir, ramp.a, i.normal, lightCol, indirectDiffuse, i.albedo);
 
     //Final color calculation = Diffuse color (that contains also the indirect component) 
     //                        + the vertex lights contribution 

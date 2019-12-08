@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Cibbi.ToonyStandard
 {
-    public class BasicMainSection 
+    public class BasicMainSection
     {
         private static class Styles
         {
@@ -20,7 +20,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent shadowIntensity = new GUIContent("Shadow intensity", "Defines how intense the toon ramp is");
         }
 
-         MaterialProperty _blendMode;
+        MaterialProperty _blendMode;
         MaterialProperty _Cull;
 
         MaterialProperty _MainTex;
@@ -47,14 +47,14 @@ namespace Cibbi.ToonyStandard
             FindProperty("_RimLightOn", properties).floatValue = 0;
             FindProperty("_RampOn", properties).floatValue = 1;
 
-            FindProperty("_MetallicMap", properties).textureValue = null;  
-            FindProperty("_GlossinessMap", properties).textureValue = null;    
-            FindProperty("_GlossinessMap", properties).textureValue = null;  
-            FindProperty("_HighlightRamp", properties).textureValue = TSConstants.DefaultRamp; 
-            FindProperty("_HighlightRampOffset", properties).floatValue = 0;  
+            FindProperty("_MetallicMap", properties).textureValue = null;
+            FindProperty("_GlossinessMap", properties).textureValue = null;
+            FindProperty("_GlossinessMap", properties).textureValue = null;
+            FindProperty("_HighlightRamp", properties).textureValue = TSConstants.DefaultRamp;
+            FindProperty("_HighlightRampOffset", properties).floatValue = 0;
             FindProperty("_DetailMapOn", properties).floatValue = 0;
             FindProperty("_IndirectOverride", properties).floatValue = 0;
-            
+
 
             FindProperty("_SSSOn", properties).floatValue = 0;
 
@@ -88,12 +88,12 @@ namespace Cibbi.ToonyStandard
         public void DrawSection(MaterialEditor materialEditor)
         {
             EditorGUI.BeginChangeCheck();
-                TSFunctions.DrawSelector(Enum.GetNames(typeof(ToonyStandardGUI.BlendMode)), _blendMode, Styles.blendMode, materialEditor);
+            TSFunctions.DrawSelector(Enum.GetNames(typeof(ToonyStandardGUI.BlendMode)), _blendMode, Styles.blendMode, materialEditor);
             if (EditorGUI.EndChangeCheck())
             {
                 foreach (Material mat in _blendMode.targets)
                 {
-                    ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)_blendMode.floatValue, mat.GetFloat("_OutlineOn")>0);
+                    ToonyStandardGUI.SetupMaterialWithBlendMode(mat, (ToonyStandardGUI.BlendMode)_blendMode.floatValue, mat.GetFloat("_OutlineOn") > 0);
                 }
             }
 
@@ -117,11 +117,11 @@ namespace Cibbi.ToonyStandard
 
             // Emission
             EditorGUI.BeginChangeCheck();
-                if (materialEditor.EmissionEnabledProperty())
-                {
-                    materialEditor.TexturePropertySingleLine(Styles.emission, _Emission, _EmissionColor);
-                    materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
-                }
+            if (materialEditor.EmissionEnabledProperty())
+            {
+                materialEditor.TexturePropertySingleLine(Styles.emission, _Emission, _EmissionColor);
+                materialEditor.LightmapEmissionProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel);
+            }
             if (EditorGUI.EndChangeCheck())
             {
                 foreach (Material mat in _Emission.targets)
@@ -139,7 +139,7 @@ namespace Cibbi.ToonyStandard
                     }
                 }
             }
-            
+
             materialEditor.TextureScaleOffsetProperty(_MainTex);
 
             EditorGUILayout.Space();

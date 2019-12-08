@@ -16,9 +16,9 @@ float4 _MainTex_ST, _DetailTexture_ST, _HighlightPattern_ST;
 float4 _Color, _RampColor, _HighlightRampColor, _IndirectColor, _DetailColor, _RimColor, _EmissionColor, _SSColor;
 
 float _Cutoff, _Occlusion, _RampOffset, _ShadowIntensity, _OcclusionOffsetIntensity,
-	  _RimIntensity, _RimStrength, _RimSharpness, _Metallic, _Glossiness, _Anisotropy,
-	  _FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity,
-	  _SSDistortion, _SSPower, _SSScale;
+_RimIntensity, _RimStrength, _RimSharpness, _Metallic, _Glossiness, _Anisotropy,
+_FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity,
+_SSDistortion, _SSPower, _SSScale;
 float _BumpScale, _DetailBumpScale;
 float _RampOn, _RimLightOn, _SSSOn, _EmissiveRim, _IndirectSpecular, _IndirectOverride, _ToonyHighlights;
 float4 _MainRampMin, _MainRampMax;
@@ -30,7 +30,7 @@ sampler2D _HighlightPattern;
 sampler2D _FakeHighlights;
 
 #if defined(_DITHER_ON)
-sampler3D _DitherMaskLOD;
+	sampler3D _DitherMaskLOD;
 #endif
 
 #include "TSBRDF.cginc"
@@ -96,7 +96,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	float3 WorldBinormal   = normalize(cross(NormalDirection,WorldTangent) * i.tangentDir.w * unity_WorldTransformParams.w);
 	CalculateNormals(NormalDirection, WorldTangent, WorldBinormal, normalMap);			
 	float3 LightDirection  = normalize(UnityWorldSpaceLightDir(i.worldPos));
-    float3 ViewDirection   = normalize(UnityWorldSpaceViewDir(i.worldPos));
+	float3 ViewDirection   = normalize(UnityWorldSpaceViewDir(i.worldPos));
 	float3 worldRefl       = reflect(-ViewDirection, NormalDirection);
 	
 	//sampling MSOT map
@@ -152,7 +152,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 		}
 	#endif
 
-    float SSSthickness = 0;
+	float SSSthickness = 0;
 
 	if(_SSSOn > 0)
 	{
@@ -172,7 +172,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	s.dir.tangent   = WorldTangent;
 	s.dir.bitangent = WorldBinormal;
 	s.dir.reflect   = worldRefl;
-    s.worldPos      = i.worldPos;
+	s.worldPos      = i.worldPos;
 
 	s.albedo 	= albedo.rgb;
 	s.alpha  	= albedo.a;
@@ -215,15 +215,15 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	#endif	
 
 	s.sss.color = _SSColor.rgb * min(1, _SSSOn);
-    s.sss.thickness = SSSthickness;
-    s.sss.distortion = _SSDistortion;
-    s.sss.power = _SSPower;
-    s.sss.scale = _SSScale;			
+	s.sss.thickness = SSSthickness;
+	s.sss.distortion = _SSDistortion;
+	s.sss.power = _SSPower;
+	s.sss.scale = _SSScale;			
 
 	//lightmap sampling
 	#if defined(LIGHTMAP_ON)
 		s.lightmap = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lightmapUV));
-	
+		
 		//directional map sampling
 		#if defined(DIRLIGHTMAP_COMBINED)
 			s.lightmapDirection = UNITY_SAMPLE_TEX2D_SAMPLER(unity_LightmapInd, unity_Lightmap, i.lightmapUV);

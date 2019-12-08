@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Cibbi.ToonyStandard
 {
-    
+
     public class OrderedSectionGroup
     {
         private List<OrderedSection> sections;
@@ -19,27 +19,27 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         public OrderedSectionGroup()
         {
-            TSSettings settings=JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
-            sectionStyle=(SectionStyle)settings.sectionStyle;
-			switch(sectionStyle)
+            TSSettings settings = JsonUtility.FromJson<TSSettings>(File.ReadAllText(TSConstants.SettingsJSONPath));
+            sectionStyle = (SectionStyle)settings.sectionStyle;
+            switch (sectionStyle)
             {
                 case SectionStyle.Bubbles:
-                    buttonStyle="button";
+                    buttonStyle = "button";
                     break;
                 case SectionStyle.Foldout:
-                    buttonStyle=new GUIStyle("button");
+                    buttonStyle = new GUIStyle("button");
                     break;
                 case SectionStyle.Box:
-                    buttonStyle=new GUIStyle("box");
-                    buttonStyle.alignment=TextAnchor.MiddleCenter;
-                    buttonStyle.stretchWidth=true;
-                    buttonStyle.normal.textColor=Color.white;
-                    buttonStyle.fontStyle=FontStyle.Bold;
+                    buttonStyle = new GUIStyle("box");
+                    buttonStyle.alignment = TextAnchor.MiddleCenter;
+                    buttonStyle.stretchWidth = true;
+                    buttonStyle.normal.textColor = Color.white;
+                    buttonStyle.fontStyle = FontStyle.Bold;
                     break;
             }
-            
-			sectionBgColor=settings.sectionColor;
-            sections=new List<OrderedSection>();
+
+            sectionBgColor = settings.sectionColor;
+            sections = new List<OrderedSection>();
         }
 
         /// <summary>
@@ -57,27 +57,27 @@ namespace Cibbi.ToonyStandard
         public void ReorderSections()
         {
             OrderedSection[] sectionsList = sections.ToArray();
-            for(int i=0;i<sectionsList.Length;i++)
+            for (int i = 0; i < sectionsList.Length; i++)
             {
-                if(sectionsList[i].pushState==1 && i<sectionsList.Length-1)
+                if (sectionsList[i].pushState == 1 && i < sectionsList.Length - 1)
                 {
                     int swap = sectionsList[i].GetIndexNumber();
-                    sectionsList[i].SetIndexNumber(sectionsList[i+1].GetIndexNumber());
-                    sectionsList[i+1].SetIndexNumber(swap);                  
+                    sectionsList[i].SetIndexNumber(sectionsList[i + 1].GetIndexNumber());
+                    sectionsList[i + 1].SetIndexNumber(swap);
                 }
-                else if(sectionsList[i].pushState==-1 && i>0 && sectionsList[i-1].GetIndexNumber()!=0)
+                else if (sectionsList[i].pushState == -1 && i > 0 && sectionsList[i - 1].GetIndexNumber() != 0)
                 {
                     int swap = sectionsList[i].GetIndexNumber();
-                    sectionsList[i].SetIndexNumber(sectionsList[i-1].GetIndexNumber());
-                    sectionsList[i-1].SetIndexNumber(swap);
+                    sectionsList[i].SetIndexNumber(sectionsList[i - 1].GetIndexNumber());
+                    sectionsList[i - 1].SetIndexNumber(swap);
                 }
-                sectionsList[i].pushState=0;
+                sectionsList[i].pushState = 0;
             }
             sections.Sort(CompareSectionsOrder);
-            int j=1;
+            int j = 1;
             foreach (OrderedSection section in sections)
             {
-                if(section.GetIndexNumber()!=0  &&  !section.IsIndexMixed())
+                if (section.GetIndexNumber() != 0 && !section.IsIndexMixed())
                 {
                     section.SetIndexNumber(j);
                     j++;
@@ -95,15 +95,15 @@ namespace Cibbi.ToonyStandard
 
             foreach (OrderedSection section in sections)
             {
-                if(!HasMixedIndexZero(section))
+                if (!HasMixedIndexZero(section))
                 {
                     section.DrawSection(materialEditor, properties);
                 }
             }
 
-            if(sectionStyle==SectionStyle.Foldout)
+            if (sectionStyle == SectionStyle.Foldout)
             {
-                TSFunctions.DrawLine(new Color(0.35f,0.35f,0.35f,1),1,0);
+                TSFunctions.DrawLine(new Color(0.35f, 0.35f, 0.35f, 1), 1, 0);
                 GUILayout.Space(10);
             }
         }
@@ -113,37 +113,37 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         public void DrawAddButton(MaterialProperty[] properties)
         {
-            if(ListHasMixedIndexZero(sections))
+            if (ListHasMixedIndexZero(sections))
             {
-                
+
                 Color bCol = GUI.backgroundColor;
                 GUI.backgroundColor = sectionBgColor;
                 bool buttonPressed;
-                if(sectionStyle==SectionStyle.Foldout)
+                if (sectionStyle == SectionStyle.Foldout)
                 {
                     EditorGUILayout.BeginHorizontal();
                     GUILayout.FlexibleSpace();
-                    buttonPressed=GUILayout.Button("+",buttonStyle,GUILayout.MinWidth(200));
+                    buttonPressed = GUILayout.Button("+", buttonStyle, GUILayout.MinWidth(200));
                     GUILayout.FlexibleSpace();
                     EditorGUILayout.EndHorizontal();
                 }
                 else
                 {
-                    buttonPressed=GUILayout.Button("+",buttonStyle);
-                }     
-                
+                    buttonPressed = GUILayout.Button("+", buttonStyle);
+                }
+
                 if (buttonPressed)
                 {
                     GenericMenu menu = new GenericMenu();
 
                     foreach (OrderedSection section in sections)
                     {
-                        if(HasMixedIndexZero(section) && section.CanBeEnabled(properties))
+                        if (HasMixedIndexZero(section) && section.CanBeEnabled(properties))
                         {
                             menu.AddItem(section.getSectionTitle(), false, TurnOnSection, section);
                         }
                     }
-                   menu.ShowAsContext();
+                    menu.ShowAsContext();
                 }
                 GUI.backgroundColor = bCol;
             }
@@ -159,7 +159,7 @@ namespace Cibbi.ToonyStandard
             section.SetIndexNumber(753);
             section.OnAdd();
         }
-        
+
         /// <summary>
         /// Compares 2 ordered sections to determine which one is the first one
         /// </summary>
@@ -188,11 +188,11 @@ namespace Cibbi.ToonyStandard
                 else
                 {
                     //
-                    if (x.GetIndexNumber()>y.GetIndexNumber())
+                    if (x.GetIndexNumber() > y.GetIndexNumber())
                     {
                         return 1;
                     }
-                    else if (x.GetIndexNumber()<y.GetIndexNumber())
+                    else if (x.GetIndexNumber() < y.GetIndexNumber())
                     {
                         return -1;
                     }
@@ -212,10 +212,10 @@ namespace Cibbi.ToonyStandard
         private static bool ListHasMixedIndexZero(List<OrderedSection> sections)
         {
             bool zero = false;
-            foreach(OrderedSection section in sections)
+            foreach (OrderedSection section in sections)
             {
-                zero=HasMixedIndexZero(section);
-                if(zero)
+                zero = HasMixedIndexZero(section);
+                if (zero)
                 {
                     break;
                 }
@@ -233,8 +233,8 @@ namespace Cibbi.ToonyStandard
             bool zero = false;
             foreach (Material mat in section.GetIndexTargets())
             {
-                zero = mat.GetFloat(section.GetIndexName())==0;
-                if(zero)
+                zero = mat.GetFloat(section.GetIndexName()) == 0;
+                if (zero)
                 {
                     break;
                 }

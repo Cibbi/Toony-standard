@@ -73,7 +73,7 @@ namespace Cibbi.ToonyStandard
             }
             if (!isEnabled)
             {
-                if(!_DetailMapOn.hasMixedValue)
+                if (!_DetailMapOn.hasMixedValue)
                 {
                     _DetailMapOn.floatValue = 0;
                 }

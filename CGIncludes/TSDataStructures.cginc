@@ -1,22 +1,22 @@
 struct VertexData 
 {
-	float4 vertex     : POSITION;
-	float2 uv         : TEXCOORD0;
+    float4 vertex     : POSITION;
+    float2 uv         : TEXCOORD0;
     float2 uv1        : TEXCOORD1;
     float2 uv2        : TEXCOORD2;
-	float3 normal     : NORMAL;
-	float4 tangentDir : TANGENT;
+    float3 normal     : NORMAL;
+    float4 tangentDir : TANGENT;
 };
 
 struct FragmentData 
 {
-	float4 pos        : SV_POSITION;
-	float3 normal     : NORMAL;
-	float4 tangentDir : TANGENT;
-	float2 uv         : TEXCOORD0;
-	float2 detailUv   : TEXCOORD1;
-	float2 HPuv       : TEXCOORD2;
-	float3 worldPos   : TEXCOORD3;
+    float4 pos        : SV_POSITION;
+    float3 normal     : NORMAL;
+    float4 tangentDir : TANGENT;
+    float2 uv         : TEXCOORD0;
+    float2 detailUv   : TEXCOORD1;
+    float2 HPuv       : TEXCOORD2;
+    float3 worldPos   : TEXCOORD3;
     
     UNITY_SHADOW_COORDS(4)
     UNITY_FOG_COORDS(5)
@@ -25,8 +25,8 @@ struct FragmentData
         float2 lightmapUV : TEXCOORD6;
     #endif
     #if defined(DYNAMICLIGHTMAP_ON)
-		float2 dynamicLightmapUV : TEXCOORD7;
-	#endif
+        float2 dynamicLightmapUV : TEXCOORD7;
+    #endif
 };
 
 struct DirectionData
@@ -81,7 +81,7 @@ struct BRDFData
 
     RampData mainRamp;
     float3 mainRampMin;
-	float3 mainRampMax;
+    float3 mainRampMax;
     #if !defined (_SPECULARHIGHLIGHTS_OFF)
         float metallic;
         #if defined(_SPECGLOSSMAP)

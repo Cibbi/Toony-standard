@@ -1,16 +1,16 @@
 //Base functions
 //
 inline float remap(float value, float oldMin, float oldMax, float newMin, float newMax) {
-	return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
+    return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
 }
 inline float2 remap(float2 value, float2 oldMin, float2 oldMax, float2 newMin, float2 newMax) {
-	return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
+    return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
 }
 inline float3 remap(float3 value, float3 oldMin, float3 oldMax, float3 newMin, float3 newMax) {
-	return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
+    return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
 }
 inline float4 remap(float4 value, float4 oldMin, float4 oldMax, float4 newMin, float4 newMax) {
-	return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
+    return (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
 }
 
 inline half Pow5 (half x)
@@ -35,7 +35,7 @@ float ClampRoughness(float roughness)
     #if defined(_ANISOTROPIC_SPECULAR)
         return roughness;
     #else
-	    return max(roughness, 0.002);
+        return max(roughness, 0.002);
     #endif
 }
 
@@ -64,20 +64,20 @@ half4 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyE
 {
     half perceptualRoughness = glossIn.roughness /* perceptualRoughness */ ;
 
-// TODO: CAUTION: remap from Morten may work only with offline convolution, see impact with runtime convolution!
-// For now disabled
-#if 0
-    float m = PerceptualRoughnessToRoughness(perceptualRoughness); // m is the real roughness parameter
-    const float fEps = 1.192092896e-07F;        // smallest such that 1.0+FLT_EPSILON != 1.0  (+1e-4h is NOT good here. is visibly very wrong)
-    float n =  (2.0/max(fEps, m*m))-2.0;        // remap to spec power. See eq. 21 in --> https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
+    // TODO: CAUTION: remap from Morten may work only with offline convolution, see impact with runtime convolution!
+    // For now disabled
+    #if 0
+        float m = PerceptualRoughnessToRoughness(perceptualRoughness); // m is the real roughness parameter
+        const float fEps = 1.192092896e-07F;        // smallest such that 1.0+FLT_EPSILON != 1.0  (+1e-4h is NOT good here. is visibly very wrong)
+        float n =  (2.0/max(fEps, m*m))-2.0;        // remap to spec power. See eq. 21 in --> https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
 
-    n /= 4;                                     // remap from n_dot_h formulatino to n_dot_r. See section "Pre-convolved Cube Maps vs Path Tracers" --> https://s3.amazonaws.com/docs.knaldtech.com/knald/1.0.0/lys_power_drops.html
+        n /= 4;                                     // remap from n_dot_h formulatino to n_dot_r. See section "Pre-convolved Cube Maps vs Path Tracers" --> https://s3.amazonaws.com/docs.knaldtech.com/knald/1.0.0/lys_power_drops.html
 
-    perceptualRoughness = pow( 2/(n+2), 0.25);      // remap back to square root of real roughness (0.25 include both the sqrt root of the conversion and sqrt for going from roughness to perceptualRoughness)
-#else
-    // MM: came up with a surprisingly close approximation to what the #if 0'ed out code above does.
-    perceptualRoughness = perceptualRoughness*(1.7 - 0.7*perceptualRoughness);
-#endif
+        perceptualRoughness = pow( 2/(n+2), 0.25);      // remap back to square root of real roughness (0.25 include both the sqrt root of the conversion and sqrt for going from roughness to perceptualRoughness)
+    #else
+        // MM: came up with a surprisingly close approximation to what the #if 0'ed out code above does.
+        perceptualRoughness = perceptualRoughness*(1.7 - 0.7*perceptualRoughness);
+    #endif
 
 
     half mip = perceptualRoughnessToMipmapLevel(perceptualRoughness);
@@ -124,14 +124,14 @@ void CalculateNormals(inout float3 normal, inout float3 tangent, inout float3 bi
 float FadeShadows (FragmentData i, float attenuation) 
 {
     #if HANDLE_SHADOWS_BLENDING_IN_GI && !defined (SHADOWS_SHADOWMASK)
-		// UNITY_LIGHT_ATTENUATION doesn't fade shadows for us.
-		float viewZ =dot(_WorldSpaceCameraPos - i.worldPos, UNITY_MATRIX_V[2].xyz);
-		float shadowFadeDistance =UnityComputeShadowFadeDistance(i.worldPos, viewZ);
-		float shadowFade = UnityComputeShadowFade(shadowFadeDistance);
-		attenuation = saturate(attenuation + shadowFade);
-	#endif
+        // UNITY_LIGHT_ATTENUATION doesn't fade shadows for us.
+        float viewZ =dot(_WorldSpaceCameraPos - i.worldPos, UNITY_MATRIX_V[2].xyz);
+        float shadowFadeDistance =UnityComputeShadowFadeDistance(i.worldPos, viewZ);
+        float shadowFade = UnityComputeShadowFade(shadowFadeDistance);
+        attenuation = saturate(attenuation + shadowFade);
+    #endif
     #if defined(LIGHTMAP_ON) && defined (SHADOWS_SHADOWMASK)
-		// UNITY_LIGHT_ATTENUATION doesn't fade shadows for us.
+        // UNITY_LIGHT_ATTENUATION doesn't fade shadows for us.
         float viewZ = dot(_WorldSpaceCameraPos - i.worldPos, UNITY_MATRIX_V[2].xyz);
         float shadowFadeDistance = UnityComputeShadowFadeDistance(i.worldPos, viewZ);
         float shadowFade = UnityComputeShadowFade(shadowFadeDistance);
@@ -141,22 +141,22 @@ float FadeShadows (FragmentData i, float attenuation)
         //attenuation = bakedAttenuation;
 
     #endif
-	return attenuation;
+    return attenuation;
 }
 
 float3 GetModifiedTangent(float3 tangentTS, float3 tangentDir)
 {
-	float3x3 worldToTangent;
-	worldToTangent[0] = float3(1, 0, 0);
-	worldToTangent[1] = float3(0, 1, 0);
-	worldToTangent[2] = float3(0, 0, 1); 
+    float3x3 worldToTangent;
+    worldToTangent[0] = float3(1, 0, 0);
+    worldToTangent[1] = float3(0, 1, 0);
+    worldToTangent[2] = float3(0, 0, 1); 
 
-	float3 tangentTWS = mul(tangentTS, worldToTangent);
-	float3 fTangent;
-	if (tangentTS.z < 1)
-		tangentDir = tangentTS;
-	else
-		tangentDir = tangentDir;
+    float3 tangentTWS = mul(tangentTS, worldToTangent);
+    float3 fTangent;
+    if (tangentTS.z < 1)
+    tangentDir = tangentTS;
+    else
+    tangentDir = tangentDir;
     
     return tangentDir;
 }
@@ -202,12 +202,12 @@ float3 Shade4PointLights(float3 normal, float3 worldPos)
     lengthSq += toLightY * toLightY;
     lengthSq += toLightZ * toLightZ;
     float4 NdotL = 0;
-	NdotL += toLightX * normal.x;
-	NdotL += toLightY * normal.y;
-	NdotL += toLightZ * normal.z;
+    NdotL += toLightX * normal.x;
+    NdotL += toLightY * normal.y;
+    NdotL += toLightZ * normal.z;
     // correct NdotL
-	float4 corr = rsqrt(lengthSq);
-	NdotL =  NdotL * corr;
+    float4 corr = rsqrt(lengthSq);
+    NdotL =  NdotL * corr;
     //attenuation
     float4 atten = 1.0 / (1.0 + lengthSq * unity_4LightAtten0);
 
@@ -232,20 +232,20 @@ float3 RampDotLVertLight(float3 normal, float3 worldPos, RampData rampData, floa
     lengthSq += toLightY * toLightY;
     lengthSq += toLightZ * toLightZ;
     float4 NdotL = 0;
-	NdotL += toLightX * normal.x;
-	NdotL += toLightY * normal.y;
-	NdotL += toLightZ * normal.z;
+    NdotL += toLightX * normal.x;
+    NdotL += toLightY * normal.y;
+    NdotL += toLightZ * normal.z;
     // correct NdotL
-	float4 corr = rsqrt(lengthSq);
-	NdotL =  NdotL * corr;
+    float4 corr = rsqrt(lengthSq);
+    NdotL =  NdotL * corr;
     //attenuation
     float4 atten = 1.0 / (1.0 + lengthSq * unity_4LightAtten0);
     //ramp calculation for all 4 vertex lights
     float offset = rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
     //Calculating ramp uvs based on offset
-	float newMin = max(offset, 0);
-	float newMax = max(offset + 1, 0);
-	float4 rampUv = remap(min(NdotL,remap(atten,0,1,-1,1)), float4(-1,-1,-1,-1), float4(1,1,1,1), float4(newMin,newMin,newMin,newMin), float4(newMax,newMax,newMax,newMax));
+    float newMin = max(offset, 0);
+    float newMax = max(offset + 1, 0);
+    float4 rampUv = remap(min(NdotL,remap(atten,0,1,-1,1)), float4(-1,-1,-1,-1), float4(1,1,1,1), float4(newMin,newMin,newMin,newMin), float4(newMax,newMax,newMax,newMax));
     float3 ramp = remap(remap(tex2D(rampData.ramp, float2(rampUv.x, rampUv.x)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[0].rgb;
     ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.y, rampUv.y)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[1].rgb;
     ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.z, rampUv.z)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[2].rgb;
@@ -259,10 +259,10 @@ float4 RampDotL(float NdotL, RampData rampData, float rampMin, float rampMax, fl
     //Adding the occlusion into the offset of the ramp
     float offset=rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
     //Calculating ramp uvs based on offset
-	float newMin = max(offset, 0);
-	float newMax = max(offset + 1, 0);
-	float rampUv = remap(NdotL, -1, 1, newMin, newMax);
-	float3 ramp = tex2D(rampData.ramp, float2(rampUv, rampUv)).rgb;
+    float newMin = max(offset, 0);
+    float newMax = max(offset + 1, 0);
+    float rampUv = remap(NdotL, -1, 1, newMin, newMax);
+    float3 ramp = tex2D(rampData.ramp, float2(rampUv, rampUv)).rgb;
     //Adding the color and remapping it based on the shadow intensity stored into the alpha channel of the ramp color
     ramp *= rampData.color.rgb;
     ramp = remap(ramp, float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1));
@@ -271,7 +271,7 @@ float4 RampDotL(float NdotL, RampData rampData, float rampMin, float rampMax, fl
     float3 rampA = remap(ramp, rampMin, rampMax,0,1);
     float rampGrey = max(max(rampA.r, rampA.g), rampA.b);
     #if defined(DIRECTIONAL) || defined(DIRECTIONAL_COOKIE) 
-	    return float4(ramp,rampGrey); 
+        return float4(ramp,rampGrey); 
     #else
         return float4(rampA,rampGrey);
     #endif
@@ -283,12 +283,12 @@ float3 RampDotLSimple(float NdotL, RampData rampData, float occlusion, float occ
     //Adding the occlusion into the offset of the ramp
     float offset = rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
     //Calculating ramp uvs based on offset
-	float newMin = max(offset, 0);
-	float newMax = max(offset + 1, 0);
-	float rampUv = remap(NdotL, -1, 1, newMin, newMax);
-	float3 ramp = tex2D(rampData.ramp, float2(rampUv, rampUv)).rgb;
+    float newMin = max(offset, 0);
+    float newMax = max(offset + 1, 0);
+    float rampUv = remap(NdotL, -1, 1, newMin, newMax);
+    float3 ramp = tex2D(rampData.ramp, float2(rampUv, rampUv)).rgb;
     //Adding the color and remapping it based on the shadow intensity stored into the alpha channel of the ramp color
-	ramp *= rampData.color.rgb;
+    ramp *= rampData.color.rgb;
     ramp = remap(ramp, float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1));
     return ramp; 
 }
@@ -298,8 +298,8 @@ float3 StylizedLightmap(float3 lightmap, RampData rampData, float occlusion, flo
     //Adding the occlusion into the offset of the ramp
     float offset = rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
     //Calculating ramp uvs based on offset
-	float newMin = max(offset, 0);
-	float newMax = max(offset + 1, 0);
+    float newMin = max(offset, 0);
+    float newMax = max(offset + 1, 0);
     float rampUv = remap((lightmap.r + lightmap.g + lightmap.b)/3, 0, 1, newMin, newMax);
     float3 ramp = tex2D(rampData.ramp, float2(rampUv, rampUv)).rgb;
     ramp = remap(ramp, float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1))*lightmap;
@@ -309,7 +309,7 @@ float3 StylizedLightmap(float3 lightmap, RampData rampData, float occlusion, flo
 
 //edited DecodeDirectionalLightmap from UnityCG
 inline half3 DecodeDirectionalToonLightmap (
-	half3 color, fixed4 dirTex, half3 normalWorld, RampData rampData, float occlusion, float occlusionOffsetIntensity) 
+half3 color, fixed4 dirTex, half3 normalWorld, RampData rampData, float occlusion, float occlusionOffsetIntensity) 
 {
 
     half halfLambert = dot(normalWorld, dirTex.xyz);
@@ -379,40 +379,40 @@ float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighligh
 float3 DirectAnisotropicSpecular(DirectionData dir, BaseDots dots, float anisotropy, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
     #if defined(_ANISOTROPIC_SPECULAR) && !defined (_SPECULARHIGHLIGHTS_OFF)
-    //Anisotropic specific dot products
-    float TdotH = dot(dir.tangentMap, dir.halfD);
-    float TdotL = dot(dir.tangentMap, dir.light);
-    float BdotH = dot(dir.bitangent, dir.halfD);
-    float BdotL = dot(dir.bitangent, dir.light);
-    float TdotV = dot(dir.view, dir.tangentMap);
-    float BdotV = dot(dir.view, dir.bitangent);
+        //Anisotropic specific dot products
+        float TdotH = dot(dir.tangentMap, dir.halfD);
+        float TdotL = dot(dir.tangentMap, dir.light);
+        float BdotH = dot(dir.bitangent, dir.halfD);
+        float BdotL = dot(dir.bitangent, dir.light);
+        float TdotV = dot(dir.view, dir.tangentMap);
+        float BdotV = dot(dir.view, dir.bitangent);
 
-    //float aspect = sqrt(1-anisotropy*.9);
-    //float ax = max(.005, roughness / aspect);
-    //float ay = max(.005, roughness * aspect);
-    float ax = max(roughness * (1.0 + anisotropy), 0.005);
-	float ay = max(roughness * (1.0 - anisotropy), 0.005);
+        //float aspect = sqrt(1-anisotropy*.9);
+        //float ax = max(.005, roughness / aspect);
+        //float ay = max(.005, roughness * aspect);
+        float ax = max(roughness * (1.0 + anisotropy), 0.005);
+        float ay = max(roughness * (1.0 - anisotropy), 0.005);
 
 
-    float3 D = GTR2_aniso(dots.NdotH, TdotH, BdotH, ax, ay);
-    
-    float V  = smithG_GGX_aniso(dots.NdotL, TdotL, BdotL, ax, ay);
-    V *= smithG_GGX_aniso(dots.NdotV, TdotV, BdotV, ax, ay);
+        float3 D = GTR2_aniso(dots.NdotH, TdotH, BdotH, ax, ay);
+        
+        float V  = smithG_GGX_aniso(dots.NdotL, TdotL, BdotL, ax, ay);
+        V *= smithG_GGX_aniso(dots.NdotV, TdotV, BdotV, ax, ay);
 
-    D = PbrToToonHighlights(toonyHighlights, highlightRamp, D, metallic);
-    //masking with the highlight pattern
-    D *= highlightPattern;
+        D = PbrToToonHighlights(toonyHighlights, highlightRamp, D, metallic);
+        //masking with the highlight pattern
+        D *= highlightPattern;
 
-    float3 specularTerm = D * V* UNITY_PI;
-    #ifdef UNITY_COLORSPACE_GAMMA
-        specularTerm = sqrt(max(1e-4h, specularTerm));
-    #endif    
-    specularTerm = max(0, specularTerm * ramp.a * dots.NdotL);
-    specularTerm *= any(specColor) ? 1.0 : 0.0;
-    specularTerm *= FresnelTerm(specColor, dots.LdotH);
-    return specularTerm;
+        float3 specularTerm = D * V* UNITY_PI;
+        #ifdef UNITY_COLORSPACE_GAMMA
+            specularTerm = sqrt(max(1e-4h, specularTerm));
+        #endif    
+        specularTerm = max(0, specularTerm * ramp.a * dots.NdotL);
+        specularTerm *= any(specColor) ? 1.0 : 0.0;
+        specularTerm *= FresnelTerm(specColor, dots.LdotH);
+        return specularTerm;
     #else
-    return 0;
+        return 0;
     #endif
 }
 

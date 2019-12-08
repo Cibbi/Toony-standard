@@ -43,7 +43,7 @@ namespace Cibbi.ToonyStandard
             _EmissiveRim = FindProperty("_EmissiveRim", properties);
 
             _RimLightBox = FindProperty("_RimLightBox", properties);
-            _RimLightOn = FindProperty("_RimLightOn", properties);  
+            _RimLightOn = FindProperty("_RimLightOn", properties);
         }
 
         public override void SectionContent(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -72,7 +72,7 @@ namespace Cibbi.ToonyStandard
             _RimLightBox.floatValue = TSFunctions.floatBoolean(isOpen);
             if (!isEnabled)
             {
-                if(!_RimLightOn.hasMixedValue)
+                if (!_RimLightOn.hasMixedValue)
                 {
                     _RimLightOn.floatValue = 0;
                 }

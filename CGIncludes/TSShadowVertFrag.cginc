@@ -9,7 +9,7 @@ sampler3D _DitherMaskLOD;
 struct VertexData 
 {
 	float4 position : POSITION;
-    float3 normal : NORMAL;
+	float3 normal : NORMAL;
 	float2 uv : TEXCOORD0;
 };
 
@@ -46,7 +46,7 @@ InterpolatorsVertex  ShadowVertexFunction (VertexData v)
 	#if defined(SHADOWS_CUBE)
 		i.position = UnityObjectToClipPos(v.position);
 		i.lightVec =
-			mul(unity_ObjectToWorld, v.position).xyz - _LightPositionRange.xyz;
+		mul(unity_ObjectToWorld, v.position).xyz - _LightPositionRange.xyz;
 	#else
 		i.position = UnityClipSpaceShadowCasterPos(v.position.xyz, v.normal);
 		i.position = UnityApplyLinearShadowBias(i.position);

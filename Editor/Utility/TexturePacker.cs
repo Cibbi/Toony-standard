@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Cibbi.ToonyStandard
-{	
+{
     public class TexturePacker
     {
         public enum DefaultTexture
@@ -12,11 +12,11 @@ namespace Cibbi.ToonyStandard
         }
         public enum Resolution
         {
-            XS_128x128    = 128,
-            S_256x256     = 256,
-            M_512x512     = 512,
-            L_1024x1024   = 1024,
-            XL_2048x2048  = 2048,
+            XS_128x128 = 128,
+            S_256x256 = 256,
+            M_512x512 = 512,
+            L_1024x1024 = 1024,
+            XL_2048x2048 = 2048,
             XXL_4096x4096 = 4096
         }
 
@@ -65,10 +65,10 @@ namespace Cibbi.ToonyStandard
         /// <param name="res">Default resolution of the output texture</param>
         /// <param name="textureNames">Names of the 4 textures</param>
         /// <param name="defaultPath">Default output path (with texture name and extention)</param>
-        public TexturePacker(Resolution res,string[] textureNames, string defaultPath)
+        public TexturePacker(Resolution res, string[] textureNames, string defaultPath)
         {
             resolution = res;
-            result = new RenderTexture((int)resolution, (int)resolution,32,RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+            result = new RenderTexture((int)resolution, (int)resolution, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
             result.enableRandomWrite = true;
             result.Create();
 
@@ -76,7 +76,7 @@ namespace Cibbi.ToonyStandard
 
             tex = new Texture2D(result.width, result.height, TextureFormat.RGBA32, false);
             names = textureNames;
-            if(names.Length>4)
+            if (names.Length > 4)
             {
                 string[] oldNames = names;
                 names = new string[4];
@@ -85,20 +85,20 @@ namespace Cibbi.ToonyStandard
                     names[i] = oldNames[i];
                 }
             }
-            else if(names.Length<4)
+            else if (names.Length < 4)
             {
                 string[] oldNames = names;
                 names = new string[4];
                 for (int i = 0; i < 4; i++)
                 {
-                    if(i<oldNames.Length)
+                    if (i < oldNames.Length)
                     {
                         names[i] = oldNames[i];
                     }
                     else
                     {
                         names[i] = "Texture";
-                    }    
+                    }
                 }
             }
 
@@ -141,9 +141,9 @@ namespace Cibbi.ToonyStandard
         /// <param name="path">Path of the saved texture (name and extension included</param>
         public void PackTexture(string path)
         {
-            if(result.width!=(int)resolution||result.height!=(int)resolution)
+            if (result.width != (int)resolution || result.height != (int)resolution)
             {
-                result = new RenderTexture((int)resolution, (int)resolution,32,RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+                result = new RenderTexture((int)resolution, (int)resolution, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
                 result.enableRandomWrite = true;
                 result.Create();
                 tex = new Texture2D(result.width, result.height, TextureFormat.RGBA32, false);
@@ -161,33 +161,33 @@ namespace Cibbi.ToonyStandard
             SetTextureWithDefault("RChannel", "rWidth", "rHeight", rTexture, rDefault);
             compute.SetFloat("rSelectedChannel", rChannel);
             compute.SetFloat("rGamma", rNeedsGamma);
-            compute.SetFloat("rReverse", rReverse?1:0);
+            compute.SetFloat("rReverse", rReverse ? 1 : 0);
 
             SetTextureWithDefault("GChannel", "gWidth", "gHeight", gTexture, gDefault);
             compute.SetFloat("gSelectedChannel", gChannel);
             compute.SetFloat("gGamma", gNeedsGamma);
-            compute.SetFloat("gReverse", gReverse?1:0);
+            compute.SetFloat("gReverse", gReverse ? 1 : 0);
 
             SetTextureWithDefault("BChannel", "bWidth", "bHeight", bTexture, bDefault);
             compute.SetFloat("bSelectedChannel", bChannel);
             compute.SetFloat("bGamma", bNeedsGamma);
-            compute.SetFloat("bReverse", bReverse?1:0);
-            
+            compute.SetFloat("bReverse", bReverse ? 1 : 0);
+
             SetTextureWithDefault("AChannel", "aWidth", "aHeight", aTexture, aDefault);
             compute.SetFloat("aSelectedChannel", aChannel);
             compute.SetFloat("aGamma", aNeedsGamma);
-            compute.SetFloat("aReverse", aReverse?1:0);
+            compute.SetFloat("aReverse", aReverse ? 1 : 0);
 
             compute.SetFloat("width", (float)resolution);
             compute.SetFloat("height", (float)resolution);
 
-            compute.Dispatch(kernel, (int)resolution/16,(int)resolution/16,1);
-                
+            compute.Dispatch(kernel, (int)resolution / 16, (int)resolution / 16, 1);
+
             RenderTexture.active = result;
             tex.ReadPixels(new Rect(0, 0, result.width, result.height), 0, 0);
             byte[] bytes;
             bytes = tex.EncodeToPNG();
-            
+
             System.IO.File.WriteAllBytes(path, bytes);
             path = path.Substring(path.LastIndexOf("Assets"));
             AssetDatabase.ImportAsset(path);
@@ -206,19 +206,19 @@ namespace Cibbi.ToonyStandard
         {
             GUILayout.FlexibleSpace();
             EditorGUILayout.BeginHorizontal("box");
-                EditorGUILayout.BeginVertical();
-                    EditorGUILayout.BeginHorizontal();
-                        EditorGUI.LabelField(GUILayoutUtility.GetRect(110,16), name, TSConstants.Styles.rightLabel);
-                    EditorGUILayout.EndHorizontal();
-                    channel = GUILayout.Toolbar(channel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
-                    EditorGUILayout.BeginHorizontal();
-                        GUILayout.Space(44);
-                        EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
-                        reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),reverse);
-                    EditorGUILayout.EndHorizontal();
-                    defaultTexture = (DefaultTexture) EditorGUILayout.EnumPopup(defaultTexture,GUILayout.Width(110));
-                EditorGUILayout.EndVertical();
-                texture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),texture,typeof(Texture2D),false);
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUI.LabelField(GUILayoutUtility.GetRect(110, 16), name, TSConstants.Styles.rightLabel);
+            EditorGUILayout.EndHorizontal();
+            channel = GUILayout.Toolbar(channel, new string[] { "R", "G", "B", "A" }, EditorStyles.toolbarButton);
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(44);
+            EditorGUI.LabelField(GUILayoutUtility.GetRect(50, 16), "Reverse");
+            reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16, 16), reverse);
+            EditorGUILayout.EndHorizontal();
+            defaultTexture = (DefaultTexture)EditorGUILayout.EnumPopup(defaultTexture, GUILayout.Width(110));
+            EditorGUILayout.EndVertical();
+            texture = (Texture2D)EditorGUI.ObjectField(GUILayoutUtility.GetRect(64, 64), texture, typeof(Texture2D), false);
             EditorGUILayout.EndHorizontal();
         }
         /// <summary>
@@ -232,21 +232,21 @@ namespace Cibbi.ToonyStandard
         private void DrawRight(string name, ref int channel, ref bool reverse, ref DefaultTexture defaultTexture, ref Texture2D texture)
         {
             EditorGUILayout.BeginHorizontal("box");
-                texture = (Texture2D) EditorGUI.ObjectField(GUILayoutUtility.GetRect(64,64),texture,typeof(Texture2D),false);
-                EditorGUILayout.BeginVertical();
-                    EditorGUILayout.BeginHorizontal();
-                        EditorGUI.LabelField(GUILayoutUtility.GetRect(110,16),name);
-                    EditorGUILayout.EndHorizontal();
-                    channel = GUILayout.Toolbar(channel,new string[]{"R","G","B","A"},EditorStyles.toolbarButton);
-                    EditorGUILayout.BeginHorizontal();
-                        GUILayout.Space(4);
-                        reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16,16),reverse);
-                        EditorGUI.LabelField(GUILayoutUtility.GetRect(50,16),"Reverse");
-                        GUILayout.Space(40);
-                    EditorGUILayout.EndHorizontal();
-                    defaultTexture = (DefaultTexture) EditorGUILayout.EnumPopup(defaultTexture, GUILayout.Width(110));
-                EditorGUILayout.EndVertical();
-            EditorGUILayout.EndHorizontal(); 
+            texture = (Texture2D)EditorGUI.ObjectField(GUILayoutUtility.GetRect(64, 64), texture, typeof(Texture2D), false);
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUI.LabelField(GUILayoutUtility.GetRect(110, 16), name);
+            EditorGUILayout.EndHorizontal();
+            channel = GUILayout.Toolbar(channel, new string[] { "R", "G", "B", "A" }, EditorStyles.toolbarButton);
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(4);
+            reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16, 16), reverse);
+            EditorGUI.LabelField(GUILayoutUtility.GetRect(50, 16), "Reverse");
+            GUILayout.Space(40);
+            EditorGUILayout.EndHorizontal();
+            defaultTexture = (DefaultTexture)EditorGUILayout.EnumPopup(defaultTexture, GUILayout.Width(110));
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
         }
 
@@ -254,35 +254,35 @@ namespace Cibbi.ToonyStandard
         {
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
-                DrawLeft(names[0], ref rChannel, ref rReverse, ref rDefault, ref rTexture);
-                DrawRight(names[1], ref gChannel, ref gReverse, ref gDefault, ref gTexture);
+            DrawLeft(names[0], ref rChannel, ref rReverse, ref rDefault, ref rTexture);
+            DrawRight(names[1], ref gChannel, ref gReverse, ref gDefault, ref gTexture);
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-                DrawLeft(names[2], ref bChannel, ref bReverse, ref bDefault, ref bTexture);
-                DrawRight(names[3], ref aChannel, ref aReverse, ref aDefault, ref aTexture);               
+            DrawLeft(names[2], ref bChannel, ref bReverse, ref bDefault, ref bTexture);
+            DrawRight(names[3], ref aChannel, ref aReverse, ref aDefault, ref aTexture);
             EditorGUILayout.EndHorizontal();
             //result = (RenderTexture) EditorGUILayout.ObjectField("result",result,typeof(RenderTexture),false);
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Resolution",GUILayout.Width(65));
-            resolution = (Resolution) EditorGUILayout.EnumPopup(resolution,GUILayout.Width(120));
+            EditorGUILayout.LabelField("Resolution", GUILayout.Width(65));
+            resolution = (Resolution)EditorGUILayout.EnumPopup(resolution, GUILayout.Width(120));
             GUILayout.FlexibleSpace();
-            if(drawInternalConfirmButton)
+            if (drawInternalConfirmButton)
             {
-                if(GUILayout.Button("Pack textures",GUILayout.Width(150)))
+                if (GUILayout.Button("Pack textures", GUILayout.Width(150)))
                 {
                     PackTexture(defaultPath);
                 }
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
-        
+
         }
 
         private void SetTextureWithDefault(string channelName, string widthName, string heightName, Texture2D texture, DefaultTexture defaultTex)
         {
-            if(texture == null)
+            if (texture == null)
             {
-                if(defaultTex == DefaultTexture.DefaultWhite)
+                if (defaultTex == DefaultTexture.DefaultWhite)
                 {
                     compute.SetTexture(kernel, channelName, Texture2D.whiteTexture);
                     compute.SetFloat(widthName, Texture2D.whiteTexture.width);
@@ -299,17 +299,17 @@ namespace Cibbi.ToonyStandard
             {
                 compute.SetTexture(kernel, channelName, texture);
                 compute.SetFloat(widthName, texture.width);
-                    compute.SetFloat(heightName, texture.height);
+                compute.SetFloat(heightName, texture.height);
             }
         }
 
         private float NeedsGamma(Texture2D texture)
         {
-            string assetPath = AssetDatabase.GetAssetPath( texture );
-                var tImporter = AssetImporter.GetAtPath( assetPath ) as TextureImporter;
-                if ( tImporter != null )
-                {
-                if(tImporter.sRGBTexture)
+            string assetPath = AssetDatabase.GetAssetPath(texture);
+            var tImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (tImporter != null)
+            {
+                if (tImporter.sRGBTexture)
                 {
                     return 1;
                 }
@@ -317,8 +317,8 @@ namespace Cibbi.ToonyStandard
                 {
                     return 0;
                 }
-                }
-                return 0;
+            }
+            return 0;
         }
     }
 }

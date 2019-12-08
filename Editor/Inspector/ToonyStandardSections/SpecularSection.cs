@@ -53,7 +53,7 @@ namespace Cibbi.ToonyStandard
             public static GUIContent GradientEditorButton = new GUIContent("Open gradient editor", "Open the gradient editor for creating a custom toon ramp");
             public static void ToggleGradientEditorToggle(bool isOpen)
             {
-                if(isOpen)
+                if (isOpen)
                 {
                     Styles.GradientEditorButton.text = "Close gradient editor";
                     Styles.GradientEditorButton.tooltip = "Close the gradient editor";
@@ -162,12 +162,12 @@ namespace Cibbi.ToonyStandard
             TSFunctions.DrawSelector(Enum.GetNames(typeof(Workflow)), _workflow, Styles.workflow, materialEditor);
             if ((Workflow)_workflow.floatValue == Workflow.Metallic)
             {
-                if(level==InspectorLevel.Normal)
-                {   
-                    Rect r = TSFunctions.GetControlRectForSingleLine(); 
+                if (level == InspectorLevel.Normal)
+                {
+                    Rect r = TSFunctions.GetControlRectForSingleLine();
                     EditorGUI.BeginChangeCheck();
-                    materialEditor.TexturePropertyMiniThumbnail(r,_MetallicMap, Styles.metallic.text,Styles.metallic.tooltip);
-                    if(EditorGUI.EndChangeCheck())
+                    materialEditor.TexturePropertyMiniThumbnail(r, _MetallicMap, Styles.metallic.text, Styles.metallic.tooltip);
+                    if (EditorGUI.EndChangeCheck())
                     {
                         inspector.RegenerateMSOT();
                     }
@@ -184,12 +184,12 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertySingleLine(Styles.specular, _MetallicMap);
             }
 
-            if(level==InspectorLevel.Normal)
-            {   
-                Rect r = TSFunctions.GetControlRectForSingleLine(); 
+            if (level == InspectorLevel.Normal)
+            {
+                Rect r = TSFunctions.GetControlRectForSingleLine();
                 EditorGUI.BeginChangeCheck();
-                materialEditor.TexturePropertyMiniThumbnail(r,_GlossinessMap, Styles.smoothness.text, Styles.smoothness.tooltip);
-                if(EditorGUI.EndChangeCheck())
+                materialEditor.TexturePropertyMiniThumbnail(r, _GlossinessMap, Styles.smoothness.text, Styles.smoothness.tooltip);
+                if (EditorGUI.EndChangeCheck())
                 {
                     inspector.RegenerateMSOT();
                 }
@@ -223,9 +223,9 @@ namespace Cibbi.ToonyStandard
             }
             else if ((IndirectSpecular)_indirectSpecular.floatValue == IndirectSpecular.Color)
             {
-                TSFunctions.ProperColorBox(ref _IndirectColor,Styles.indirectColor);
+                TSFunctions.ProperColorBox(ref _IndirectColor, Styles.indirectColor);
             }
-            if((IndirectSpecular)_indirectSpecular.floatValue != IndirectSpecular.None)
+            if ((IndirectSpecular)_indirectSpecular.floatValue != IndirectSpecular.None)
             {
                 TSFunctions.ProperToggle(ref _IndirectOverride, Styles.indirectOverride);
             }
@@ -234,43 +234,43 @@ namespace Cibbi.ToonyStandard
                 _IndirectOverride.floatValue = 0;
             }
 
-            isToonyHighlightsEnabled=TSFunctions.ProperToggle(ref _ToonyHighlights,Styles.toonyHighlight);
+            isToonyHighlightsEnabled = TSFunctions.ProperToggle(ref _ToonyHighlights, Styles.toonyHighlight);
 
             if (isToonyHighlightsEnabled)
             {
                 EditorGUILayout.BeginHorizontal();
                 materialEditor.TexturePropertySingleLine(Styles.highlightRamp, _HighlightRamp, _HighlightRampColor);
-                
-                if(GUILayout.Button(Styles.GradientEditorButton))
+
+                if (GUILayout.Button(Styles.GradientEditorButton))
                 {
                     EditorGUILayout.EndHorizontal();
-                    isGradientEditorOpen=!isGradientEditorOpen;
+                    isGradientEditorOpen = !isGradientEditorOpen;
                     Styles.ToggleGradientEditorToggle(isGradientEditorOpen);
                 }
                 else
                 {
                     EditorGUILayout.EndHorizontal();
                 }
-                if(isGradientEditorOpen)
+                if (isGradientEditorOpen)
                 {
                     EditorGUILayout.BeginVertical("box");
-                    if(needToStorePreviousRamp)
+                    if (needToStorePreviousRamp)
                     {
                         needToStorePreviousRamp = false;
                         PreviousRamp = _HighlightRamp.textureValue;
                     }
-                    if(_HighlightRamp.textureValue != (Texture)gradientEditor.GetGradientTexture())
+                    if (_HighlightRamp.textureValue != (Texture)gradientEditor.GetGradientTexture())
                     {
                         _HighlightRamp.textureValue = (Texture)gradientEditor.GetGradientTexture();
                     }
-                    if(gradientEditor.DrawGUI())
+                    if (gradientEditor.DrawGUI())
                     {
                         materialEditor.Repaint();
                     }
-                    if(GUILayout.Button("Save and apply"))
+                    if (GUILayout.Button("Save and apply"))
                     {
-                        string path = inspector.GetTextureDestinationPath((Material)_HighlightRamp.targets[0],"_highlight_ramp.png");
-                        _HighlightRamp.textureValue = (Texture) gradientEditor.SaveGradient(path);
+                        string path = inspector.GetTextureDestinationPath((Material)_HighlightRamp.targets[0], "_highlight_ramp.png");
+                        _HighlightRamp.textureValue = (Texture)gradientEditor.SaveGradient(path);
                         needToStorePreviousRamp = true;
                         PreviousRamp = null;
                         isGradientEditorOpen = false;
@@ -279,14 +279,14 @@ namespace Cibbi.ToonyStandard
                 }
                 else
                 {
-                    if(PreviousRamp != null)
+                    if (PreviousRamp != null)
                     {
                         _HighlightRamp.textureValue = PreviousRamp;
                         PreviousRamp = null;
                         needToStorePreviousRamp = true;
                     }
                 }
-                
+
                 materialEditor.ShaderProperty(_HighlightRampOffset, Styles.hightlightRampOffset);
                 materialEditor.ShaderProperty(_HighlightIntensity, Styles.highlightIntensity);
             }
@@ -302,10 +302,10 @@ namespace Cibbi.ToonyStandard
         public override void EndBoxCheck(bool isOpen, bool isEnabled)
         {
             _SpecularBox.floatValue = TSFunctions.floatBoolean(isOpen);
-           
+
             if (!isEnabled)
-            {   
-                if(!_SpecularOn.hasMixedValue)
+            {
+                if (!_SpecularOn.hasMixedValue)
                 {
                     foreach (Material mat in _SpecularOn.targets)
                     {
@@ -381,7 +381,7 @@ namespace Cibbi.ToonyStandard
 
         public void ResetRampTexture()
         {
-             if(PreviousRamp != null)
+            if (PreviousRamp != null)
             {
                 _HighlightRamp.textureValue = PreviousRamp;
                 PreviousRamp = null;
