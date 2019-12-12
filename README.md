@@ -2,31 +2,13 @@
 <img src="https://raw.githubusercontent.com/Cibbi/Toony-standard/master/Editor/Resources/ToonyStandardLogo.png">
 </p>
 
-Welcome to Toony Standard, a toon shader with some standard elements built mainly for VRChat!
+Welcome to Toony Standard Lavender edition, a A conversion of Toony standard made for Lavender!
 
-## Shader features
-* Toon shading with custom ramps.
-* Fake light fallbacks for VRChat worlds without a directional light.
-* Rim light and emissive rim light.
-* Support for both metallic and specular workflows, with the possibility to substitute the specular probe with your own matcap or cubemap.
-* Anisotropic highlights.
-* Detail mapping.
+This version of the shader contains all the feature of the main branch of toony standard, but with minor fixes to take advantage of unity 2019!
 
-## Editor features
-
-* Fully custom inspector made to make your life as easy as possible.
-* Different levels of inspector with different feature sets based on the end user experience with unity.
-* Different styles for your inspector.
-* Auto updater.
-
-(to modify some of these options you can go to the settings window on "window/Toony standard/setting")
-
-
-### Warning
-Even if directly downloading the zip should work fine, i suggest you to download the shader from the [release page](https://github.com/Cibbi/Toony-standard/releases), this is to be sure to have it installed in an easy to find path, and also cause i tend to add some starting matcap textures and toon ramps into the unity package that are not available from the github auto generated zip.
+Due to the lack of an official release page for this particular version of the shader (for now) you can download it with the "Clone or Download" button above.
 
 
 ### Links
-* Download page: https://github.com/Cibbi/Toony-standard/releases
 * Official wiki: https://github.com/Cibbi/Toony-standard/wiki
 * Patreon page: https://www.patreon.com/Cibbi
