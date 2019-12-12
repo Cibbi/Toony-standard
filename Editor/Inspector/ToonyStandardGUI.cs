@@ -57,17 +57,6 @@ namespace Cibbi.ToonyStandard
         /// <param name="properties">Array of materialProperties provided by the custom inspector</param>
         public void Start(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
-            //Temporary code for transitioning between 2017 to 2018
-            if (FindProperty("_NeedsFix", properties).floatValue == 0.5)
-            {
-#if UNITY_2018_1_OR_NEWER
-                FindProperty("_NeedsFix", properties).floatValue = 0;
-#else
-                    FindProperty("_NeedsFix", properties).floatValue=1;
-#endif
-            }
-
-
             EditorGUIUtility.labelWidth = 0f;
             //material = materialEditor.target as Material;
 
@@ -158,30 +147,6 @@ namespace Cibbi.ToonyStandard
             }
             TSFunctions.DrawHeader(EditorGUIUtility.currentViewWidth, 10);
 
-            //Temporary code for converting back HDR colors
-#if UNITY_2018_1_OR_NEWER
-            if (FindProperty("_NeedsFix", properties).floatValue == 1)
-            {
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Convert HDR colors back to 2017 look"))
-                {
-                    foreach (MaterialProperty m in properties)
-                    {
-                        if (m.flags == MaterialProperty.PropFlags.HDR)
-                        {
-                            m.colorValue = m.colorValue.linear;
-                        }
-                    }
-                    FindProperty("_NeedsFix", properties).floatValue = 0;
-                }
-                if (GUILayout.Button("Keep current colors"))
-                {
-                    FindProperty("_NeedsFix", properties).floatValue = 0;
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-#endif
-
             //if a keyword is used to apply the effects on the shader caused by enabling/disabling a section, it needs to be set every update
             foreach (Material mat in _SpecularOn.targets)
             {
@@ -240,7 +205,6 @@ namespace Cibbi.ToonyStandard
                 Color max = new Color(0, 0, 0, 1);
                 if (ramp != null)
                 {
-#if UNITY_2018_1_OR_NEWER
                     if (!ramp.isReadable)
                     {
                         SetTextureImporterFormat(ramp, true);
@@ -254,33 +218,6 @@ namespace Cibbi.ToonyStandard
                         if (max.g < c.g) { max.g = c.g; }
                         if (max.b < c.b) { max.b = c.b; }
                     }
-#else
-                    try
-                    {
-                        foreach (Color c in ramp.GetPixels())
-                        {
-                            if(min.r > c.r) {min.r = c.r;}
-                            if(min.g > c.g) {min.g = c.g;}
-                            if(min.b > c.b) {min.b = c.b;}
-                            if(max.r < c.r) {max.r = c.r;}
-                            if(max.g < c.g) {max.g = c.g;}
-                            if(max.b < c.b) {max.b = c.b;}                           
-                        }
-                    }
-                    catch(UnityException)
-                    {
-                        SetTextureImporterFormat(ramp, true);
-                        foreach (Color c in ramp.GetPixels())
-                        {
-                            if(min.r > c.r) {min.r = c.r;}
-                            if(min.g > c.g) {min.g = c.g;}
-                            if(min.b > c.b) {min.b = c.b;}
-                            if(max.r < c.r) {max.r = c.r;}
-                            if(max.g < c.g) {max.g = c.g;}
-                            if(max.b < c.b) {max.b = c.b;}                         
-                        }
-                    }
-#endif
                 }
                 else
                 {

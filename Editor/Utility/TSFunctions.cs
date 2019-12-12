@@ -58,14 +58,14 @@ namespace Cibbi.ToonyStandard
         /// <param name="padding">Verical padding</param>
         public static void DrawLine(Color color, int thickness = 2, int padding = 10)
         {
-            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding+thickness));
-            float lineCenter=r.x+(r.width/2);
-            r.x=0;
-            r.width=lineCenter*2;
+            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
+            float lineCenter = r.x + (r.width / 2);
+            r.x = 0;
+            r.width = lineCenter * 2;
             r.height = thickness;
-            r.y+=padding/2;
-            r.x-=2;
-            r.width +=6;
+            r.y += padding / 2;
+            r.x -= 2;
+            r.width += 6;
             EditorGUI.DrawRect(r, color);
         }
 
@@ -102,7 +102,7 @@ namespace Cibbi.ToonyStandard
         /// <param name="label">Label of the property</param>
         public static bool ProperToggle(ref MaterialProperty boolProperty, GUIContent label)
         {
-            bool isToggleEnabled = boolProperty.floatValue>0;
+            bool isToggleEnabled = boolProperty.floatValue > 0;
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = boolProperty.hasMixedValue;
             isToggleEnabled = EditorGUILayout.Toggle(label, isToggleEnabled);
@@ -112,7 +112,7 @@ namespace Cibbi.ToonyStandard
                 boolProperty.floatValue = floatBoolean(isToggleEnabled);
             }
             return isToggleEnabled;
-            
+
         }
 
         /// <summary>
@@ -132,11 +132,11 @@ namespace Cibbi.ToonyStandard
             Rect colorPropertyRect = EditorGUILayout.GetControlRect();
             colorPropertyRect.width = EditorGUIUtility.labelWidth + 50.0f;
             EditorGUI.showMixedValue = colorProperty.hasMixedValue;
-            #if UNITY_2018_1_OR_NEWER
-                boxColor = EditorGUI.ColorField(colorPropertyRect, label, boxColor, true, true, hdr);
-            #else
+#if UNITY_2018_1_OR_NEWER
+            boxColor = EditorGUI.ColorField(colorPropertyRect, label, boxColor, true, true, hdr);
+#else
                 boxColor = EditorGUI.ColorField(colorPropertyRect, label, boxColor, true, true, hdr, new ColorPickerHDRConfig(0, 65536, 0, 3));
-            #endif
+#endif
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
@@ -155,13 +155,13 @@ namespace Cibbi.ToonyStandard
             float value = sliderProperty.floatValue;
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = sliderProperty.hasMixedValue;
-            if(label!=null)
+            if (label != null)
             {
-                value = EditorGUI.Slider(r, label,value,0,1);
+                value = EditorGUI.Slider(r, label, value, 0, 1);
             }
             else
             {
-                value = EditorGUI.Slider(r, value,0,1);
+                value = EditorGUI.Slider(r, value, 0, 1);
             }
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
@@ -175,7 +175,7 @@ namespace Cibbi.ToonyStandard
         /// </summary>
         /// <param name="r">Rect of the area in which draw the slider property</param>
         /// <param name="sliderProperty">Material property of the slider</param>
-        public static void ProperSlider(Rect r, ref MaterialProperty sliderProperty) 
+        public static void ProperSlider(Rect r, ref MaterialProperty sliderProperty)
         {
             ProperSlider(r, ref sliderProperty, null);
         }
@@ -196,63 +196,63 @@ namespace Cibbi.ToonyStandard
         /// <param name="windowWidth">The width of the current window</param>
         /// <param name="padding">Vertical padding</param>
         public static void DrawHeader(float windowWidth, int padding)
-		{
-			Texture2D icon=TSConstants.Logo;
-			GUILayout.Space(padding);
-			GUILayout.BeginHorizontal();
-				GUILayout.FlexibleSpace();
-                windowWidth-=40;
-                int width;
-                int height;
-                if(windowWidth<icon.width)
-                {
-                    width=(int)windowWidth;
-                    height=icon.height*width/icon.width;
-                }
-                else
-                {
-                    width=icon.width;
-                    height=icon.height;
-                }
-				GUILayout.Label(icon, GUILayout.Width(width),GUILayout.Height(height));
-				GUILayout.FlexibleSpace();
-			GUILayout.EndHorizontal();
-			GUILayout.Space(padding);
-		}
+        {
+            Texture2D icon = TSConstants.Logo;
+            GUILayout.Space(padding);
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            windowWidth -= 40;
+            int width;
+            int height;
+            if (windowWidth < icon.width)
+            {
+                width = (int)windowWidth;
+                height = icon.height * width / icon.width;
+            }
+            else
+            {
+                width = icon.width;
+                height = icon.height;
+            }
+            GUILayout.Label(icon, GUILayout.Width(width), GUILayout.Height(height));
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.Space(padding);
+        }
 
         /// <summary>
         /// Draw the default footer of the various windows
         /// </summary>
         public static void DrawFooter()
-		{
-			GUILayout.FlexibleSpace();
-			GUILayout.BeginHorizontal();
-				GUILayout.BeginHorizontal();
-					if (GUILayout.Button(new GUIContent(TSConstants.GithubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
-					{
-						Application.OpenURL("https://github.com/Cibbi/Toony-standard");
-					}
-					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-                    if (GUILayout.Button(new GUIContent(TSConstants.DiscordIcon, "Join our discord!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
-					{
-						Application.OpenURL("https://discord.gg/THPSWpP");
-					}
-					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-                    if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patron!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
-					{
-						Application.OpenURL("https://www.patreon.com/Cibbi");
-					}
-					EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-				GUILayout.EndHorizontal();
-				GUILayout.FlexibleSpace();
-				GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);
-				aboutLabelStyle.alignment = TextAnchor.LowerRight;
-				aboutLabelStyle.fontStyle = FontStyle.Italic;
-				aboutLabelStyle.hover.textColor = Color.magenta;
-				GUILayout.Label(TSConstants.Version, aboutLabelStyle, GUILayout.Height(26));
-			GUILayout.EndHorizontal();
+        {
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(new GUIContent(TSConstants.GithubIcon, "Check the official GitHub!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                Application.OpenURL("https://github.com/Cibbi/Toony-standard");
+            }
+            EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+            if (GUILayout.Button(new GUIContent(TSConstants.DiscordIcon, "Join our discord!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                Application.OpenURL("https://discord.gg/THPSWpP");
+            }
+            EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+            if (GUILayout.Button(new GUIContent(TSConstants.PatreonIcon, "Want to gift me pizza every month? Become a patron!"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                Application.OpenURL("https://www.patreon.com/Cibbi");
+            }
+            EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);
+            aboutLabelStyle.alignment = TextAnchor.LowerRight;
+            aboutLabelStyle.fontStyle = FontStyle.Italic;
+            aboutLabelStyle.hover.textColor = Color.magenta;
+            GUILayout.Label(TSConstants.Version, aboutLabelStyle, GUILayout.Height(26));
+            GUILayout.EndHorizontal();
 
-		}
+        }
         /// <summary>
         /// Get the currently open window in the Project window or the root if the former is not available
         /// </summary>
@@ -260,11 +260,11 @@ namespace Cibbi.ToonyStandard
         public static string GetSelectedPathOrFallback()
         {
             string path = "Assets";
-            
+
             foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
             {
                 path = AssetDatabase.GetAssetPath(obj);
-                if ( !string.IsNullOrEmpty(path) && File.Exists(path) ) 
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
                 {
                     path = Path.GetDirectoryName(path);
                     break;

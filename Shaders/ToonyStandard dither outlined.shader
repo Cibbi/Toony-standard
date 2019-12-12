@@ -104,8 +104,6 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 		[HideInInspector] _SSSBox("__SSSBox", Float) = 0.0
 		[HideInInspector] _StencilBox("__StencilBox", Float) = 0.0
 		[HideInInspector] _OutlineBox("__OutlineBox", Float) = 0.0
-
-		[HideInInspector] _NeedsFix("__NeedsFix", Float) = 0.5
 	}
 	SubShader
 	{
@@ -144,11 +142,11 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
             #endif
 
             #define _DITHER_ON
-			#pragma shader_feature _SPECGLOSSMAP
-			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
-			#pragma shader_feature _DETAIL_MULX2
-			#pragma shader_feature _EMISSION
+			#pragma shader_feature_local _SPECGLOSSMAP
+			#pragma shader_feature_local _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
+			#pragma shader_feature_local _SPECULARHIGHLIGHTS_OFF
+			#pragma shader_feature_local _DETAIL_MULX2
+			#pragma shader_feature_local _EMISSION
 			#include "UnityCG.cginc"
 			#include "UnityLightingCommon.cginc"
 			#include "UnityStandardUtils.cginc"
@@ -180,10 +178,10 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 			#pragma multi_compile_fog
 
             #define _DITHER_ON
-			#pragma shader_feature _SPECGLOSSMAP
-			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
-			#pragma shader_feature _DETAIL_MULX2
+			#pragma shader_feature_local _SPECGLOSSMAP
+			#pragma shader_feature_local _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
+			#pragma shader_feature_local _SPECULARHIGHLIGHTS_OFF
+			#pragma shader_feature_local _DETAIL_MULX2
 			#include "UnityCG.cginc"
 			#include "UnityLightingCommon.cginc"
 			#include "UnityStandardUtils.cginc"
@@ -234,11 +232,11 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 			#pragma vertex MetaVertexFunction
 			#pragma fragment MetaFragmentFunction
 
-			#pragma shader_feature _SPECGLOSSMAP
-			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
-			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
-			#pragma shader_feature _DETAIL_MULX2
-			#pragma shader_feature _EMISSION
+			#pragma shader_feature_local _SPECGLOSSMAP
+			#pragma shader_feature_local _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
+			#pragma shader_feature_local _SPECULARHIGHLIGHTS_OFF
+			#pragma shader_feature_local _DETAIL_MULX2
+			#pragma shader_feature_local _EMISSION
 
 			#include "../CGIncludes/TSMetaVertFrag.cginc" 
 

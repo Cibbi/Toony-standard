@@ -212,15 +212,15 @@ namespace Cibbi.ToonyStandard
                 EditorPrefs.SetInt(TSConstants.TSEPInspectorLevel, (int)inspectorLevel);
             }
 
-            EditorGUI.BeginChangeCheck();
-            updater.updateStream = (UpdateStream)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.UpdateStream, updater.updateStream);
+            /*EditorGUI.BeginChangeCheck();
+            //updater.updateStream = (UpdateStream)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.UpdateStream, updater.updateStream);
             if (EditorGUI.EndChangeCheck())
             {
                 LocalVersionJSON local = JsonUtility.FromJson<LocalVersionJSON>(File.ReadAllText(TSConstants.LocalJSONPath));
                 local.beta = updater.updateStream == UpdateStream.Beta;
                 File.WriteAllText(TSConstants.LocalJSONPath, JsonUtility.ToJson(local));
                 updater.Reset();
-            }
+            }*/
 
             EditorGUI.BeginChangeCheck();
             sectionStyle = (SectionStyle)EditorGUILayout.EnumPopup(TSConstants.TSWindowLabels.SectionStyle, sectionStyle);

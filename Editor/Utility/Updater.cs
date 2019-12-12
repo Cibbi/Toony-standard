@@ -90,7 +90,7 @@ namespace Cibbi.ToonyStandard
             }
             else
             {
-                updateStream = UpdateStream.Release;
+                updateStream = UpdateStream.Beta;
             }
         }
 
@@ -145,7 +145,7 @@ namespace Cibbi.ToonyStandard
                 case UpdaterState.Ready:
                     if (updateStream == UpdateStream.Beta)
                     {
-                        EditorGUILayout.LabelField("New beta update found");
+                        EditorGUILayout.LabelField("New update found");
                         EditorGUILayout.LabelField("Released at: " + DateTime.Parse(githubBetaJSON.commit.committer.date).ToString());
                         EditorGUILayout.BeginVertical("box");
                         MainAreaScrollPos = EditorGUILayout.BeginScrollView(MainAreaScrollPos, GUILayout.MinHeight(100), GUILayout.MaxHeight(400));
@@ -253,7 +253,7 @@ namespace Cibbi.ToonyStandard
             // Creates a web request to the github api dependent to the update stream currently selected
             if (updateStream == UpdateStream.Beta)
             {
-                request = new UnityWebRequest("https://api.github.com/repos/Cibbi/Toony-standard/commits/master");
+                request = new UnityWebRequest("https://api.github.com/repos/Cibbi/Toony-standard/commits/Lavender");
             }
             else
             {
