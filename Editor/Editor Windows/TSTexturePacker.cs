@@ -6,13 +6,13 @@ namespace Cibbi.ToonyStandard
     public class TSTexturePacker : EditorWindow
     {
 
-        [MenuItem("Window/Toony Standard/Tools/Texture Packer")]
+        [MenuItem("Tools/Cibbi/TS Texture packer")]
         private static TSTexturePacker CreateBaseWindow()
         {
             TSTexturePacker window = EditorWindow.GetWindow<TSTexturePacker>();
-            window.titleContent = new GUIContent("Texture packer");
-            window.minSize = new Vector2(400, 210);
-            window.maxSize = new Vector2(400, 210);
+            window.titleContent = new GUIContent("TS Texture Packer");
+            window.minSize = new Vector2(400, 230);
+            window.maxSize = new Vector2(400, 230);
             return window;
         }
 

@@ -6,13 +6,13 @@ namespace Cibbi.ToonyStandard
     public class TSGradientEditor : EditorWindow
     {
 
-        [MenuItem("Window/Toony Standard/Tools/Gradient Editor")]
+        [MenuItem("Tools/Cibbi/TS Gradient Editor")]
         private static TSGradientEditor CreateBaseWindow()
         {
             TSGradientEditor window = EditorWindow.GetWindow<TSGradientEditor>();
-            window.titleContent = new GUIContent("Gradient editor");
-            window.minSize = new Vector2(400, 160);
-            window.maxSize = new Vector2(400, 160);
+            window.titleContent = new GUIContent("TS Gradient Editor");
+            window.minSize = new Vector2(400, 190);
+            window.maxSize = new Vector2(400, 190);
             return window;
         }
 
