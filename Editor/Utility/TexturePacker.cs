@@ -211,7 +211,7 @@ namespace Cibbi.ToonyStandard
             EditorGUI.LabelField(GUILayoutUtility.GetRect(110, 16), name, TSConstants.Styles.rightLabel);
             EditorGUILayout.EndHorizontal();
             channel = GUILayout.Toolbar(channel, new string[] { "R", "G", "B", "A" }, EditorStyles.toolbarButton);
-            EditorGUILayout.Space(2);
+            GUILayout.Space(2);
             EditorGUILayout.BeginHorizontal();
             GUILayout.Space(44);
             EditorGUI.LabelField(GUILayoutUtility.GetRect(50, 16), "Reverse");
@@ -219,7 +219,7 @@ namespace Cibbi.ToonyStandard
             EditorGUILayout.EndHorizontal();
             defaultTexture = (DefaultTexture)EditorGUILayout.EnumPopup(defaultTexture, GUILayout.Width(110));
             EditorGUILayout.EndVertical();
-            EditorGUILayout.Space(4);
+            GUILayout.Space(4);
             texture = (Texture2D)EditorGUI.ObjectField(GUILayoutUtility.GetRect(72, 72), texture, typeof(Texture2D), false);
             EditorGUILayout.EndHorizontal();
         }
@@ -235,13 +235,13 @@ namespace Cibbi.ToonyStandard
         {
             EditorGUILayout.BeginHorizontal("box");
             texture = (Texture2D)EditorGUI.ObjectField(GUILayoutUtility.GetRect(72, 72), texture, typeof(Texture2D), false);
-            EditorGUILayout.Space(4);
+            GUILayout.Space(4);
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
             EditorGUI.LabelField(GUILayoutUtility.GetRect(110, 16), name);
             EditorGUILayout.EndHorizontal();
             channel = GUILayout.Toolbar(channel, new string[] { "R", "G", "B", "A" }, EditorStyles.toolbarButton);
-            EditorGUILayout.Space(2);
+            GUILayout.Space(2);
             EditorGUILayout.BeginHorizontal();
             GUILayout.Space(4);
             reverse = EditorGUI.Toggle(GUILayoutUtility.GetRect(16, 16), reverse);
