@@ -243,7 +243,7 @@ namespace Cibbi.ToonyStandard
 #if UNITY_2018_1_OR_NEWER
                     if (!ramp.isReadable)
                     {
-                        SetTextureImporterFormat(ramp, true);
+                        ramp = TSFunctions.SetTextureImporterFormat(ramp, true);
                     }
                     foreach (Color c in ramp.GetPixels())
                     {
@@ -269,7 +269,7 @@ namespace Cibbi.ToonyStandard
                     }
                     catch(UnityException)
                     {
-                        SetTextureImporterFormat(ramp, true);
+                        ramp = TSFunctions.SetTextureImporterFormat(ramp, true);
                         foreach (Color c in ramp.GetPixels())
                         {
                             if(min.r > c.r) {min.r = c.r;}
@@ -395,28 +395,6 @@ namespace Cibbi.ToonyStandard
             float g = (value.g - oldMin.g) / (oldMax.g - oldMin.g) * (newMax.g - newMin.g) + newMin.g;
             float b = (value.b - oldMin.b) / (oldMax.b - oldMin.b) * (newMax.b - newMin.b) + newMin.b;
             return new Color(r, g, b, 1);
-        }
-
-        /// <summary>
-        /// Set the texture to readable
-        /// </summary>
-        /// <param name="texture">Texture</param>
-        /// <param name="isReadable">Does the texture need to be readable</param>
-        public static void SetTextureImporterFormat(Texture2D texture, bool isReadable)
-        {
-            if (null == texture) return;
-
-            string assetPath = AssetDatabase.GetAssetPath(texture);
-            var tImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
-            if (tImporter != null)
-            {
-                tImporter.textureType = TextureImporterType.Default;
-
-                tImporter.isReadable = isReadable;
-
-                AssetDatabase.ImportAsset(assetPath);
-                AssetDatabase.Refresh();
-            }
         }
 
         /// <summary>

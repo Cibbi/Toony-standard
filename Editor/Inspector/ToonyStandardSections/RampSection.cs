@@ -100,6 +100,7 @@ namespace Cibbi.ToonyStandard
                 if (needToStorePreviousRamp)
                 {
                     needToStorePreviousRamp = false;
+                    gradientEditor.TranslateTextureToGradient((Texture2D)_Ramp.textureValue);
                     PreviousRamp = _Ramp.textureValue;
                 }
                 if (_Ramp.textureValue != (Texture)gradientEditor.GetGradientTexture())
