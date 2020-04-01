@@ -32,11 +32,14 @@ inline half3 FresnelLerp (half3 F0, half3 F90, half cosA)
 
 float ClampRoughness(float roughness)
 {
-    #if defined(_ANISOTROPIC_SPECULAR)
+    if (_SpMode == 1)
+    {
         return roughness;
-    #else
+    }
+    else
+    {
         return max(roughness, 0.002);
-    #endif
+    }
 }
 
 float sqr(float x) { return x*x; }
@@ -240,6 +243,8 @@ float3 RampDotLVertLight(float3 normal, float3 worldPos, RampData rampData, floa
     NdotL =  NdotL * corr;
     //attenuation
     float4 atten = 1.0 / (1.0 + lengthSq * unity_4LightAtten0);
+    //float4 atten2 = saturate(1 - (lengthSq * unity_4LightAtten0 / 25));
+    //atten = min(atten, atten2 * atten2);
     //ramp calculation for all 4 vertex lights
     float offset = rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
     //Calculating ramp uvs based on offset
@@ -378,7 +383,7 @@ float3 DirectFakeSpecular(float3 fakeHighlights,float LdotH, float toonyHighligh
 // Anisotropic specular calculation
 float3 DirectAnisotropicSpecular(DirectionData dir, BaseDots dots, float anisotropy, float toonyHighlights, RampData highlightRamp, float metallic, float highlightPattern, float4 ramp, float3 specColor, float roughness)
 {
-    #if defined(_ANISOTROPIC_SPECULAR) && !defined (_SPECULARHIGHLIGHTS_OFF)
+    #if !defined (_SPECULARHIGHLIGHTS_OFF)
         //Anisotropic specific dot products
         float TdotH = dot(dir.tangentMap, dir.halfD);
         float TdotL = dot(dir.tangentMap, dir.light);

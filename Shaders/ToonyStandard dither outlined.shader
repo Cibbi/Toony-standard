@@ -145,7 +145,6 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 
             #define _DITHER_ON
 			#pragma shader_feature _SPECGLOSSMAP
-			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION
@@ -156,8 +155,6 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 
 			//#include "UnityStandardConfig.cginc"
 
-			#include "../CGIncludes/TSDataStructures.cginc"
-			#include "../CGIncludes/TSFunctions.cginc"
 			#include "../CGIncludes/TSVertFrag.cginc"
 			
 			ENDCG
@@ -181,7 +178,6 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 
             #define _DITHER_ON
 			#pragma shader_feature _SPECGLOSSMAP
-			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
 			#include "UnityCG.cginc"
@@ -189,9 +185,6 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 			#include "UnityStandardUtils.cginc"
 			#include "AutoLight.cginc"
 
-			//#include "UnityStandardConfig.cginc"
-			#include "../CGIncludes/TSDataStructures.cginc"
-			#include "../CGIncludes/TSFunctions.cginc"
 			#include "../CGIncludes/TSVertFrag.cginc"
 			
 			ENDCG
@@ -235,7 +228,6 @@ Shader "Hidden/Cibbis shaders/toony standard/DitherOutlined"
 			#pragma fragment MetaFragmentFunction
 
 			#pragma shader_feature _SPECGLOSSMAP
-			#pragma shader_feature _ _ANISOTROPIC_SPECULAR _FAKE_SPECULAR
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
 			#pragma shader_feature _EMISSION

@@ -20,7 +20,7 @@ _RimIntensity, _RimStrength, _RimSharpness, _Metallic, _Glossiness, _Anisotropy,
 _FakeHighlightIntensity, _HighlightRampOffset, _HighlightIntensity, _DetailIntensity,
 _SSDistortion, _SSPower, _SSScale;
 float _BumpScale, _DetailBumpScale;
-float _RampOn, _RimLightOn, _SSSOn, _EmissiveRim, _IndirectSpecular, _IndirectOverride, _ToonyHighlights;
+float _RampOn, _RimLightOn, _SSSOn, _EmissiveRim, _IndirectSpecular, _IndirectOverride, _ToonyHighlights, _SpMode;
 float4 _MainRampMin, _MainRampMax;
 
 sampler2D _Ramp, _HighlightRamp;
@@ -32,7 +32,8 @@ sampler2D _FakeHighlights;
 #if defined(_DITHER_ON)
 	sampler3D _DitherMaskLOD;
 #endif
-
+#include "TSDataStructures.cginc"
+#include "TSFunctions.cginc"
 #include "TSBRDF.cginc"
 
 FragmentData VertexFunction (VertexData v)
@@ -114,25 +115,28 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 		#endif
 		float roughness = 1-(msot.g * _Glossiness);
 
-		#if defined(_ANISOTROPIC_SPECULAR)
+		float anisotropy = 0;
+		float3 tangentMap = 0;
+		if (_SpMode == 1)
+		{
 			float3 tangentTS = UNITY_SAMPLE_TEX2D_SAMPLER(_TangentMap, _MainTex, i.uv);
 			
-			float anisotropy = (UNITY_SAMPLE_TEX2D_SAMPLER(_AnisotropyMap, _MainTex, i.uv) * _Anisotropy).r;
-			float3 tangentMap = GetModifiedTangent(tangentTS, WorldTangent);
-		#endif
+			anisotropy = (UNITY_SAMPLE_TEX2D_SAMPLER(_AnisotropyMap, _MainTex, i.uv) * _Anisotropy).r;
+			tangentMap = GetModifiedTangent(tangentTS, WorldTangent);
 
-		#if defined(_FAKE_SPECULAR)
-			float3 fakeHighlights = tex2D(_FakeHighlights , remap(worldRefl.xy,-1,1,0.1,0.9)).rgb*(sin((1-roughness)*UNITY_PI))*_FakeHighlightIntensity;
-		#endif
-
-		#if defined(_ANISOTROPIC_SPECULAR)
 			float3  anisotropyDirection = anisotropy >= 0.0 ? WorldBinormal : WorldTangent;
 			float3  anisotropicTangent  = cross(anisotropyDirection, ViewDirection);
 			float3  anisotropicNormal   = cross(anisotropicTangent, anisotropyDirection);
 			float   bendFactor          = abs(anisotropy) * saturate(1-(Pow5(1-roughness)));
 			float3  bentNormal          = normalize(lerp(NormalDirection, anisotropicNormal, bendFactor));
 			worldRefl = reflect(-ViewDirection, bentNormal);
-		#endif
+		}
+
+		float3 fakeHighlights = 0;
+		if (_SpMode == 2)
+		{
+			fakeHighlights = tex2D(_FakeHighlights , remap(worldRefl.xy,-1,1,0.1,0.9)).rgb*(sin((1-roughness)*UNITY_PI))*_FakeHighlightIntensity;
+		}
 
 		float3 customIndirect = 0;
 		if(_IndirectSpecular == 1)
@@ -195,13 +199,12 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 		#endif
 		s.roughness = roughness;
 
-		#if defined(_ANISOTROPIC_SPECULAR)
-			s.anisotropy 	 = anisotropy;
-			s.dir.tangentMap = tangentMap;
-		#endif
-		#if defined(_FAKE_SPECULAR)
-			s.fakeHighlights = fakeHighlights;
-		#endif
+		
+		s.anisotropy 	 = anisotropy;
+		s.dir.tangentMap = tangentMap;
+
+		s.fakeHighlights = fakeHighlights;
+
 
 		s.indirectSpecular = _IndirectSpecular;
 		s.customIndirect   = customIndirect;

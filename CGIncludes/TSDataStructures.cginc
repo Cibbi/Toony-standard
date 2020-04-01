@@ -34,7 +34,7 @@ struct DirectionData
     float3 light;
     float3 view;
     float3 tangent;
-    #if defined(_ANISOTROPIC_SPECULAR) && !defined (_SPECULARHIGHLIGHTS_OFF)
+    #if !defined (_SPECULARHIGHLIGHTS_OFF)
         float3 tangentMap;
     #endif
     float3 bitangent;
@@ -88,12 +88,9 @@ struct BRDFData
             float3 specular;
         #endif
         float roughness;
-        #if defined(_ANISOTROPIC_SPECULAR)
-            float anisotropy;
-        #endif
-        #if defined(_FAKE_SPECULAR)
-            float3 fakeHighlights;
-        #endif
+
+        float anisotropy;
+        float3 fakeHighlights;
         float indirectSpecular;
         float3 customIndirect;
         float indirectOverride;

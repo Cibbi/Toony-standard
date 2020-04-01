@@ -113,7 +113,7 @@ namespace Cibbi.ToonyStandard
             {
                 TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
                 SetupWorkflow(mat, (Workflow)_workflow.floatValue);
-                SetupSpMode(mat, (SpMode)_SpMode.floatValue);
+                //SetupSpMode(mat, (SpMode)_SpMode.floatValue);
             }
 
             gradientEditor = new GradientEditor();
@@ -322,7 +322,7 @@ namespace Cibbi.ToonyStandard
             }
             foreach (Material mat in _SpMode.targets)
             {
-                SetupSpMode(mat, (SpMode)_SpMode.floatValue);
+                //SetupSpMode(mat, (SpMode)_SpMode.floatValue);
             }
         }
 
@@ -332,7 +332,7 @@ namespace Cibbi.ToonyStandard
             {
                 TSFunctions.SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", !(mat.GetFloat(_SpecularOn.name) != 0));
                 SetupWorkflow(mat, (Workflow)_workflow.floatValue);
-                SetupSpMode(mat, (SpMode)_SpMode.floatValue);
+                //SetupSpMode(mat, (SpMode)_SpMode.floatValue);
             }
         }
 
@@ -360,7 +360,7 @@ namespace Cibbi.ToonyStandard
             }
         }
 
-        public static void SetupSpMode(Material material, SpMode spMode)
+        /*public static void SetupSpMode(Material material, SpMode spMode)
         {
             switch (spMode)
             {
@@ -378,7 +378,7 @@ namespace Cibbi.ToonyStandard
                     material.EnableKeyword("_FAKE_SPECULAR");
                     break;
             }
-        }
+        }*/
 
         public void ResetRampTexture()
         {

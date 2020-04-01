@@ -84,7 +84,7 @@ float4 TS_BRDF(BRDFData i)
         //toon version of the NdotL for the direct light
         ramp = RampDotL(dots.NdotL, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
         //The max operation is done after cause we needed the -1 to 0 values for correctly sampling the ramp
-        dots.NdotL=max(dots.NdotL,0);
+        dots.NdotL = max(dots.NdotL,0);
 
         //diffuse color
         #if defined(DIRECTIONAL) || defined(DIRECTIONAL_COOKIE) 
@@ -123,15 +123,18 @@ float4 TS_BRDF(BRDFData i)
         //
         i.roughness *= i.roughness;
         i.roughness = ClampRoughness(i.roughness);
-        #if defined(_ANISOTROPIC_SPECULAR)
+        if (_SpMode == 1)
+        {
             specularTerm = DirectAnisotropicSpecular(i.dir, dots, i.anisotropy, i.toonyHighlights, i.highlightRamp, i.metallic, i.highlightPattern, ramp, specColor, i.roughness);  
-        #else
-            #if defined(_FAKE_SPECULAR)
-                specularTerm = DirectFakeSpecular(i.fakeHighlights, dots.LdotH, i.toonyHighlights, i.highlightRamp, i.metallic, i.highlightPattern, ramp, specColor,  i.roughness);
-            #else
-                specularTerm = DirectSpecular(dots, i.toonyHighlights, i.highlightRamp, i.metallic, i.highlightPattern, ramp, specColor,  i.roughness);
-            #endif
-        #endif
+        }
+        else if(_SpMode == 2)
+        {
+            specularTerm = DirectFakeSpecular(i.fakeHighlights, dots.LdotH, i.toonyHighlights, i.highlightRamp, i.metallic, i.highlightPattern, ramp, specColor,  i.roughness);
+        }
+        else
+        {
+            specularTerm = DirectSpecular(dots, i.toonyHighlights, i.highlightRamp, i.metallic, i.highlightPattern, ramp, specColor,  i.roughness);
+        }
         //
         //End direct specular calculation
 

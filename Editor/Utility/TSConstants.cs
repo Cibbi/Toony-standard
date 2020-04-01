@@ -8,7 +8,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20191221";
+        public static string Version = "Toony Standard master build 20200401";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
 
@@ -311,8 +311,6 @@ namespace Cibbi.ToonyStandard
         { 
             //List of all used keywords in toony standard
             "_SPECGLOSSMAP",
-            "_ANISOTROPIC_SPECULAR",
-            "_FAKE_SPECULAR",
             "_SPECULARHIGHLIGHTS_OFF",
             "_DETAIL_MULX2",
             "_EMISSION"
