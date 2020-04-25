@@ -1,4 +1,4 @@
-Shader "Hidden/Cibbis shaders/toony standard/Dither"
+Shader "Hidden/Cibbi's shaders/Toony Standard/Outlined"
 {
 	Properties
 	{
@@ -234,7 +234,39 @@ Shader "Hidden/Cibbis shaders/toony standard/Dither"
 			ENDCG
 		}
 
-        
+        Pass 
+		{
+			Name "Outline"
+			//Blend One Zero
+			ZWrite On
+			Cull Front
+			Tags
+			{
+				"LightMode" = "ForwardBase"
+			}
+
+			Stencil 
+			{
+				Ref [_OutlineStencilID]
+            	Comp [_OutlineStencilComp]
+            	Pass [_OutlineStencilOp]
+			}
+
+			CGPROGRAM
+			#pragma target 3.0
+			#pragma vertex VertexOutlineFunction
+			#pragma fragment FragmentOutlineFunction
+			//#pragma multi_compile_fwdbase
+			#pragma multi_compile_fog	
+			//#pragma multi_compile _ SHADOWS_SCREEN
+			//#pragma multi_compile _ VERTEXLIGHT_ON
+
+			#pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
+
+			#include "../CGIncludes/TSOutlineVertFrag.cginc"
+			
+			ENDCG
+		}
 	}
 	CustomEditor "Cibbi.ToonyStandard.ToonyStandardGUI"
 }

@@ -109,13 +109,8 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
 	}
 	SubShader
 	{
-		Tags
-		{
-			"RenderType" = "Opaque"
-			"Queue" = "Geometry"
-		}
-		Blend One Zero
-		ZWrite On
+		Blend [_SrcBlend] [_DstBlend]
+        ZWrite [_ZWrite]
 		Cull [_Cull]
 		Stencil 
         {
@@ -123,7 +118,7 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
             Comp [_StencilComp]
             Pass [_StencilOp]
         }
-		
+
 		Pass 
 		{
 			Tags
@@ -143,7 +138,7 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
                 #define UNITY_PASS_FORWARDBASE
             #endif
 
-            
+            #pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
@@ -167,7 +162,9 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
 				"LightMode" = "ForwardAdd"
 			}
 
-			Blend One One
+			Blend [_SrcBlend] One
+            Fog { Color (0,0,0,0) } // in additive pass fog should be black
+            ZWrite Off
 
 			CGPROGRAM
 			#pragma target 3.0
@@ -176,7 +173,7 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
 
-            
+            #pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
@@ -195,7 +192,7 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
 			{
 				"LightMode" = "ShadowCaster"
 			}
-            
+            ZWrite On ZTest LEqual
 
 			CGPROGRAM
 
@@ -207,7 +204,7 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
 			#pragma vertex ShadowVertexFunction
 			#pragma fragment ShadowFragmentFunction
 
-            
+            #pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 
 			#include "../CGIncludes/TSShadowVertFrag.cginc"
 
@@ -264,7 +261,7 @@ Shader "Hidden/Cibbis shaders/toony standard/OpaqueOutlined"
 			//#pragma multi_compile _ SHADOWS_SCREEN
 			//#pragma multi_compile _ VERTEXLIGHT_ON
 
-			
+			#pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 
 			#include "../CGIncludes/TSOutlineVertFrag.cginc"
 			

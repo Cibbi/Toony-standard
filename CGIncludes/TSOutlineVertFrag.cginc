@@ -31,7 +31,7 @@ float4 _MainTex_ST;
     float _Cutoff;
     UNITY_DECLARE_TEX2D(_MainTex);
 #else
-    #if defined(_DITHER_ON)
+    #if defined(_ALPHAMODULATE_ON)
         float4 _Color;
         UNITY_DECLARE_TEX2D(_MainTex);
         sampler3D _DitherMaskLOD;
@@ -65,7 +65,7 @@ float4 FragmentOutlineFunction(FragmentData i) : COLOR
         albedo = UNITY_SAMPLE_TEX2D (_MainTex, i.uv) * _Color;
         clip(albedo.a - _Cutoff);
     #else 
-        #if defined(_DITHER_ON)
+        #if defined(_ALPHAMODULATE_ON)
             float4 albedo;
             albedo = UNITY_SAMPLE_TEX2D (_MainTex, i.uv) * _Color;
             float dither = tex3D(_DitherMaskLOD, float3(i.pos.xy * 0.25, albedo.a * 0.9375)).a;

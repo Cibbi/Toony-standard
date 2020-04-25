@@ -29,7 +29,7 @@ samplerCUBE _Cubemap;
 sampler2D _HighlightPattern;
 sampler2D _FakeHighlights;
 
-#if defined(_DITHER_ON)
+#if defined(_ALPHAMODULATE_ON)
 	sampler3D _DitherMaskLOD;
 #endif
 #include "TSDataStructures.cginc"
@@ -76,7 +76,7 @@ float4 FragmentFunction (FragmentData i) : SV_TARGET
 	#if defined(_ALPHATEST_ON)
 		clip(albedo.a - _Cutoff);
 	#else 
-		#if defined(_DITHER_ON)
+		#if defined(_ALPHAMODULATE_ON)
 			float dither = tex3D(_DitherMaskLOD, float3(i.pos.xy * 0.25, albedo.a * 0.9375)).a;
 			//albedo = dither-0.01;
 			clip(dither-0.01);

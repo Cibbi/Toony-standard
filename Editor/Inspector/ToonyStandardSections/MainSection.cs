@@ -178,6 +178,8 @@ namespace Cibbi.ToonyStandard
             }
             EditorGUILayout.Space();
             materialEditor.TextureScaleOffsetProperty(_MainTex);
+            //EditorGUILayout.Space();
+            //materialEditor.RenderQueueField();
 
             EditorGUILayout.Space();
         }

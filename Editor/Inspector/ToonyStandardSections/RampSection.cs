@@ -56,6 +56,7 @@ namespace Cibbi.ToonyStandard
             this.inspector = inspector;
             gradientEditor = new GradientEditor();
             isGradientEditorOpen = false;
+            Styles.ToggleGradientEditorToggle(isGradientEditorOpen);
             needToStorePreviousRamp = true;
             Selection.selectionChanged += ResetRampTexture;
         }

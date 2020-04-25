@@ -8,7 +8,7 @@ namespace Cibbi.ToonyStandard
 {
     public static class TSConstants
     {
-        public static string Version = "Toony Standard master build 20200401";
+        public static string Version = "Toony Standard master build 20200426";
         public static string TSEPInspectorLevel = "TSInspectorLevel";
         public static string TSEPNotFirstTime = "TSNotFirstTime";
 
@@ -313,7 +313,11 @@ namespace Cibbi.ToonyStandard
             "_SPECGLOSSMAP",
             "_SPECULARHIGHLIGHTS_OFF",
             "_DETAIL_MULX2",
-            "_EMISSION"
+            "_EMISSION",
+            "_ALPHATEST_ON",
+            "_ALPHABLEND_ON",
+            "_ALPHAPREMULTIPLY_ON",
+            "_ALPHAMODULATE_ON"
         });
 
         public static class TSWindowLabels

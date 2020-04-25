@@ -406,36 +406,84 @@ namespace Cibbi.ToonyStandard
         public static void SetupMaterialWithBlendMode(Material material, BlendMode blendMode, bool outlined)
         {
             string shaderName = "";
+            int renderQueue = 0;
             switch (blendMode)
             {
                 case BlendMode.Opaque:
-                    shaderName = "Hidden/Cibbis shaders/toony standard/Opaque";
+                    material.SetOverrideTag("RenderType", "");
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                    material.SetInt("_ZWrite", 1);
+                    material.DisableKeyword("_ALPHATEST_ON");
+                    material.DisableKeyword("_ALPHABLEND_ON");
+                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    material.DisableKeyword("_ALPHAMODULATE_ON");
+                    renderQueue = -1;
+                    //shaderName = "Hidden/Cibbis shaders/toony standard/Opaque";
                     break;
                 case BlendMode.Cutout:
-                    shaderName = "Hidden/Cibbis shaders/toony standard/Cutout";
+                    material.SetOverrideTag("RenderType", "TransparentCutout");
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                    material.SetInt("_ZWrite", 1);
+                    material.EnableKeyword("_ALPHATEST_ON");
+                    material.DisableKeyword("_ALPHABLEND_ON");
+                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    material.DisableKeyword("_ALPHAMODULATE_ON");
+                    renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+                    //shaderName = "Hidden/Cibbis shaders/toony standard/Cutout";
                     break;
                 case BlendMode.Dither:
-                    shaderName = "Hidden/Cibbis shaders/toony standard/Dither";
+                    material.SetOverrideTag("RenderType", "TransparentCutout");
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                    material.SetInt("_ZWrite", 1);
+                    material.DisableKeyword("_ALPHATEST_ON");
+                    material.DisableKeyword("_ALPHABLEND_ON");
+                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    material.EnableKeyword("_ALPHAMODULATE_ON");
+                    renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+                    //shaderName = "Hidden/Cibbis shaders/toony standard/Dither";
                     break;
                 case BlendMode.Fade:
-                    shaderName = "Hidden/Cibbis shaders/toony standard/Fade";
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    material.SetInt("_ZWrite", 0);
+                    material.DisableKeyword("_ALPHATEST_ON");
+                    material.EnableKeyword("_ALPHABLEND_ON");
+                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    material.DisableKeyword("_ALPHAMODULATE_ON");
+                    renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    //shaderName = "Hidden/Cibbis shaders/toony standard/Fade";
                     outlined = false;
                     break;
                 case BlendMode.Transparent:
-                    shaderName = "Hidden/Cibbis shaders/toony standard/Transparent";
+                    material.SetOverrideTag("RenderType", "Transparent");
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    material.SetInt("_ZWrite", 0);
+                    material.DisableKeyword("_ALPHATEST_ON");
+                    material.DisableKeyword("_ALPHABLEND_ON");
+                    material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+                    material.DisableKeyword("_ALPHAMODULATE_ON");
+                    renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    //shaderName = "Hidden/Cibbis shaders/toony standard/Transparent";
                     outlined = false;
                     break;
             }
             if (outlined)
             {
-                shaderName += "Outlined";
-
+                shaderName = "Hidden/Cibbi's shaders/Toony Standard/Outlined";
             }
             else
             {
+                shaderName = "Cibbi's shaders/Toony Standard";
                 material.SetFloat("_OutlineOn", 0);
             }
+            //Debug.Log(material.renderQueue);
             material.shader = Shader.Find(shaderName);
+            material.renderQueue = renderQueue;
         }
 
         /// <summary>

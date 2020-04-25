@@ -109,13 +109,8 @@ Shader "Hidden/Cibbis shaders/toony standard/Fade"
 	}
 	SubShader
 	{
-		Tags
-		{
-			"RenderType" = "Transparent"
-			"Queue" = "Transparent"
-		}
-		Blend SrcAlpha OneMinusSrcAlpha
-		ZWrite Off
+		Blend [_SrcBlend] [_DstBlend]
+        ZWrite [_ZWrite]
 		Cull [_Cull]
 		Stencil 
         {
@@ -123,7 +118,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Fade"
             Comp [_StencilComp]
             Pass [_StencilOp]
         }
-		
+
 		Pass 
 		{
 			Tags
@@ -143,7 +138,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Fade"
                 #define UNITY_PASS_FORWARDBASE
             #endif
 
-            #define _ALPHABLEND_ON
+            #pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
@@ -167,7 +162,9 @@ Shader "Hidden/Cibbis shaders/toony standard/Fade"
 				"LightMode" = "ForwardAdd"
 			}
 
-			Blend SrcAlpha One
+			Blend [_SrcBlend] One
+            Fog { Color (0,0,0,0) } // in additive pass fog should be black
+            ZWrite Off
 
 			CGPROGRAM
 			#pragma target 3.0
@@ -176,7 +173,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Fade"
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
 
-            #define _ALPHABLEND_ON
+            #pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 			#pragma shader_feature _SPECGLOSSMAP
 			#pragma shader_feature _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _DETAIL_MULX2
@@ -207,7 +204,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Fade"
 			#pragma vertex ShadowVertexFunction
 			#pragma fragment ShadowFragmentFunction
 
-            #define _ALPHABLEND_ON
+            #pragma shader_feature _ _ALPHATEST_ON _ALPHAMODULATE_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
 
 			#include "../CGIncludes/TSShadowVertFrag.cginc"
 

@@ -1,4 +1,4 @@
-Shader "Hidden/Cibbis shaders/toony standard/Dither"
+Shader "Cibbi's shaders/Toony Standard"
 {
 	Properties
 	{
