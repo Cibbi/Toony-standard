@@ -87,7 +87,9 @@ namespace Cibbi.ToonyStandard
             }
             int bMode = (int)selectedOption.floatValue;
             EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = selectedOption.hasMixedValue;
             bMode = EditorGUILayout.Popup(label, (int)bMode, GUIoptions);
+            EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
                 materialEditor.RegisterPropertyChangeUndo(label.text);

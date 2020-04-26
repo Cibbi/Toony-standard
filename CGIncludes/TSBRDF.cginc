@@ -30,18 +30,22 @@ float4 TS_BRDF(BRDFData i)
         #if !defined(LIGHTMAP_ON) && !defined(DYNAMICLIGHTMAP_ON)
             //if there's no direct light, we get the probe light direction to use as direct light direction and
             //we consider the indirect light color as it was the direct light color.
+            //also taking into account the case of a really low intensity being considered like non existent due to it no having
+            //much relevance anyways and it can cause problems locally on mirrors if the avatat has a very low intensity light
+            //just for enabling the depth buffer.
             indirectDiffuse = float3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
-            if(any(_WorldSpaceLightPos0.xyz)==0)
+            if(any(_WorldSpaceLightPos0.xyz)==0 || _LightColor0.a<0.01)
             {
-                probeLightDir = unity_SHAr.xyz + unity_SHAg.xyz + unity_SHAb.xyz;
+                i.dir.light = normalize(unity_SHAr.xyz + unity_SHAg.xyz + unity_SHAb.xyz);
                 specLightCol.rgb = indirectDiffuse;
+                lightCol.a = 1;
                 if(_RampOn>0)
                 {  
                     lightCol.rgb = indirectDiffuse;            
-                    indirectDiffuse=0;
+                    indirectDiffuse = 0;
                 }
-            }     
-            i.dir.light = normalize(UnityWorldSpaceLightDir(i.worldPos) + probeLightDir);
+            }  
+
         #endif
         
 
@@ -97,6 +101,7 @@ float4 TS_BRDF(BRDFData i)
             vertexDiffuse = RampDotLVertLight(i.normal, i.worldPos, i.mainRamp, i.mainRampMin, i.mainRampMax, i.occlusion, i.occlusionOffsetIntensity);
             vertexDiffuse*=i.albedo;
         #endif
+        
     }
     else
     {
