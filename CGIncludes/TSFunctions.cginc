@@ -243,22 +243,22 @@ float3 RampDotLVertLight(float3 normal, float3 worldPos, RampData rampData, floa
     NdotL =  NdotL * corr;
     //attenuation
     float4 atten = 1.0 / (1.0 + lengthSq * unity_4LightAtten0);
-    //float4 atten2 = saturate(1 - (lengthSq * unity_4LightAtten0 / 25));
-    //atten = min(atten, atten2 * atten2);
+    float4 atten2 = saturate(1 - (lengthSq * unity_4LightAtten0 / 25));
+    atten = min(atten, atten2 * atten2);
+
     //ramp calculation for all 4 vertex lights
     float offset = rampData.offset+(occlusion*occlusionOffsetIntensity)-occlusionOffsetIntensity;
     //Calculating ramp uvs based on offset
     float newMin = max(offset, 0);
     float newMax = max(offset + 1, 0);
-    float4 rampUv = remap(min(NdotL,remap(atten,0,1,-1,1)), float4(-1,-1,-1,-1), float4(1,1,1,1), float4(newMin,newMin,newMin,newMin), float4(newMax,newMax,newMax,newMax));
-    float3 ramp = remap(remap(tex2D(rampData.ramp, float2(rampUv.x, rampUv.x)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[0].rgb;
-    ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.y, rampUv.y)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[1].rgb;
-    ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.z, rampUv.z)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[2].rgb;
-    ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.w, rampUv.w)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[3].rgb;
+    float4 rampUv = remap(NdotL, float4(-1,-1,-1,-1), float4(1,1,1,1), float4(newMin,newMin,newMin,newMin), float4(newMax,newMax,newMax,newMax));
+    float3 ramp = remap(remap(tex2D(rampData.ramp, float2(rampUv.x, rampUv.x)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[0].rgb * atten.r;
+    ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.y, rampUv.y)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[1].rgb * atten.g;
+    ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.z, rampUv.z)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[2].rgb * atten.b;
+    ramp +=       remap(remap(tex2D(rampData.ramp, float2(rampUv.w, rampUv.w)).rgb * rampData.color.rgb,float3(0, 0, 0), float3(1, 1, 1),1-rampData.color.aaa, float3(1, 1, 1)),rampMin,rampMax,0,1).rgb * unity_LightColor[3].rgb * atten.a;
     
     return ramp;
 }
-//TODO: remove the fucking lightColor parameter or fucking use it
 float4 RampDotL(float NdotL, RampData rampData, float rampMin, float rampMax, float occlusion, float occlusionOffsetIntensity)
 {
     //Adding the occlusion into the offset of the ramp
