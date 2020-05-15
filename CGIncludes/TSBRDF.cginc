@@ -1,6 +1,8 @@
 float4 TS_BRDF(BRDFData i)
 {
     float4 lightCol = float4(_LightColor0.rgb, i.attenuation);
+    lightCol.rgb += float3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
+    lightCol.rgb = lerp(GetSHLength(), lightCol.rgb, .75);
     float4 specLightCol = lightCol;
     float3 indirectDiffuse=0;
     #if defined(UNITY_PASS_FORWARDBASE)

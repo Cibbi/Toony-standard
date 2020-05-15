@@ -14,7 +14,7 @@ Shader "Hidden/Cibbis shaders/toony standard/Transparent"
 
 		_Ramp("Ramp Texture", 2D) = "white" {}
 		_RampColor("Ramp Color", Color) = (1,1,1,1)
-		_ShadowIntensity("Shadow Intensity", Range(0,1)) = 0.4
+		_ShadowIntensity("Shadow Intensity", Range(0,1)) = 0.7
 		_RampOffset("Ramp Offset", Range(-1,1)) = 0.0
 		_OcclusionOffsetIntensity("Occlusion Offset", Range(0,1)) = 0.0
 
