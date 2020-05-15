@@ -292,10 +292,10 @@ namespace Cibbi.ToonyStandard
                 {
                     intensity = 0.001f;
                 }
-                Color remapMin = new Color(1 - intensity, 1 - intensity, 1 - intensity, 1).gamma;
+                Color remapMin = new Color(1 - intensity, 1 - intensity, 1 - intensity, 1);
 
-                min *= m.GetColor("_RampColor");
-                max *= m.GetColor("_RampColor");
+                min *= m.GetColor("_RampColor").linear;
+                max *= m.GetColor("_RampColor").linear;
 
                 min = remap(min, Color.black, Color.white, remapMin, Color.white);
                 max = remap(max, Color.black, Color.white, remapMin, Color.white);
