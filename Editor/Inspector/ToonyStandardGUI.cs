@@ -338,11 +338,11 @@ namespace Cibbi.ToonyStandard
         /// <summary>
         /// Regenerated the MSOT texture
         /// </summary>
-        public void RegenerateMSOT()
+        public void RegenerateMSOT(bool saveToFile)
         {
             foreach (Material mat in _RampOn.targets)
             {
-                string path = GetTextureDestinationPath(mat, "MSOT.png");
+
                 if (mat.GetTexture("_MetallicMap") != null || mat.GetTexture("_GlossinessMap") != null || mat.GetTexture("_OcclusionMap") != null || mat.GetTexture("_ThicknessMap") != null)
                 {
                     packer.resolution = TexturePacker.Resolution.XS_128x128;
@@ -374,8 +374,15 @@ namespace Cibbi.ToonyStandard
                             if (!packer.RiseResolutionByOneLevel())
                                 break;
                         }
-
-                    packer.GenerateTexture();
+                    if (saveToFile)
+                    {
+                        string path = GetTextureDestinationPath(mat, "MSOT.png");
+                        packer.PackTexture(path);
+                    }
+                    else
+                    {
+                        packer.GenerateTexture();
+                    }
                     mat.SetTexture("_MSOT", packer.resultTex);
                 }
                 else
@@ -511,15 +518,8 @@ namespace Cibbi.ToonyStandard
         {
             if (needsMSOTRefresh)
             {
-
-                foreach (Material mat in _RampOn.targets)
-                {
-                    string path = GetTextureDestinationPath(mat, "MSOT.png");
-                    packer.PackTexture(path);
-                    mat.SetTexture("_MSOT", packer.resultTex);
-                    needsMSOTRefresh = false;
-                    //needToStorePreviousRamp = true;
-                }
+                RegenerateMSOT(true);
+                needsMSOTRefresh = false;
             }
             Selection.selectionChanged -= SetMSOT;
         }

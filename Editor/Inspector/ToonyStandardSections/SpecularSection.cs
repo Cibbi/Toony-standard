@@ -169,7 +169,7 @@ namespace Cibbi.ToonyStandard
                     materialEditor.TexturePropertyMiniThumbnail(r, _MetallicMap, Styles.metallic.text, Styles.metallic.tooltip);
                     if (EditorGUI.EndChangeCheck())
                     {
-                        inspector.RegenerateMSOT();
+                        inspector.RegenerateMSOT(false);
                     }
                     TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Metallic);
 
@@ -191,7 +191,7 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertyMiniThumbnail(r, _GlossinessMap, Styles.smoothness.text, Styles.smoothness.tooltip);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    inspector.RegenerateMSOT();
+                    inspector.RegenerateMSOT(false);
                 }
                 TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Glossiness);
             }

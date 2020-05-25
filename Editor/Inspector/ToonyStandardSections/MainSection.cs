@@ -114,7 +114,7 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertyMiniThumbnail(r, _OcclusionMap, Styles.occlusion.text, Styles.occlusion.tooltip);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    gui.RegenerateMSOT();
+                    gui.RegenerateMSOT(false);
                 }
                 TSFunctions.ProperSlider(MaterialEditor.GetRectAfterLabelWidth(r), ref _Occlusion);
 

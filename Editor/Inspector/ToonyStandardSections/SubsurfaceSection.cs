@@ -61,7 +61,7 @@ namespace Cibbi.ToonyStandard
                 materialEditor.TexturePropertySingleLine(Styles.thickness, _ThicknessMap);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    inspector.RegenerateMSOT();
+                    inspector.RegenerateMSOT(false);
                 }
             }
             TSFunctions.ProperColorBox(ref _SSColor, Styles.color);
