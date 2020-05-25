@@ -21,7 +21,7 @@ namespace Cibbi.ToonyStandard
 
         private void Start()
         {
-            packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[] { "Texture 1", "Texture 2", "Texture 3", "Texture 4" }, TSFunctions.GetSelectedPathOrFallback() + "Packed.png");
+            packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[] { "Texture 1 (R)", "Texture 2 (G)", "Texture 3 (B)", "Texture 4 (A)" }, TSFunctions.GetSelectedPathOrFallback() + "Packed.png");
             packer.drawInternalConfirmButton = false;
         }
 

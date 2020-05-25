@@ -245,6 +245,14 @@ namespace Cibbi.ToonyStandard
                 Application.OpenURL("https://www.patreon.com/Cibbi");
             }
             EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+
+            //So, hello, if you're looking at this probably means that you either looking at random stuff or you found the hidden link and for some reason you decided to look here
+            //What's this about? let's just say you should really keep an eye on that link, your won't regret it :)
+            if (GUILayout.Button(new GUIContent(" ", "???"), "label", GUILayout.Width(32), GUILayout.Height(32)))
+            {
+                Application.OpenURL("https://vrlabs.dev");
+            }
+            EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();
             GUIStyle aboutLabelStyle = new GUIStyle(EditorStyles.miniLabel);

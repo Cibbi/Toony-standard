@@ -58,6 +58,7 @@ namespace Cibbi.ToonyStandard
         int kernel;
 
         public bool drawInternalConfirmButton;
+        private bool isImageSaved;
 
         /// <summary>
         /// Constructor of the texture packer
@@ -135,11 +136,7 @@ namespace Cibbi.ToonyStandard
             return false;
         }
 
-        /// <summary>
-        /// Generates the texture using the current inputs and saves it into the given path
-        /// </summary>
-        /// <param name="path">Path of the saved texture (name and extension included</param>
-        public void PackTexture(string path)
+        public Texture2D GenerateTexture()
         {
             if (result.width != (int)resolution || result.height != (int)resolution)
             {
@@ -185,6 +182,14 @@ namespace Cibbi.ToonyStandard
 
             RenderTexture.active = result;
             tex.ReadPixels(new Rect(0, 0, result.width, result.height), 0, 0);
+            isImageSaved = false;
+            tex.Apply(true);
+            resultTex = tex;
+            return tex;
+        }
+
+        public void SaveTexture(string path)
+        {
             byte[] bytes;
             bytes = tex.EncodeToPNG();
 
@@ -192,6 +197,17 @@ namespace Cibbi.ToonyStandard
             path = path.Substring(path.LastIndexOf("Assets"));
             AssetDatabase.ImportAsset(path);
             resultTex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+            isImageSaved = true;
+        }
+
+        /// <summary>
+        /// Generates the texture using the current inputs and saves it into the given path
+        /// </summary>
+        /// <param name="path">Path of the saved texture (name and extension included</param>
+        public void PackTexture(string path)
+        {
+            GenerateTexture();
+            SaveTexture(path);
         }
 
         /// <summary>

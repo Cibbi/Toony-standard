@@ -48,6 +48,9 @@ namespace Cibbi.ToonyStandard
         InspectorLevel inspectorLevel;
         public TexturePacker packer;
 
+        bool needsMSOTRefresh = false;
+
+
         #endregion
 
         /// <summary>
@@ -85,12 +88,14 @@ namespace Cibbi.ToonyStandard
                 case InspectorLevel.Normal:
                     packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[] { "Metallic", "Smoothness", "Ambient occlusion", "Thickness map" }, GetTextureDestinationPath((Material)_RampOn.targets[0], "MSOT.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
+                    Selection.selectionChanged += SetMSOT;
                     break;
                 case InspectorLevel.Expert:
                     packer = new TexturePacker(TexturePacker.Resolution.M_512x512, new string[] { "Metallic", "Smoothness", "Ambient occlusion", "Thickness map" }, GetTextureDestinationPath((Material)_RampOn.targets[0], "MSOT.png"));
                     main = new MainSection(properties, inspectorLevel, packer, this);
                     break;
             }
+
             foreach (Material mat in FindProperty("_Mode", properties).targets)
             {
                 //remove keywords not used in Toony Standard
@@ -370,13 +375,14 @@ namespace Cibbi.ToonyStandard
                                 break;
                         }
 
-                    packer.PackTexture(path);
+                    packer.GenerateTexture();
                     mat.SetTexture("_MSOT", packer.resultTex);
                 }
                 else
                 {
                     mat.SetTexture("_MSOT", null);
                 }
+                needsMSOTRefresh = true;
             }
         }
 
@@ -499,6 +505,23 @@ namespace Cibbi.ToonyStandard
                     material.DisableKeyword(keyword);
                 }
             }
+        }
+
+        public void SetMSOT()
+        {
+            if (needsMSOTRefresh)
+            {
+
+                foreach (Material mat in _RampOn.targets)
+                {
+                    string path = GetTextureDestinationPath(mat, "MSOT.png");
+                    packer.PackTexture(path);
+                    mat.SetTexture("_MSOT", packer.resultTex);
+                    needsMSOTRefresh = false;
+                    //needToStorePreviousRamp = true;
+                }
+            }
+            Selection.selectionChanged -= SetMSOT;
         }
     }
 }
